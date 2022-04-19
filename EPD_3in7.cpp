@@ -149,7 +149,7 @@ parameter:
 void EPD_3IN7_Load_LUT(UBYTE lut)
 {
     UWORD i;
-    EPD_3IN7_SendCommand(0x32);
+    EPD_3IN7_SendCommand(EPD_CMD_WRITE_LUT);
     for (i = 0; i < 105; i++)
     {
         if (lut == 0)
@@ -173,7 +173,7 @@ void EPD_3IN7_4Gray_Init(void)
 {
     EPD_3IN7_Reset();
 
-    EPD_3IN7_SendCommand(0x12);
+    EPD_3IN7_SendCommand(EPD_CMD_SW_RESET);
     DEV_Delay_ms(300);
 
     EPD_3IN7_SendCommand(0x46);
@@ -183,39 +183,39 @@ void EPD_3IN7_4Gray_Init(void)
     EPD_3IN7_SendData(0xF7);
     EPD_3IN7_ReadBusy_HIGH();
 
-    EPD_3IN7_SendCommand(0x01); // setting gate number
+    EPD_3IN7_SendCommand(EPD_CMD_DRV_OUTPUT_CTRL); // setting gate number
     EPD_3IN7_SendData(0xDF);
     EPD_3IN7_SendData(0x01);
     EPD_3IN7_SendData(0x00);
 
-    EPD_3IN7_SendCommand(0x03); // set gate voltage
+    EPD_3IN7_SendCommand(EPD_CMD_GATE_DRV_CTRL); // set gate voltage
     EPD_3IN7_SendData(0x00);
 
-    EPD_3IN7_SendCommand(0x04); // set source voltage
+    EPD_3IN7_SendCommand(EPD_CMD_SRC_DRV_VOLT_CTRL); // set source voltage
     EPD_3IN7_SendData(0x41);
     EPD_3IN7_SendData(0xA8);
     EPD_3IN7_SendData(0x32);
 
-    EPD_3IN7_SendCommand(0x11); // set data entry sequence
+    EPD_3IN7_SendCommand(EPD_CMD_DATA_ENTRY); // set data entry sequence
     EPD_3IN7_SendData(0x03);
 
-    EPD_3IN7_SendCommand(0x3C); // set border
+    EPD_3IN7_SendCommand(EPD_CMD_BORDER_WAVEFORM); // set border
     EPD_3IN7_SendData(0x00);
 
-    EPD_3IN7_SendCommand(0x0C); // set booster strength
+    EPD_3IN7_SendCommand(EPD_CMD_BOOSTER_SOFT_START_CTRL); // set booster strength
     EPD_3IN7_SendData(0xAE);
     EPD_3IN7_SendData(0xC7);
     EPD_3IN7_SendData(0xC3);
     EPD_3IN7_SendData(0xC0);
     EPD_3IN7_SendData(0xC0);
 
-    EPD_3IN7_SendCommand(0x18); // set internal sensor on
+    EPD_3IN7_SendCommand(EPD_CMD_TEMP_SENS); // set internal sensor on
     EPD_3IN7_SendData(0x80);
 
-    EPD_3IN7_SendCommand(0x2C); // set vcom value
+    EPD_3IN7_SendCommand(EPD_CMD_VCOM_CONF_3); // set vcom value
     EPD_3IN7_SendData(0x44);
 
-    EPD_3IN7_SendCommand(0x37); // set display option, these setting turn on previous function
+    EPD_3IN7_SendCommand(EPD_CMD_WRITE_DISP_OPT); // set display option, these setting turn on previous function
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x00);
@@ -227,19 +227,19 @@ void EPD_3IN7_4Gray_Init(void)
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x00);
 
-    EPD_3IN7_SendCommand(0x44); // setting X direction start/end position of RAM
+    EPD_3IN7_SendCommand(EPD_CMD_RAM_X_POS); // setting X direction start/end position of RAM
+    EPD_3IN7_SendData(0x00); // 0
     EPD_3IN7_SendData(0x00);
-    EPD_3IN7_SendData(0x00);
-    EPD_3IN7_SendData(0x17);
+    EPD_3IN7_SendData(0x17); // 279
     EPD_3IN7_SendData(0x01);
 
-    EPD_3IN7_SendCommand(0x45); // setting Y direction start/end position of RAM
+    EPD_3IN7_SendCommand(EPD_CMD_RAM_Y_POS); // setting Y direction start/end position of RAM
+    EPD_3IN7_SendData(0x00); // 0
     EPD_3IN7_SendData(0x00);
-    EPD_3IN7_SendData(0x00);
-    EPD_3IN7_SendData(0xDF);
+    EPD_3IN7_SendData(0xDF); // 479
     EPD_3IN7_SendData(0x01);
 
-    EPD_3IN7_SendCommand(0x22); // Display Update Control 2
+    EPD_3IN7_SendCommand(EPD_CMD_DISP_UPT_CTRL_2); // Display Update Control 2
     EPD_3IN7_SendData(0xCF);
 }
 
@@ -251,7 +251,7 @@ void EPD_3IN7_1Gray_Init(void)
 {
     EPD_3IN7_Reset();
 
-    EPD_3IN7_SendCommand(0x12);
+    EPD_3IN7_SendCommand(EPD_CMD_SW_RESET);
     DEV_Delay_ms(300);
 
     EPD_3IN7_SendCommand(0x46);
@@ -261,39 +261,39 @@ void EPD_3IN7_1Gray_Init(void)
     EPD_3IN7_SendData(0xF7);
     EPD_3IN7_ReadBusy_HIGH();
 
-    EPD_3IN7_SendCommand(0x01); // setting gaet number
+    EPD_3IN7_SendCommand(EPD_CMD_DRV_OUTPUT_CTRL); // setting gate number
     EPD_3IN7_SendData(0xDF);
     EPD_3IN7_SendData(0x01);
     EPD_3IN7_SendData(0x00);
 
-    EPD_3IN7_SendCommand(0x03); // set gate voltage
+    EPD_3IN7_SendCommand(EPD_CMD_GATE_DRV_CTRL); // set gate voltage
     EPD_3IN7_SendData(0x00);
 
-    EPD_3IN7_SendCommand(0x04); // set source voltage
+    EPD_3IN7_SendCommand(EPD_CMD_SRC_DRV_VOLT_CTRL); // set source voltage
     EPD_3IN7_SendData(0x41);
     EPD_3IN7_SendData(0xA8);
     EPD_3IN7_SendData(0x32);
 
-    EPD_3IN7_SendCommand(0x11); // set data entry sequence
+    EPD_3IN7_SendCommand(EPD_CMD_DATA_ENTRY); // set data entry sequence
     EPD_3IN7_SendData(0x03);
 
-    EPD_3IN7_SendCommand(0x3C); // set border
+    EPD_3IN7_SendCommand(EPD_CMD_BORDER_WAVEFORM); // set border
     EPD_3IN7_SendData(0x00);
 
-    EPD_3IN7_SendCommand(0x0C); // set booster strength
+    EPD_3IN7_SendCommand(EPD_CMD_BOOSTER_SOFT_START_CTRL); // set booster strength
     EPD_3IN7_SendData(0xAE);
     EPD_3IN7_SendData(0xC7);
     EPD_3IN7_SendData(0xC3);
     EPD_3IN7_SendData(0xC0);
     EPD_3IN7_SendData(0xC0);
 
-    EPD_3IN7_SendCommand(0x18); // set internal sensor on
+    EPD_3IN7_SendCommand(EPD_CMD_TEMP_SENS); // set internal sensor on
     EPD_3IN7_SendData(0x80);
 
-    EPD_3IN7_SendCommand(0x2C); // set vcom value
+    EPD_3IN7_SendCommand(EPD_CMD_VCOM_CONF_3); // set vcom value
     EPD_3IN7_SendData(0x44);
 
-    EPD_3IN7_SendCommand(0x37); // set display option, these setting turn on previous function
+    EPD_3IN7_SendCommand(EPD_CMD_WRITE_DISP_OPT); // set display option, these setting turn on previous function
     EPD_3IN7_SendData(0x00);     //can switch 1 gray or 4 gray
     EPD_3IN7_SendData(0xFF);
     EPD_3IN7_SendData(0xFF);
@@ -305,19 +305,19 @@ void EPD_3IN7_1Gray_Init(void)
     EPD_3IN7_SendData(0xFF);
     EPD_3IN7_SendData(0xFF);
 
-    EPD_3IN7_SendCommand(0x44); // setting X direction start/end position of RAM
+    EPD_3IN7_SendCommand(EPD_CMD_RAM_X_POS); // setting X direction start/end position of RAM
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x17);
     EPD_3IN7_SendData(0x01);
 
-    EPD_3IN7_SendCommand(0x45); // setting Y direction start/end position of RAM
+    EPD_3IN7_SendCommand(EPD_CMD_RAM_Y_POS); // setting Y direction start/end position of RAM
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0xDF);
     EPD_3IN7_SendData(0x01);
 
-    EPD_3IN7_SendCommand(0x22); // Display Update Control 2
+    EPD_3IN7_SendCommand(EPD_CMD_DISP_UPT_CTRL_2); // Display Update Control 2
     EPD_3IN7_SendData(0xCF);
 }
 
@@ -333,29 +333,29 @@ void EPD_3IN7_4Gray_Clear(void)
 
     EPD_3IN7_SendCommand(0x49);
     EPD_3IN7_SendData(0x00);
-    EPD_3IN7_SendCommand(0x4E);
+    EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x00);
-    EPD_3IN7_SendCommand(0x4F);
+    EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x00);
 
-    EPD_3IN7_SendCommand(0x24);
+    EPD_3IN7_SendCommand(EPD_CMD_WRITE_RAM_BW);
     for (UWORD j = 0; j < Height; j++) {
         for (UWORD i = 0; i < Width; i++) {
             EPD_3IN7_SendData(0xff);
         }
     }
 
-    EPD_3IN7_SendCommand(0x4E);
+    EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x00);
 
-    EPD_3IN7_SendCommand(0x4F);
+    EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x00);
 
-    EPD_3IN7_SendCommand(0x26);
+    EPD_3IN7_SendCommand(EPD_CMD_WRITE_RAM_GREY);
     for (UWORD j = 0; j < Height; j++) {
         for (UWORD i = 0; i < Width; i++) {
             EPD_3IN7_SendData(0xff);
@@ -363,10 +363,10 @@ void EPD_3IN7_4Gray_Clear(void)
     }
 
     EPD_3IN7_Load_LUT(0);
-    EPD_3IN7_SendCommand(0x22);
+    EPD_3IN7_SendCommand(EPD_CMD_DISP_UPT_CTRL_2);
     EPD_3IN7_SendData(0xC7);
 
-    EPD_3IN7_SendCommand(0x20);
+    EPD_3IN7_SendCommand(EPD_CMD_UPDATE_SCREEN);
     EPD_3IN7_ReadBusy_HIGH();
 }
 
@@ -379,14 +379,14 @@ void EPD_3IN7_1Gray_Clear(void)
     UWORD i;
     UWORD IMAGE_COUNTER = EPD_3IN7_WIDTH * EPD_3IN7_HEIGHT / 8;
 
-    EPD_3IN7_SendCommand(0x4E);
+    EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x00);
-    EPD_3IN7_SendCommand(0x4F);
+    EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x00);
 
-    EPD_3IN7_SendCommand(0x24);
+    EPD_3IN7_SendCommand(EPD_CMD_WRITE_RAM_BW);
     for (i = 0; i < IMAGE_COUNTER; i++)
     {
         EPD_3IN7_SendData(0xff);
@@ -394,7 +394,7 @@ void EPD_3IN7_1Gray_Clear(void)
 
     EPD_3IN7_Load_LUT(2);
 
-    EPD_3IN7_SendCommand(0x20);
+    EPD_3IN7_SendCommand(EPD_CMD_UPDATE_SCREEN);
     EPD_3IN7_ReadBusy_HIGH();
 }
 
@@ -411,16 +411,16 @@ void EPD_3IN7_4Gray_Display(const UBYTE *Image)
     EPD_3IN7_SendData(0x00);
 
 
-    EPD_3IN7_SendCommand(0x4E);
+    EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x00);
 
 
-    EPD_3IN7_SendCommand(0x4F);
+    EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x00);
 
-    EPD_3IN7_SendCommand(0x24);
+    EPD_3IN7_SendCommand(EPD_CMD_WRITE_RAM_BW);
     for (i = 0; i < 16800; i++) {
         temp3 = 0;
         for (j = 0; j < 2; j++) {
@@ -457,22 +457,22 @@ void EPD_3IN7_4Gray_Display(const UBYTE *Image)
         EPD_3IN7_SendData(temp3);
     }
     // new  data
-    EPD_3IN7_SendCommand(0x4E);
+    EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x00);
 
 
-    EPD_3IN7_SendCommand(0x4F);
+    EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x00);
 
-    EPD_3IN7_SendCommand(0x26);
+    EPD_3IN7_SendCommand(EPD_CMD_WRITE_RAM_GREY);
     for (i = 0; i < 16800; i++) {
         temp3 = 0;
         for (j = 0; j < 2; j++) {
             temp1 = Image[i * 2 + j];
             for (k = 0; k < 2; k++) {
-                temp2 = temp1 & 0xC0 ;
+                temp2 = temp1 & 0xC0;
                 if (temp2 == 0xC0)
                     temp3 |= 0x01;//white
                 else if (temp2 == 0x00)
@@ -504,10 +504,10 @@ void EPD_3IN7_4Gray_Display(const UBYTE *Image)
 
     EPD_3IN7_Load_LUT(0);
 
-    EPD_3IN7_SendCommand(0x22);
+    EPD_3IN7_SendCommand(EPD_CMD_DISP_UPT_CTRL_2);
     EPD_3IN7_SendData(0xC7);
 
-    EPD_3IN7_SendCommand(0x20);
+    EPD_3IN7_SendCommand(EPD_CMD_UPDATE_SCREEN);
 
     EPD_3IN7_ReadBusy_HIGH();
 }
@@ -521,21 +521,21 @@ void EPD_3IN7_1Gray_Display(const UBYTE *Image)
     UWORD i;
     UWORD IMAGE_COUNTER = EPD_3IN7_WIDTH * EPD_3IN7_HEIGHT / 8;
 
-    EPD_3IN7_SendCommand(0x4E);
+    EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x00);
-    EPD_3IN7_SendCommand(0x4F);
+    EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
     EPD_3IN7_SendData(0x00);
     EPD_3IN7_SendData(0x00);
 
-    EPD_3IN7_SendCommand(0x24);
+    EPD_3IN7_SendCommand(EPD_CMD_WRITE_RAM_BW);
     for (i = 0; i < IMAGE_COUNTER; i++)
     {
         EPD_3IN7_SendData(Image[i]);
     }
 
     EPD_3IN7_Load_LUT(2);
-    EPD_3IN7_SendCommand(0x20);
+    EPD_3IN7_SendCommand(EPD_CMD_UPDATE_SCREEN);
     EPD_3IN7_ReadBusy_HIGH();
 }
 
@@ -551,26 +551,26 @@ void EPD_3IN7_1Gray_Display_Part(const UBYTE *Image, UWORD Xstart, UWORD Ystart,
     UWORD IMAGE_COUNTER = EPD_3IN7_WIDTH * EPD_3IN7_HEIGHT / 8;
 
     // EPD_3IN7_SendCommand(0x44);
-    EPD_3IN7_SendCommand(0x4E);
+    EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
     EPD_3IN7_SendData(Xstart & 0xff);
     EPD_3IN7_SendData((Xstart >> 8) & 0x03);
     EPD_3IN7_SendData(Xend & 0xff);
     EPD_3IN7_SendData((Xend >> 8) & 0x03);
     // EPD_3IN7_SendCommand(0x45);
-    EPD_3IN7_SendCommand(0x4F);
+    EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
     EPD_3IN7_SendData(Ystart & 0xff);
     EPD_3IN7_SendData((Ystart >> 8) & 0x03);
     EPD_3IN7_SendData(Yend & 0xff);
     EPD_3IN7_SendData((Yend >> 8) & 0x03);
 
-    EPD_3IN7_SendCommand(0x24);
+    EPD_3IN7_SendCommand(EPD_CMD_WRITE_RAM_BW);
     for (i = 0; i < IMAGE_COUNTER; i++)
     {
         EPD_3IN7_SendData(Image[i]);
     }
 
     EPD_3IN7_Load_LUT(2);
-    EPD_3IN7_SendCommand(0x20);
+    EPD_3IN7_SendCommand(EPD_CMD_UPDATE_SCREEN);
     EPD_3IN7_ReadBusy_HIGH();
 }
 

@@ -44,13 +44,44 @@ void EPD_3IN7_4Gray_Display(const UBYTE *Image);
 void EPD_3IN7_1Gray_Clear(void);
 void EPD_3IN7_1Gray_Init(void);
 void EPD_3IN7_1Gray_Display(const UBYTE *Image);
-void EPD_3IN7_1Gray_Display_Part(const UBYTE *Image, UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend);
+void EPD_3IN7_1Gray_Display_Part(const UBYTE *Image, UWORD Xstart, UWORD Ystart,
+                                 UWORD Xend, UWORD Yend);
 
 void EPD_3IN7_Sleep(void);
 
-#define EPD_REG_DRV_OUTPUT_CTRL 0x01
-#define EPD_REG_GATE_DRV_CTRL 0x03
-#define EPD_REG_SRC_DRV_VOLT_CTRL 0x04
-#define EPD_REG_SRC_DRV_VOLT_CTRL 0x08
+#define EPD_CMD_DRV_OUTPUT_CTRL 0x01
+#define EPD_CMD_GATE_DRV_CTRL 0x03
+#define EPD_CMD_SRC_DRV_VOLT_CTRL 0x04
+#define EPD_CMD_INIT_SET_OTP 0x08
+#define EPD_CMD_WRITE_REG_INIT_CODE_SET 0x09
+#define EPD_CMD_READ_REG_INIT_CODE_SET 0x0A
+#define EPD_CMD_BOOSTER_SOFT_START_CTRL 0x0C
+#define EPD_CMD_DEEP_SLEEP 0x10
+#define EPD_CMD_DATA_ENTRY 0x11
+#define EPD_CMD_SW_RESET 0x12
+#define EPD_CMD_HV_READY_DETECT 0x14
+#define EPD_CMD_VCI_DETECT 0x15
+#define EPD_CMD_TEMP_SENS 0x18
+#define EPD_CMD_WRITE_TEMP_SENS 0x1A
+#define EPD_CMD_READ_TEMP_SENS 0x1B
+#define EPD_CMD_WRITE_EXT_TEMP_SENS 0x1C
+#define EPD_CMD_UPDATE_SCREEN 0x20
+#define EPD_CMD_DISP_UPT_CTRL_1 0x21
+#define EPD_CMD_DISP_UPT_CTRL_2 0x22
+#define EPD_CMD_WRITE_RAM_BW 0x24
+#define EPD_CMD_WRITE_RAM_GREY 0x26
+#define EPD_CMD_VCOM_SENSE 0x28
+#define EPD_CMD_VCOM_SENSE_DUR 0x29
+#define EPD_CMD_VCOM_CONF_1 0x2A
+#define EPD_CMD_VCOM_CONF_2 0x2B
+#define EPD_CMD_VCOM_CONF_3 0x2C
+#define EPD_CMD_WRITE_LUT 0x32
+#define EPD_CMD_WRITE_DISP_OPT 0x37
+#define EPD_CMD_BORDER_WAVEFORM 0x3C
+#define EPD_CMD_RAM_X_POS 0x44
+#define EPD_CMD_RAM_Y_POS 0x45
+#define EPD_CMD_SET_RAM_X_POS 0x4E
+#define EPD_CMD_SET_RAM_Y_POS 0x4F
+#define EPD_CMD_NOP 0x7F
 
 #endif
