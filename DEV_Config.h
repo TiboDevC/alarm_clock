@@ -37,27 +37,28 @@
 /**
  * data
 **/
-#define UBYTE   uint8_t
-#define UWORD   uint16_t
+#define UBYTE uint8_t
+#define UWORD uint16_t
 #define UDOUBLE uint32_t
 
 /**
  * GPIO config
 **/
-#define EPD_SCK_PIN  PIN_SPI_SCK
+#define EPD_SCK_PIN PIN_SPI_SCK
 #define EPD_MOSI_PIN PIN_SPI_MOSI
-#define EPD_CS_PIN   5
-#define EPD_RST_PIN  3
-#define EPD_DC_PIN   1
+#define EPD_CS_PIN 5
+#define EPD_RST_PIN 3
+#define EPD_DC_PIN 1
 #define EPD_BUSY_PIN 2
 
-#define GPIO_PIN_SET   1
+#define GPIO_PIN_SET 1
 #define GPIO_PIN_RESET 0
 
 /**
  * GPIO read and write
 **/
-#define DEV_Digital_Write(_pin, _value) digitalWrite(_pin, _value == 0? LOW:HIGH)
+#define DEV_Digital_Write(_pin, _value) \
+  digitalWrite(_pin, _value == 0 ? LOW : HIGH)
 #define DEV_Digital_Read(_pin) digitalRead(_pin)
 
 /**
