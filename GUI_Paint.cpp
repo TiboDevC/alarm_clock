@@ -280,23 +280,6 @@ void Paint_Clear(UWORD Color) {
       }
     }
     Serial.println("Paint_Clear end");
-  } else if (Paint.Scale == 7) {
-    Color = (UBYTE)Color;
-    UWORD Width = (Paint.WidthMemory * 3 % 8 == 0)
-                      ? (Paint.WidthMemory * 3 / 8)
-                      : (Paint.WidthMemory * 3 / 8 + 1);
-    for (UWORD Y = 0; Y < Paint.HeightByte; Y++) {
-      for (UWORD X = 0; X < Width; X++) {
-        UDOUBLE Addr = X + Y * Width;
-        if ((X + Y * Width) % 3 == 0)
-          Paint.Image[Addr] = ((Color << 5) | (Color << 2) | (Color >> 1));
-        else if ((X + Y * Width) % 3 == 1)
-          Paint.Image[Addr] =
-              ((Color << 7) | (Color << 4) | (Color << 1) | (Color >> 2));
-        else if ((X + Y * Width) % 3 == 2)
-          Paint.Image[Addr] = ((Color << 6) | (Color << 3) | Color);
-      }
-    }
   }
 }
 
