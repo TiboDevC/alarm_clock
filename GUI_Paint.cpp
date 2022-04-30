@@ -857,6 +857,6 @@ void Paint_DrawImage(const unsigned char* image_buffer, UWORD xStart,
       Addr = x + y * w_byte;
       pAddr = x + (xStart / 8) + ((y + yStart) * Paint.WidthByte);
       Paint.Image[pAddr] = (unsigned char)image_buffer[Addr];
-        }
     }
+  }
 }
