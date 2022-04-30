@@ -43,8 +43,8 @@ enum img_rotation_t {
 };
 
 enum grey_scale_t {
-  grey_scale_2 = 0,
-  grey_scale_4,
+  grey_scale_2 = 8,
+  grey_scale_4 = 4,
 };
 
 enum color_t {

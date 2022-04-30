@@ -526,35 +526,61 @@ void EPD_3IN7_1Gray_Display(const UBYTE *Image) {
 function :  Sends the image buffer in RAM to e-Paper and displays
 parameter:
 ******************************************************************************/
-void EPD_3IN7_1Gray_Display_Part(const UBYTE *Image, UWORD Xstart, UWORD Ystart,
-                                 UWORD Xend, UWORD Yend) {
-  UWORD i, Width;
-  Width =
-      (Xend - Xstart) % 8 == 0 ? (Xend - Xstart) / 8 : (Xend - Xstart) / 8 + 1;
-  // UWORD IMAGE_COUNTER = Width * (Yend-Ystart);
-  UWORD IMAGE_COUNTER = EPD_3IN7_WIDTH * EPD_3IN7_HEIGHT / 8;
+void EPD_3IN7_1Gray_Display_Part(const uint8_t *Image,
+                                 const uint16_t image_x_size,
+                                 const uint16_t image_y_size,
+                                 const uint32_t buf_size_byte, uint16_t Xstart,
+                                 uint16_t Ystart) {
+    uint32_t i = 0;
+    /*uint16_t  Width;
+  Width = (Xend - Xstart) % 8 == 0 ? (Xend - Xstart) / 8 : (Xend - Xstart) / 8 + 1;*/
+    // UWORD IMAGE_COUNTER = Width * (Yend-Ystart);
 
-  // EPD_3IN7_SendCommand(0x44);
-  EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
-  EPD_3IN7_SendData(Xstart & 0xff);
-  EPD_3IN7_SendData((Xstart >> 8) & 0x03);
-  EPD_3IN7_SendData(Xend & 0xff);
-  EPD_3IN7_SendData((Xend >> 8) & 0x03);
-  // EPD_3IN7_SendCommand(0x45);
-  EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
-  EPD_3IN7_SendData(Ystart & 0xff);
-  EPD_3IN7_SendData((Ystart >> 8) & 0x03);
-  EPD_3IN7_SendData(Yend & 0xff);
-  EPD_3IN7_SendData((Yend >> 8) & 0x03);
+    const uint16_t Xend = Xstart + image_x_size;
+    const uint16_t Yend = Ystart + image_y_size;
 
-  EPD_3IN7_SendCommand(EPD_CMD_WRITE_RAM_BW);
-  for (i = 0; i < IMAGE_COUNTER; i++) {
-    EPD_3IN7_SendData(Image[i]);
-  }
+    Serial.print("Writing from x: ");
+    Serial.print(Xstart);
+    Serial.print(" to ");
+    Serial.print(Xend);
+    Serial.print(", y: ");
+    Serial.print(Ystart);
+    Serial.print(" to ");
+    Serial.print(Yend);
+    Serial.print(", size: ");
+    Serial.println(buf_size_byte);
 
-  EPD_3IN7_Load_LUT(2);
-  EPD_3IN7_SendCommand(EPD_CMD_UPDATE_SCREEN);
-  EPD_3IN7_ReadBusy_HIGH();
+
+    /*EPD_3IN7_SendCommand(0x44);
+    //  EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
+    EPD_3IN7_SendData(Xstart & 0xff);
+    EPD_3IN7_SendData((Xstart >> 8) & 0x03);
+    EPD_3IN7_SendData(Xend & 0xff);
+    EPD_3IN7_SendData((Xend >> 8) & 0x03);
+
+    EPD_3IN7_SendCommand(0x45);
+    //  EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_Y_POS);
+    EPD_3IN7_SendData(Ystart & 0xff);
+    EPD_3IN7_SendData((Ystart >> 8) & 0x03);
+    EPD_3IN7_SendData(Yend & 0xff);
+    EPD_3IN7_SendData((Yend >> 8) & 0x03);*/
+
+    EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_X_POS);
+    EPD_3IN7_SendData(Xstart & 0xff);
+    EPD_3IN7_SendData((Xstart >> 8) & 0x03);
+
+    EPD_3IN7_SendCommand(EPD_CMD_SET_RAM_Y_POS);
+    EPD_3IN7_SendData(Ystart & 0xff);
+    EPD_3IN7_SendData((Ystart >> 8) & 0x03);
+
+    EPD_3IN7_SendCommand(EPD_CMD_WRITE_RAM_BW);
+    for (i = 0; i < buf_size_byte; i++) {
+        EPD_3IN7_SendData(Image[i]);
+    }
+
+    EPD_3IN7_Load_LUT(2);
+    EPD_3IN7_SendCommand(EPD_CMD_UPDATE_SCREEN);
+    EPD_3IN7_ReadBusy_HIGH();
 }
 
 /******************************************************************************

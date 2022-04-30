@@ -81,6 +81,7 @@
 #include "Debug.h"
 #include "DEV_Config.h"
 #include "fonts.h"
+#include "paint.hpp"
 
 /**
  * Image attributes

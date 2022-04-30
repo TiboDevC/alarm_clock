@@ -1,14 +1,10 @@
+#include <stdlib.h>
+
 #include "DEV_Config.h"
 #include "EPD.h"
 #include "GUI_Paint.h"
 #include "imagedata.h"
-#include <stdlib.h>
-
-// Create a new image cache
-uint8_t BlackImage[((EPD_3IN7_WIDTH % 8 == 0)
-                        ? (EPD_3IN7_WIDTH * EPD_3IN7_HEIGHT) / 8
-                        : (EPD_3IN7_WIDTH / 8 + 1)) *
-                   EPD_3IN7_HEIGHT];
+#include "screen.h"
 
 void setup() {
   Serial.begin(115200);
@@ -17,22 +13,12 @@ void setup() {
   DEV_Module_Init();
 
   Serial.println("e-Paper Init and Clear...\r\n");
-  EPD_3IN7_4Gray_Init();
-  EPD_3IN7_4Gray_Clear();
   DEV_Delay_ms(500);
+  init_screen();
 
-  // UWORD Imagesize = ((EPD_3IN7_WIDTH % 8 == 0) ? (EPD_3IN7_WIDTH / 8 ) :
-  // (EPD_3IN7_WIDTH / 8 + 1)) * EPD_3IN7_HEIGHT;
-  Serial.print("Allocate ");
-  Serial.println(sizeof(BlackImage));
-  // BlackImage = (UBYTE *)malloc(Imagesize);
-  // if (BlackImage == NULL) {
-  //     Serial.println("Failed to apply for black memory...\r\n");
-  //     while (1);
-  // }
 
   Serial.println("Paint_NewImage\r\n");
-  Paint_NewImage(BlackImage, EPD_3IN7_WIDTH, EPD_3IN7_HEIGHT, 0, BLACK);
+
 // Paint_SetScale(4);
 // Paint_Clear(WHITE);
 
@@ -85,25 +71,15 @@ void setup() {
 #endif
 
 #if 1                     // partial update, just 1 Gray mode
-  EPD_3IN7_1Gray_Init();  // init 1 Gray mode
-  EPD_3IN7_1Gray_Clear();
-  Paint_SelectImage(BlackImage);
-  Paint_SetScale(2);
-  Paint_Clear(BLACK);
-  for (int i = 0; i < 20; i++) {
-    for (int j = 0; j < 20; j++) {
-      Paint_SetPixel(i, j, WHITE);
-    }
-  }
-  Paint_SetPixel(20, 20, WHITE);
-  Paint_SetPixel(20, 21, WHITE);
-  Paint_SetPixel(21, 20, WHITE);
-  Paint_SetPixel(21, 21, WHITE);
-  EPD_3IN7_1Gray_Display_Part(BlackImage, 0, 0, EPD_3IN7_HEIGHT,
-                              EPD_3IN7_WIDTH);
 
-  Paint_Clear(BLACK);
-  DEV_Delay_ms(5000);
+  screen_display_param();
+
+    DEV_Delay_ms(5000);
+
+
+    Paint_Clear(BLACK);
+    DEV_Delay_ms(5000);
+  /*
   Serial.println("show time, partial update, just 1 Gary mode\r\n");
   PAINT_TIME sPaint_time;
   sPaint_time.Hour = 12;
@@ -137,10 +113,10 @@ void setup() {
 
     Serial.println("Part refresh...\r\n");
     // EPD_3IN7_1Gray_Display(BlackImage);
-    EPD_3IN7_1Gray_Display_Part(BlackImage, 0, 50, EPD_3IN7_HEIGHT,
-                                EPD_3IN7_WIDTH);
+    EPD_3IN7_1Gray_Display_Part(BlackImage, image_x_size, image_y_size, image_buf_size, 0, 50);
     DEV_Delay_ms(500);
   }
+   */
 
 #endif
   // EPD_3IN7_4Gray_Init();
