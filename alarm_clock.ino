@@ -102,9 +102,10 @@ void setup() {
 
 #if 1                     // partial update, just 1 Gray mode
 
-  screen_display_param();
-
-    DEV_Delay_ms(5000);
+//  screen_display_param();
+//
+//    DEV_Delay_ms(5000);
+    screen_update_clock();
 
 
     Paint_Clear(BLACK);
