@@ -90,7 +90,6 @@ void screen_display_param() {
 
     EPD_3IN7_1Gray_Display_Part(BlackImage, image_x_size, image_y_size,
                                 image_buf_size, 0, 0);
-    DEV_Delay_ms(2000);
 }
 
 static int weekday(int year, int month, int day)
