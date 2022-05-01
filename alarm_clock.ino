@@ -15,6 +15,8 @@ static uint8_t alarm_match{0};
 static WiFiUDP wifiUdp;
 static NTP ntp(wifiUdp);
 
+static uint64_t last_ntp_update{};
+
 static void printWiFiStatus() {
     // print the SSID of the network you're attached to:
     Serial.print("SSID: ");
@@ -52,13 +54,21 @@ static int connect_to_wifi() {
     return 0;
 }
 
-static void wifi_init_ntp() {
+static void disconnect_wifi() {
+    WiFi.disconnect();
+}
+
+static void init_ntp() {
     ntp.ruleDST(
             "CEST", Last, Sun, Mar, 2,
             120);// last sunday in march 2:00, timetone +120min (+1 GMT + 1h summertime offset)
     ntp.ruleSTD("CET", Last, Sun, Oct, 3,
                 60);// last sunday in october 3:00, timezone +60min (+1 GMT)
     ntp.begin();
+}
+
+static void deinit_ntp() {
+    ntp.stop();
 }
 
 static void alarmMatch() {
@@ -97,8 +107,6 @@ void setup() {
     delay(5000);
 
     init_rtc();
-    connect_to_wifi();
-    wifi_init_ntp();
 
     DEV_Module_Init();
 
@@ -114,21 +122,38 @@ void loop() {
     if (alarm_match) {
         alarm_match = 0;
 
-        ntp.update();
-        Serial.print("Epoch received: ");
-        Serial.println(ntp.epoch());
-        Serial.print("hours: ");
-        Serial.println(ntp.hours());
-        rtc.setEpoch(ntp.epoch());
-        rtc.setHours(ntp.hours());
-        Serial.println();
-        Serial.println(ntp.formattedTime("%d. %B %Y"));// dd. Mmm yyyy
-        Serial.println(ntp.formattedTime("%A %T"));    // Www hh:mm:ss
+        /* Update NTP time at 5am */
+        if ((rtc.getHours() == 5 and rtc.getMinutes() == 0) or
+            (rtc.getEpoch() - last_ntp_update > (3600 * 24))) {
+            if (connect_to_wifi() != 0) {
+                init_ntp();
 
-        init_screen();
-        screen_update_clock();
+                ntp.update();
+                Serial.print("Epoch received: ");
+                Serial.println(ntp.epoch());
+                Serial.print("hours: ");
+                Serial.println(ntp.hours());
+                rtc.setEpoch(ntp.epoch());
+                rtc.setHours(ntp.hours());
+                last_ntp_update = rtc.getEpoch();
+                Serial.println();
+                Serial.println(ntp.formattedTime("%d. %B %Y"));// dd. Mmm yyyy
+                Serial.println(ntp.formattedTime("%A %T"));    // Www hh:mm:ss
+                deinit_ntp();
+                disconnect_wifi();
+            }
+            init_screen();
+            screen_update_clock();
+            EPD_3IN7_Sleep();
+        } else {
+            /* Update screen every 5 minutes */
+            if (rtc.getMinutes() % 5 == 0) {
+                init_screen();
+                screen_update_clock();
+                EPD_3IN7_Sleep();
+            }
+        }
 
-        EPD_3IN7_Sleep();
 
         rtc.setAlarmSeconds(0);
         rtc.attachInterrupt(alarmMatch);
