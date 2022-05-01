@@ -25,7 +25,6 @@ static constexpr uint8_t initial_background_color{BLACK};
 
 uint8_t BlackImage[image_buf_size];
 
-
 void init_screen() {
     EPD_3IN7_4Gray_Init();
     EPD_3IN7_4Gray_Clear();
@@ -105,7 +104,6 @@ void screen_update_clock() {
     const uint8_t year        = rtc.getYear();
     const uint8_t hours       = rtc.getHours();
     const uint8_t minutes     = rtc.getMinutes();
-    const uint8_t seconds     = rtc.getSeconds();
     const uint8_t day_of_week = weekday(year, month, day);
     const char *days_buf[]    = {"dimanche", "lundi",    "mardi", "mercredi",
                                  "jeudi",    "vendredi", "samedi"};

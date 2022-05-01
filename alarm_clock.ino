@@ -77,7 +77,6 @@ void init_rtc() {
     rtc.setMinutes(minutes);
     rtc.setSeconds(seconds);
 
-
     // Set the date
     rtc.setDay(day);
     rtc.setMonth(month);
@@ -99,7 +98,6 @@ void setup() {
     DEV_Module_Init();
 
     init_screen();
-
 
     //  screen_display_param();
 
