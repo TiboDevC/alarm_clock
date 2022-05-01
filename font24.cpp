@@ -38,6 +38,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "fonts.h"
 
+// go run main.go --width=2 --height=23 --xoffset=0 --yoffset=23 -s 30 -d  -f AGENCYR.TTF
+
 const uint8_t Font24_Table [] = 
 {
 
