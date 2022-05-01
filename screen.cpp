@@ -25,14 +25,10 @@ static constexpr uint8_t initial_background_color{BLACK};
 
 uint8_t BlackImage[image_buf_size];
 
+
 void init_screen() {
     EPD_3IN7_4Gray_Init();
     EPD_3IN7_4Gray_Clear();
-    DEV_Delay_ms(1000);
-
-    /*EPD_3IN7_1Gray_Init();
-    EPD_3IN7_1Gray_Clear();
-    DEV_Delay_ms(1000);*/
 
     Paint_NewImage(BlackImage, image_x_size, image_y_size, rotate,
                    initial_background_color);
@@ -40,9 +36,6 @@ void init_screen() {
     Paint_SelectImage(BlackImage);
     Paint_SetScale(2);
     Paint_Clear(BLACK);
-
-    Serial.print("Allocate ");
-    Serial.println(sizeof(BlackImage));
 }
 
 void screen_display_param() {
