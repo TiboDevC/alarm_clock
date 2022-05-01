@@ -119,9 +119,8 @@ void screen_update_clock() {
     sprintf(clock_buf, "%2d:%02d", hours, minutes);
     sprintf(date_buf, "%s %d %s", days_buf[day_of_week], day,
             months_buf[month]);
-    Paint_DrawString_EN(00, 00, "test", &Font24, BLACK, WHITE);
-    Paint_DrawString_EN(10, 20, date_buf, &Font24, BLACK, WHITE);
-    Paint_DrawString_EN(0, 90, clock_buf, &FontCustom, BLACK, WHITE);
+    Paint_DrawString_EN(10, 30, date_buf, &Font24, BLACK, WHITE);
+    Paint_DrawString_EN(0, 100, clock_buf, &FontCustom, BLACK, WHITE);
 
     EPD_3IN7_1Gray_Display_Part(BlackImage, image_x_size, image_y_size,
                                 image_buf_size, 0, 0);
