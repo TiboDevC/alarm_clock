@@ -30,21 +30,26 @@ static void printWiFiStatus() {
     Serial.println(" dBm");
 }
 
-static void connect_to_wifi() {
-    int status        = WL_IDLE_STATUS;
-    const char ssid[] = WIFI_SSID_NAME;// your network SSID (name)
-    const char pass[] = WIFI_PWD;
+static int connect_to_wifi() {
+    int status                = WL_IDLE_STATUS;
+    const char ssid[]         = WIFI_SSID_NAME;// your network SSID (name)
+    const char pass[]         = WIFI_PWD;
+    const uint8_t max_num_try = 20;
+    uint8_t num_try           = 0;
 
-    while (status != WL_CONNECTED) {
-        Serial.print("Attempting to connect to SSID: ");
-        Serial.println(ssid);
-        status = WiFi.begin(ssid, pass);
-        do {
-            delay(500);
-        } while (status != WL_CONNECTED);
+    Serial.print("Attempting to connect to SSID: ");
+    Serial.println(ssid);
+    status = WiFi.begin(ssid, pass);
+    do {
+        delay(500);
+        num_try++;
+    } while (status != WL_CONNECTED and num_try < max_num_try);
+
+    if (status == WL_CONNECTED) {
+        printWiFiStatus();
+        return 1;
     }
-    // you're connected now, so print out the status:
-    printWiFiStatus();
+    return 0;
 }
 
 static void wifi_init_ntp() {
