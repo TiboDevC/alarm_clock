@@ -57,28 +57,18 @@ static void wifi_init_ntp() {
 }
 
 static void alarmMatch() {
-    RTCZero rtc;
-
-    init_screen();
-    screen_update_clock();
-
-    EPD_3IN7_Sleep();
-
-    rtc.setAlarmSeconds(0);
-    rtc.attachInterrupt(alarmMatch);
+    alarm_match = 1;
     rtc.enableAlarm(rtc.MATCH_SS);
 }
 
 void init_rtc() {
-    RTCZero rtc;
-
-    const uint8_t hours{23};
-    const uint8_t minutes{56};
+    const uint8_t hours{12};
+    const uint8_t minutes{34};
     const uint8_t seconds{00};
 
-    const uint8_t day{1};
-    const uint8_t month{05};
-    const uint8_t year{22};
+    const uint8_t day{30};
+    const uint8_t month{10};
+    const uint8_t year{07};
 
     rtc.begin();
 
@@ -117,4 +107,28 @@ void setup() {
 }
 
 /* The main loop -------------------------------------------------------------*/
-void loop() {}
+void loop() {
+    if (alarm_match) {
+        alarm_match = 0;
+
+        ntp.update();
+        Serial.print("Epoch received: ");
+        Serial.println(ntp.epoch());
+        Serial.print("hours: ");
+        Serial.println(ntp.hours());
+        rtc.setEpoch(ntp.epoch());
+        rtc.setHours(ntp.hours());
+        Serial.println();
+        Serial.println(ntp.formattedTime("%d. %B %Y"));// dd. Mmm yyyy
+        Serial.println(ntp.formattedTime("%A %T"));    // Www hh:mm:ss
+
+        init_screen();
+        screen_update_clock();
+
+        EPD_3IN7_Sleep();
+
+        rtc.setAlarmSeconds(0);
+        rtc.attachInterrupt(alarmMatch);
+        rtc.enableAlarm(rtc.MATCH_SS);
+    }
+}
