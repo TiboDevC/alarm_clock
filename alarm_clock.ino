@@ -1,4 +1,6 @@
+#include "NTP.h"
 #include <RTCZero.h>
+#include <WiFiNINA.h>
 #include <stdlib.h>
 
 #include "DEV_Config.h"
@@ -6,6 +8,53 @@
 #include "GUI_Paint.h"
 #include "imagedata.h"
 #include "screen.h"
+#include "secret.h"
+
+static RTCZero rtc;
+static uint8_t alarm_match{0};
+static WiFiUDP wifiUdp;
+static NTP ntp(wifiUdp);
+
+static void printWiFiStatus() {
+    // print the SSID of the network you're attached to:
+    Serial.print("SSID: ");
+    Serial.println(WiFi.SSID());
+    // print your WiFi shield's IP address:
+    IPAddress ip = WiFi.localIP();
+    Serial.print("IP Address: ");
+    Serial.println(ip);
+    // print the received signal strength:
+    long rssi = WiFi.RSSI();
+    Serial.print("signal strength (RSSI):");
+    Serial.print(rssi);
+    Serial.println(" dBm");
+}
+
+static void connect_to_wifi() {
+    int status        = WL_IDLE_STATUS;
+    const char ssid[] = WIFI_SSID_NAME;// your network SSID (name)
+    const char pass[] = WIFI_PWD;
+
+    while (status != WL_CONNECTED) {
+        Serial.print("Attempting to connect to SSID: ");
+        Serial.println(ssid);
+        status = WiFi.begin(ssid, pass);
+        do {
+            delay(500);
+        } while (status != WL_CONNECTED);
+    }
+    // you're connected now, so print out the status:
+    printWiFiStatus();
+}
+
+static void wifi_init_ntp() {
+    ntp.ruleDST(
+            "CEST", Last, Sun, Mar, 2,
+            120);// last sunday in march 2:00, timetone +120min (+1 GMT + 1h summertime offset)
+    ntp.ruleSTD("CET", Last, Sun, Oct, 3,
+                60);// last sunday in october 3:00, timezone +60min (+1 GMT)
+    ntp.begin();
+}
 
 static void alarmMatch() {
     RTCZero rtc;
@@ -54,6 +103,8 @@ void setup() {
     delay(5000);
 
     init_rtc();
+    connect_to_wifi();
+    wifi_init_ntp();
 
     DEV_Module_Init();
 
