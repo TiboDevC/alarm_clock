@@ -5,6 +5,8 @@
 #include "GUI_Paint.h"
 #include "screen.h"
 
+static RTCZero rtc;
+
 static constexpr uint32_t image_size(const uint16_t x_size,
                                      const uint16_t y_size,
                                      const grey_scale_t grey_scale) {
@@ -105,8 +107,6 @@ static int weekday(int year, int month, int day)
 }
 
 void screen_update_clock() {
-    RTCZero rtc;
-
     const uint8_t day         = rtc.getDay();
     const uint8_t month       = rtc.getMonth();
     const uint8_t year        = rtc.getYear();
@@ -116,26 +116,22 @@ void screen_update_clock() {
     const uint8_t day_of_week = weekday(year, month, day);
     const char *days_buf[]    = {"dimanche", "lundi",    "mardi", "mercredi",
                                  "jeudi",    "vendredi", "samedi"};
-    const char *months_buf[]  = {"janvier",   "fevrier", "mars",     "avril",
-                                 "mai",       "juin",    "juillet",  "aout",
-                                 "septembre", "octobre", "novembre", "decembre"};
+    const char *months_buf[]  = {"",        "janvier",   "fevrier", "mars",
+                                 "avril",   "mai",       "juin",    "juillet",
+                                 "aout",    "septembre", "octobre", "novembre",
+                                 "decembre"};
 
-    char clock_hour_buf[3];
-    char clock_min_buf[3];
+    char clock_buf[6];
     char date_buf[30];
 
     Paint_Clear(BLACK);
-    sprintf(clock_hour_buf, "%2d", hours);
-    sprintf(clock_min_buf, "%02d", minutes);
+    sprintf(clock_buf, "%2d:%02d", hours, minutes);
     sprintf(date_buf, "%s %d %s", days_buf[day_of_week], day,
             months_buf[month]);
-    Paint_DrawString_EN(10, 20, date_buf, &Font20, BLACK, WHITE);
-    Paint_DrawString_EN(0, 70, clock_hour_buf, &FontCustom, BLACK, WHITE);
-    Paint_DrawString_EN(FontCustom.Width * 2 + 30, 70, clock_min_buf,
-                        &FontCustom, BLACK, WHITE);
+    Paint_DrawString_EN(00, 00, "test", &Font24, BLACK, WHITE);
+    Paint_DrawString_EN(10, 20, date_buf, &Font24, BLACK, WHITE);
+    Paint_DrawString_EN(0, 90, clock_buf, &FontCustom, BLACK, WHITE);
 
     EPD_3IN7_1Gray_Display_Part(BlackImage, image_x_size, image_y_size,
                                 image_buf_size, 0, 0);
-
-    DEV_Delay_ms(5000);
 }
