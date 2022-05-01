@@ -1,5 +1,5 @@
-#include <stdlib.h>
 #include <RTCZero.h>
+#include <stdlib.h>
 
 #include "DEV_Config.h"
 #include "EPD.h"
@@ -7,8 +7,7 @@
 #include "imagedata.h"
 #include "screen.h"
 
-static void alarmMatch()
-{
+static void alarmMatch() {
     RTCZero rtc;
 
     init_screen();
@@ -21,8 +20,7 @@ static void alarmMatch()
     rtc.enableAlarm(rtc.MATCH_SS);
 }
 
-void init_rtc()
-{
+void init_rtc() {
     RTCZero rtc;
 
     const uint8_t hours{23};
@@ -52,28 +50,20 @@ void init_rtc()
 }
 
 void setup() {
-  Serial.begin(115200);
-  delay(5000);
+    Serial.begin(115200);
+    delay(5000);
 
-  init_rtc();
+    init_rtc();
 
-  Serial.println("EPD_3IN7_test Demo\r\n");
-  DEV_Module_Init();
+    DEV_Module_Init();
 
-  Serial.println("e-Paper Init and Clear...\r\n");
-  DEV_Delay_ms(500);
-  init_screen();
+    init_screen();
 
 
-//  screen_display_param();
+    //  screen_display_param();
 
     screen_update_clock();
-
-  Serial.println("Goto Sleep...\r\n");
-
-  Serial.println("close 5V, Module enters 0 power consumption ...\r\n");
 }
 
 /* The main loop -------------------------------------------------------------*/
-void loop() {
-}
+void loop() {}
