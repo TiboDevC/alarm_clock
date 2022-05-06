@@ -216,5 +216,7 @@ void loop() {
         rtc.setAlarmSeconds(0);
         rtc.attachInterrupt(alarmMatch);
         rtc.enableAlarm(rtc.MATCH_SS);
+
+        //        rtc.standbyMode();
     }
 }
