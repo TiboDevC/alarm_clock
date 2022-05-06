@@ -9,7 +9,7 @@ FlashStorage(alarm_1_flash, alarm_params_t);
 static alarm_params_t alarm_0_ram{};
 static alarm_params_t alarm_1_ram{};
 
-void init_flash_storage()
+void init_alarm_flash_storage()
 {
     alarm_0_ram = alarm_0_flash.read();
     alarm_1_ram = alarm_0_flash.read();
