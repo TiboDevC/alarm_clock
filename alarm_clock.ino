@@ -71,9 +71,9 @@ static int connect_to_wifi() {
 
     if (status == WL_CONNECTED) {
         printWiFiStatus();
-        return 1;
+        return 0;
     }
-    return 0;
+    return -1;
 }
 
 static void disconnect_wifi() {
