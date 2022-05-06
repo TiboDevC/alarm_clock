@@ -112,7 +112,7 @@ void screen_update_clock() {
                                  "aout",    "septembre", "octobre", "novembre",
                                  "decembre"};
 
-    char clock_buf[6];
+    char clock_buf[16];
     char date_buf[30];
 
     Paint_Clear(BLACK);
