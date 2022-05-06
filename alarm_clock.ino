@@ -10,6 +10,28 @@
 #include "screen.h"
 #include "secret.h"
 
+#define NUM_BUTTON 11
+#define BUTTON_0 0
+#define BUTTON_1 6
+#define BUTTON_2 11
+#define BUTTON_3 12
+#define BUTTON_4 13
+#define BUTTON_5 14
+#define BUTTON_6 16
+#define BUTTON_7 17
+#define BUTTON_8 18
+#define BUTTON_9 19
+#define BUTTON_10 20
+
+#define BUTTON_PRESSED_EVENT 1
+#define BUTTON_PRESSED_EVENT_CLR 0
+
+static uint8_t buttons_state[NUM_BUTTON];
+static constexpr uint8_t buttons_pin[NUM_BUTTON]{
+        BUTTON_0, BUTTON_1, BUTTON_2, BUTTON_3, BUTTON_4, BUTTON_5,
+        BUTTON_6, BUTTON_7, BUTTON_8, BUTTON_9, BUTTON_10};
+static uint8_t buttons_event[NUM_BUTTON];
+
 static RTCZero rtc;
 static uint8_t alarm_match{0};
 static WiFiUDP wifiUdp;
@@ -100,6 +122,29 @@ void init_rtc() {
     rtc.setAlarmSeconds(0);
     rtc.attachInterrupt(alarmMatch);
     rtc.enableAlarm(rtc.MATCH_SS);
+}
+
+static void check_buttons() {
+    for (uint8_t button = 0; button < NUM_BUTTON; button++) {
+        const uint8_t button_state = digitalRead(buttons_pin[button]);
+        if (buttons_state[button] != button_state and button_state == LOW) {
+            buttons_event[button] = BUTTON_PRESSED_EVENT;
+            Serial.print("Button ");
+            Serial.print(button);
+            Serial.println(" pressed");
+        }
+        buttons_state[button] = button_state;
+    }
+}
+
+static void init_buttons() {
+    for (uint8_t button = 0; button < NUM_BUTTON; button++) {
+        pinMode(buttons_pin[button], INPUT_PULLDOWN);
+        delay(500);
+        Serial.println(digitalRead(buttons_pin[button]));
+    }
+
+    memset(buttons_state, LOW, sizeof(buttons_state));
 }
 
 void setup() {
