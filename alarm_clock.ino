@@ -6,6 +6,7 @@
 #include "DEV_Config.h"
 #include "EPD.h"
 #include "GUI_Paint.h"
+#include "alarm_flash_storage.h"
 #include "imagedata.h"
 #include "screen.h"
 #include "secret.h"
@@ -151,6 +152,8 @@ void setup() {
     Serial.begin(115200);
     delay(5000);
 
+    init_buttons();
+    init_alarm_flash_storage();
     init_rtc();
 
     DEV_Module_Init();
@@ -164,6 +167,19 @@ void setup() {
 
 /* The main loop -------------------------------------------------------------*/
 void loop() {
+    delay(50);
+    check_buttons();
+    if (buttons_event[7] == BUTTON_PRESSED_EVENT) {
+        buttons_event[7] = BUTTON_PRESSED_EVENT_CLR;
+        ui_set_state(menu_clock);
+        ui_update();
+    }
+    if (buttons_event[6] == BUTTON_PRESSED_EVENT) {
+        buttons_event[6] = BUTTON_PRESSED_EVENT_CLR;
+        ui_set_state(menu_settings);
+        ui_update();
+    }
+
     if (alarm_match) {
         alarm_match = 0;
 
@@ -186,16 +202,12 @@ void loop() {
                 Serial.println(ntp.formattedTime("%A %T"));    // Www hh:mm:ss
                 deinit_ntp();
                 disconnect_wifi();
+                ui_update();
             }
-            init_screen();
-            screen_update_clock();
-            EPD_3IN7_Sleep();
         } else {
             /* Update screen every 5 minutes */
             if (rtc.getMinutes() % 5 == 0) {
-                init_screen();
-                screen_update_clock();
-                EPD_3IN7_Sleep();
+                ui_update();
             }
         }
 
