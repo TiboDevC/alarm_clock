@@ -125,3 +125,28 @@ void screen_update_clock() {
     EPD_3IN7_1Gray_Display_Part(BlackImage, image_x_size, image_y_size,
                                 image_buf_size, 0, 0);
 }
+
+/**********************/
+
+static ui_state_t ui_state{menu_clock};
+
+void ui_set_state(const ui_state_t& state)
+{
+    ui_state = state;
+}
+
+void ui_update() {
+//    init_screen();
+    switch (ui_state) {
+        case menu_clock:
+            Serial.println("menu_clock state");
+//            screen_update_clock();
+            break;
+        case menu_settings:
+            Serial.println("menu_settings state");
+//            screen_display_param();
+            break;
+    }
+//    EPD_3IN7_Sleep();
+}
+
