@@ -8,6 +8,7 @@
 #include "GUI_Paint.h"
 #include "alarm_flash_storage.h"
 #include "imagedata.h"
+#include "music.h"
 #include "screen.h"
 #include "secret.h"
 
@@ -156,6 +157,8 @@ void setup() {
     init_buttons();
     init_alarm_flash_storage();
     init_rtc();
+    music_init();
+    music_play();
 
     DEV_Module_Init();
     init_screen();
