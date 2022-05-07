@@ -48,11 +48,11 @@ static void draw_days_alarm(const uint16_t start_x, const uint16_t start_y,
     uint8_t ft_color;
 
     if (day_selected) {
-        bg_color = WHITE;
-        ft_color = BLACK;
-    } else {
         bg_color = BLACK;
         ft_color = WHITE;
+    } else {
+        bg_color = WHITE;
+        ft_color = BLACK;
     }
     Paint_DrawCircle(start_x, start_y, radius_circle, bg_color, DOT_PIXEL_3X3,
                      DRAW_FILL_FULL);
@@ -65,17 +65,22 @@ void screen_display_param() {
     constexpr uint16_t start_y{130};
     constexpr uint16_t start_y_1{230};
 
+    const uint8_t bg_color = WHITE;
+    const uint8_t ft_color = BLACK;
+
     alarm_params_t alarm_0;
     alarm_params_t alarm_1;
 
     alarm_0 = get_alarm_0();
     alarm_1 = get_alarm_1();
 
+    Paint_Clear(bg_color);
+
     /* Alarm 0 */
     char clock_buf[30];
     const auto &days_0 = alarm_0.alarm_days.days;
     sprintf(clock_buf, "%2dh%02d", alarm_0.alarm_hour, alarm_0.alarm_minute);
-    Paint_DrawString_EN(start_x, 80, clock_buf, &Font24, BLACK, WHITE);
+    Paint_DrawString_EN(start_x, 80, clock_buf, &Font24, bg_color, ft_color);
 
     draw_days_alarm(start_x + 40 * 0, start_y, days_0.monday, "l");
     draw_days_alarm(start_x + 40 * 1, start_y, days_0.tuesday, "m");
@@ -89,7 +94,7 @@ void screen_display_param() {
     const auto &days_1 = alarm_1.alarm_days.days;
 
     sprintf(clock_buf, "%2dh%02d", alarm_1.alarm_hour, alarm_1.alarm_minute);
-    Paint_DrawString_EN(start_x, 180, clock_buf, &Font24, BLACK, WHITE);
+    Paint_DrawString_EN(start_x, 180, clock_buf, &Font24, bg_color, ft_color);
 
     draw_days_alarm(start_x + 40 * 0, start_y_1, days_1.monday, "l");
     draw_days_alarm(start_x + 40 * 1, start_y_1, days_1.tuesday, "m");
@@ -99,8 +104,7 @@ void screen_display_param() {
     draw_days_alarm(start_x + 40 * 5, start_y_1, days_1.saturday, "s");
     draw_days_alarm(start_x + 40 * 6, start_y_1, days_1.sunday, "d");
 
-    EPD_3IN7_1Gray_Display_Part(BlackImage, image_x_size, image_y_size,
-                                image_buf_size, 0, 0);
+    EPD_3IN7_1Gray_Display(BlackImage);
 }
 
 static int weekday(int year, int month, int day)
