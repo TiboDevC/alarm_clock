@@ -40,7 +40,7 @@ void init_screen() {
 
 static void draw_days_alarm(const uint16_t start_x, const uint16_t start_y,
                             const uint8_t day_selected, const char *character) {
-    constexpr uint16_t radius_circle{13};
+    constexpr uint16_t radius_circle{15};
     constexpr int8_t offset_text_x{-8};
     constexpr int8_t offset_text_y{-12};
 
