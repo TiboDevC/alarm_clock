@@ -157,8 +157,8 @@ void setup() {
     init_alarm_flash_storage();
     init_rtc();
 
-    //    DEV_Module_Init();
-    //    init_screen();
+    DEV_Module_Init();
+    init_screen();
 }
 
 /* The main loop -------------------------------------------------------------*/

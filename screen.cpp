@@ -130,23 +130,21 @@ void screen_update_clock() {
 
 static ui_state_t ui_state{menu_clock};
 
-void ui_set_state(const ui_state_t& state)
-{
+void ui_set_state(const ui_state_t &state) {
     ui_state = state;
 }
 
 void ui_update() {
-//    init_screen();
+    init_screen();
     switch (ui_state) {
         case menu_clock:
             Serial.println("menu_clock state");
-//            screen_update_clock();
+            screen_update_clock();
             break;
         case menu_settings:
             Serial.println("menu_settings state");
-//            screen_display_param();
+            screen_display_param();
             break;
     }
-//    EPD_3IN7_Sleep();
+    EPD_3IN7_Sleep();
 }
-
