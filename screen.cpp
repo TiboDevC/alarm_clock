@@ -120,18 +120,20 @@ static int weekday(int year, int month, int day)
 }
 
 void screen_update_clock() {
-    const uint8_t day         = rtc.getDay();
-    const uint8_t month       = rtc.getMonth();
-    const uint8_t year        = rtc.getYear();
-    const uint8_t hours       = rtc.getHours();
-    const uint8_t minutes     = rtc.getMinutes();
-    const uint8_t day_of_week = weekday(year, month, day);
-    const char *days_buf[]    = {"dimanche", "lundi",    "mardi", "mercredi",
-                                 "jeudi",    "vendredi", "samedi"};
-    const char *months_buf[]  = {"",        "janvier",   "fevrier", "mars",
-                                 "avril",   "mai",       "juin",    "juillet",
-                                 "aout",    "septembre", "octobre", "novembre",
-                                 "decembre"};
+    const uint8_t day            = rtc.getDay();
+    const uint8_t month          = rtc.getMonth();
+    const uint8_t year           = rtc.getYear();
+    const uint8_t hours          = rtc.getHours();
+    const uint8_t minutes        = rtc.getMinutes();
+    const uint8_t day_of_week    = weekday(year, month, day);
+    const char *days_buf[]       = {"dimanche", "lundi",    "mardi", "mercredi",
+                                    "jeudi",    "vendredi", "samedi"};
+    const char *days_short_buf[] = {"dim.", "lun.",  "mar.", "mer.",
+                                    "jeu.", "vend.", "same."};
+    const char *months_buf[]     = {"",        "janvier",   "fevrier", "mars",
+                                    "avril",   "mai",       "juin",    "juillet",
+                                    "aout",    "septembre", "octobre", "novembre",
+                                    "decembre"};
 
     char clock_buf[16];
     char date_buf[30];
