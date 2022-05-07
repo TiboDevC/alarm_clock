@@ -135,6 +135,7 @@ static void check_buttons() {
             Serial.print("Button ");
             Serial.print(button);
             Serial.println(" pressed");
+            ui_button_event(button);
         }
         buttons_state[button] = button_state;
     }
@@ -168,16 +169,6 @@ void setup() {
 void loop() {
     delay(50);
     check_buttons();
-    if (buttons_event[7] == BUTTON_PRESSED_EVENT) {
-        buttons_event[7] = BUTTON_PRESSED_EVENT_CLR;
-        ui_set_state(menu_clock);
-        ui_update();
-    }
-    if (buttons_event[6] == BUTTON_PRESSED_EVENT) {
-        buttons_event[6] = BUTTON_PRESSED_EVENT_CLR;
-        ui_set_state(menu_settings);
-        ui_update();
-    }
 
     if (alarm_match) {
         alarm_match = 0;
