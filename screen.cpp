@@ -207,16 +207,17 @@ void ui_button_event(const uint8_t button_id) {
 }
 
 void ui_update() {
-    init_screen();
     switch (ui_state) {
         case menu_clock:
             Serial.println("menu_clock state");
+            init_screen();
             screen_update_clock();
+            EPD_3IN7_Sleep();
             break;
         case menu_settings:
             Serial.println("menu_settings state");
+            // EPD_3IN7_4Gray_quick_Clear();
             screen_display_param();
             break;
     }
-    EPD_3IN7_Sleep();
 }
