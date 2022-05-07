@@ -145,8 +145,69 @@ void screen_update_clock() {
     Paint_DrawString_EN(10, 30, date_buf, &Font24, BLACK, WHITE);
     Paint_DrawString_EN(0, 100, clock_buf, &FontCustom, BLACK, WHITE);
 
-    EPD_3IN7_1Gray_Display_Part(BlackImage, image_x_size, image_y_size,
-                                image_buf_size, 0, 0);
+    /* Alarm 0 */
+    const alarm_params_t alaram_0 = get_alarm_0();
+
+    if (true) {
+        const uint32_t minute_of_day = hours * 60 + minutes;
+        const uint32_t minute_of_day_alarm =
+                alaram_0.alarm_hour * 60 + alaram_0.alarm_minute * 60;
+
+        sprintf(date_buf, "none");
+        for (uint8_t day_it = day_of_week; day_it < day_of_week + 7; day_it++) {
+            const uint8_t day_r = day_it % 7;
+            const uint8_t alarm_day =
+                    (alaram_0.alarm_days.value >> day_r) & 0x01;
+            if (alarm_day == 1) {
+                if (day_r == day_of_week) {
+                    if (minute_of_day < minute_of_day_alarm) {
+                        sprintf(date_buf, "auj.");
+                        break;
+                    }
+                } else {
+                    sprintf(date_buf, "%s", days_short_buf[day_r]);
+                    break;
+                }
+            }
+        }
+
+        sprintf(date_buf, "%s %2dh%02d", date_buf, alaram_0.alarm_hour,
+                alaram_0.alarm_minute);
+        Paint_DrawString_EN(250, 10, date_buf, &Font20, BLACK, WHITE);
+    }
+
+    /* Alarm 1 */
+    const alarm_params_t alaram_1 = get_alarm_1();
+    //    if (alaram_0.is_set) {
+    if (true) {
+        const uint32_t minute_of_day = hours * 60 + minutes;
+        const uint32_t minute_of_day_alarm =
+                alaram_1.alarm_hour * 60 + alaram_1.alarm_minute * 60;
+
+        sprintf(date_buf, "none");
+        for (uint8_t day_it = day_of_week; day_it < day_of_week + 7; day_it++) {
+            const uint8_t day_r = day_it % 7;
+            const uint8_t alarm_day =
+                    (alaram_1.alarm_days.value >> day_r) & 0x01;
+            if (alarm_day == 1) {
+                if (day_r == day_of_week) {
+                    if (minute_of_day < minute_of_day_alarm) {
+                        sprintf(date_buf, "auj.");
+                        break;
+                    }
+                } else {
+                    sprintf(date_buf, "%s", days_short_buf[day_r]);
+                    break;
+                }
+            }
+        }
+
+        sprintf(date_buf, "%s %2dh%02d", date_buf, alaram_1.alarm_hour,
+                alaram_1.alarm_minute);
+        Paint_DrawString_EN(250, 50, date_buf, &Font20, BLACK, WHITE);
+    }
+
+    EPD_3IN7_1Gray_Display(BlackImage);
 }
 
 /**********************/
