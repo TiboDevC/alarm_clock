@@ -43,9 +43,9 @@ struct alarm_params_t {
 };
 
 void init_alarm_flash_storage();
-void set_alarm_0(const alarm_params_t &alarm);
+void set_alarm_0(alarm_params_t &alarm);
 alarm_params_t get_alarm_0();
-void set_alarm_1(const alarm_params_t &alarm);
+void set_alarm_1(alarm_params_t &alarm);
 alarm_params_t get_alarm_1();
 
 #endif//ALARM_CLOCK_FLASH_STORAGE_H
