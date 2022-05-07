@@ -150,7 +150,7 @@ static void init_buttons() {
 
 void setup() {
     Serial.begin(115200);
-    delay(5000);
+    delay(7000);
     Serial.println("Staring");
 
     init_buttons();
