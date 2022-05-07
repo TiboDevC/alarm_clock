@@ -3,6 +3,7 @@
 #include "DEV_Config.h"
 #include "EPD.h"
 #include "GUI_Paint.h"
+#include "alarm_flash_storage.h"
 #include "screen.h"
 
 static RTCZero rtc;
@@ -37,50 +38,66 @@ void init_screen() {
     Paint_Clear(BLACK);
 }
 
-void screen_display_param() {
-    constexpr uint16_t start_x{100};
-    constexpr uint16_t start_y{130};
+static void draw_days_alarm(const uint16_t start_x, const uint16_t start_y,
+                            const uint8_t day_selected, const char *character) {
     constexpr uint16_t radius_circle{13};
     constexpr int8_t offset_text_x{-8};
     constexpr int8_t offset_text_y{-12};
 
-    Paint_DrawString_EN(start_x, 50, "Reveil de la semaine", &Font24, BLACK,
-                        WHITE);
+    uint8_t bg_color;
+    uint8_t ft_color;
 
-    Paint_DrawCircle(start_x, start_y, radius_circle, WHITE, DOT_PIXEL_3X3,
+    if (day_selected) {
+        bg_color = WHITE;
+        ft_color = BLACK;
+    } else {
+        bg_color = BLACK;
+        ft_color = WHITE;
+    }
+    Paint_DrawCircle(start_x, start_y, radius_circle, bg_color, DOT_PIXEL_3X3,
                      DRAW_FILL_FULL);
-    Paint_DrawString_EN(offset_text_x + start_x, start_y + offset_text_y, "l",
-                        &Font24, WHITE, BLACK);
+    Paint_DrawString_EN(offset_text_x + start_x, start_y + offset_text_y,
+                        character, &Font24, bg_color, ft_color);
+}
 
-    Paint_DrawCircle(start_x + 40, start_y, radius_circle, WHITE, DOT_PIXEL_3X3,
-                     DRAW_FILL_FULL);
-    Paint_DrawString_EN(offset_text_x + start_x + 40, start_y + offset_text_y,
-                        "m", &Font24, WHITE, BLACK);
+void screen_display_param() {
+    constexpr uint16_t start_x{150};
+    constexpr uint16_t start_y{130};
+    constexpr uint16_t start_y_1{230};
 
-    Paint_DrawCircle(start_x + 40 * 2, start_y, radius_circle, WHITE,
-                     DOT_PIXEL_3X3, DRAW_FILL_FULL);
-    Paint_DrawString_EN(offset_text_x + start_x + 40 * 2,
-                        start_y + offset_text_y, "m", &Font24, WHITE, BLACK);
+    alarm_params_t alarm_0;
+    alarm_params_t alarm_1;
 
-    Paint_DrawCircle(start_x + 40 * 3, start_y, radius_circle, WHITE,
-                     DOT_PIXEL_3X3, DRAW_FILL_FULL);
-    Paint_DrawString_EN(offset_text_x + start_x + 40 * 3,
-                        start_y + offset_text_y, "j", &Font24, WHITE, BLACK);
+    alarm_0 = get_alarm_0();
+    alarm_1 = get_alarm_1();
 
-    Paint_DrawCircle(start_x + 40 * 4, start_y, radius_circle, WHITE,
-                     DOT_PIXEL_3X3, DRAW_FILL_FULL);
-    Paint_DrawString_EN(offset_text_x + start_x + 40 * 4,
-                        start_y + offset_text_y, "v", &Font24, WHITE, BLACK);
+    /* Alarm 0 */
+    char clock_buf[30];
+    const auto &days_0 = alarm_0.alarm_days.days;
+    sprintf(clock_buf, "%2dh%02d", alarm_0.alarm_hour, alarm_0.alarm_minute);
+    Paint_DrawString_EN(start_x, 80, clock_buf, &Font24, BLACK, WHITE);
 
-    Paint_DrawCircle(start_x + 40 * 5, start_y, radius_circle, BLACK,
-                     DOT_PIXEL_3X3, DRAW_FILL_FULL);
-    Paint_DrawString_EN(offset_text_x + start_x + 40 * 5,
-                        start_y + offset_text_y, "s", &Font24, BLACK, WHITE);
+    draw_days_alarm(start_x + 40 * 0, start_y, days_0.monday, "l");
+    draw_days_alarm(start_x + 40 * 1, start_y, days_0.tuesday, "m");
+    draw_days_alarm(start_x + 40 * 2, start_y, days_0.wednesday, "m");
+    draw_days_alarm(start_x + 40 * 3, start_y, days_0.wednesday, "j");
+    draw_days_alarm(start_x + 40 * 4, start_y, days_0.wednesday, "v");
+    draw_days_alarm(start_x + 40 * 5, start_y, days_0.wednesday, "s");
+    draw_days_alarm(start_x + 40 * 6, start_y, days_0.wednesday, "d");
 
-    Paint_DrawCircle(start_x + 40 * 6, start_y, radius_circle, BLACK,
-                     DOT_PIXEL_3X3, DRAW_FILL_FULL);
-    Paint_DrawString_EN(offset_text_x + start_x + 40 * 6,
-                        start_y + offset_text_y, "d", &Font24, BLACK, WHITE);
+    /* Alarm 1 */
+    const auto &days_1 = alarm_1.alarm_days.days;
+
+    sprintf(clock_buf, "%2dh%02d", alarm_1.alarm_hour, alarm_1.alarm_minute);
+    Paint_DrawString_EN(start_x, 180, clock_buf, &Font24, BLACK, WHITE);
+
+    draw_days_alarm(start_x + 40 * 0, start_y_1, days_1.monday, "l");
+    draw_days_alarm(start_x + 40 * 1, start_y_1, days_1.tuesday, "m");
+    draw_days_alarm(start_x + 40 * 2, start_y_1, days_1.wednesday, "m");
+    draw_days_alarm(start_x + 40 * 3, start_y_1, days_1.wednesday, "j");
+    draw_days_alarm(start_x + 40 * 4, start_y_1, days_1.wednesday, "v");
+    draw_days_alarm(start_x + 40 * 5, start_y_1, days_1.wednesday, "s");
+    draw_days_alarm(start_x + 40 * 6, start_y_1, days_1.wednesday, "d");
 
     EPD_3IN7_1Gray_Display_Part(BlackImage, image_x_size, image_y_size,
                                 image_buf_size, 0, 0);
