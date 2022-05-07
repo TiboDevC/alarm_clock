@@ -3,13 +3,13 @@
 
 union days_u {
     struct days_t {
+        uint8_t sunday : 1;
         uint8_t monday : 1;
         uint8_t tuesday : 1;
         uint8_t wednesday : 1;
         uint8_t thursday : 1;
         uint8_t friday : 1;
         uint8_t saturday : 1;
-        uint8_t sunday : 1;
         uint8_t padding : 1;
     } days;
     uint8_t value;
