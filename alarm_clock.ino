@@ -182,7 +182,7 @@ void loop() {
         /* Update NTP time at 5am */
         if ((rtc.getHours() == 5 and rtc.getMinutes() == 0) or
             (rtc.getEpoch() - last_ntp_update > (3600 * 24))) {
-            if (connect_to_wifi() != 0) {
+            if (connect_to_wifi() == 0) {
                 init_ntp();
 
                 ntp.update();
@@ -199,6 +199,8 @@ void loop() {
                 deinit_ntp();
                 disconnect_wifi();
                 ui_update();
+            } else {
+                Serial.println("Fail updating epoch");
             }
         } else {
             /* Update screen every 5 minutes */
