@@ -11,13 +11,14 @@ union days_u {
         uint8_t saturday : 1;
         uint8_t sunday : 1;
         uint8_t padding : 1;
-    };
+    } days;
     uint8_t value;
 };
 
 struct alarm_params_t {
     bool is_set{false};
-    uint64_t alarm_time{};    // when it should ring
+    uint8_t alarm_hour{};     // when it should ring
+    uint8_t alarm_minute{};   // when it should ring
     bool rings_tomorrow{true};// is the user disable alarm for the next day
     days_u alarm_days{};
 
@@ -25,7 +26,10 @@ struct alarm_params_t {
         if (a0.is_set != a1.is_set) {
             return true;
         }
-        if (a0.alarm_time != a1.alarm_time) {
+        if (a0.alarm_hour != a1.alarm_hour) {
+            return true;
+        }
+        if (a0.alarm_minute != a1.alarm_minute) {
             return true;
         }
         if (a0.rings_tomorrow != a1.rings_tomorrow) {
