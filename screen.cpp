@@ -80,10 +80,10 @@ void screen_display_param() {
     draw_days_alarm(start_x + 40 * 0, start_y, days_0.monday, "l");
     draw_days_alarm(start_x + 40 * 1, start_y, days_0.tuesday, "m");
     draw_days_alarm(start_x + 40 * 2, start_y, days_0.wednesday, "m");
-    draw_days_alarm(start_x + 40 * 3, start_y, days_0.wednesday, "j");
-    draw_days_alarm(start_x + 40 * 4, start_y, days_0.wednesday, "v");
-    draw_days_alarm(start_x + 40 * 5, start_y, days_0.wednesday, "s");
-    draw_days_alarm(start_x + 40 * 6, start_y, days_0.wednesday, "d");
+    draw_days_alarm(start_x + 40 * 3, start_y, days_0.thursday, "j");
+    draw_days_alarm(start_x + 40 * 4, start_y, days_0.friday, "v");
+    draw_days_alarm(start_x + 40 * 5, start_y, days_0.saturday, "s");
+    draw_days_alarm(start_x + 40 * 6, start_y, days_0.sunday, "d");
 
     /* Alarm 1 */
     const auto &days_1 = alarm_1.alarm_days.days;
@@ -94,10 +94,10 @@ void screen_display_param() {
     draw_days_alarm(start_x + 40 * 0, start_y_1, days_1.monday, "l");
     draw_days_alarm(start_x + 40 * 1, start_y_1, days_1.tuesday, "m");
     draw_days_alarm(start_x + 40 * 2, start_y_1, days_1.wednesday, "m");
-    draw_days_alarm(start_x + 40 * 3, start_y_1, days_1.wednesday, "j");
-    draw_days_alarm(start_x + 40 * 4, start_y_1, days_1.wednesday, "v");
-    draw_days_alarm(start_x + 40 * 5, start_y_1, days_1.wednesday, "s");
-    draw_days_alarm(start_x + 40 * 6, start_y_1, days_1.wednesday, "d");
+    draw_days_alarm(start_x + 40 * 3, start_y_1, days_1.thursday, "j");
+    draw_days_alarm(start_x + 40 * 4, start_y_1, days_1.friday, "v");
+    draw_days_alarm(start_x + 40 * 5, start_y_1, days_1.saturday, "s");
+    draw_days_alarm(start_x + 40 * 6, start_y_1, days_1.sunday, "d");
 
     EPD_3IN7_1Gray_Display_Part(BlackImage, image_x_size, image_y_size,
                                 image_buf_size, 0, 0);
