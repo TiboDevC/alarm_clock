@@ -141,9 +141,8 @@ static void check_buttons() {
 static void init_buttons() {
     for (uint8_t button = 0; button < NUM_BUTTON; button++) {
         pinMode(buttons_pin[button], INPUT_PULLDOWN);
-        delay(500);
-        Serial.println(digitalRead(buttons_pin[button]));
     }
+    delay(1000);
 
     memset(buttons_state, LOW, sizeof(buttons_state));
 }
