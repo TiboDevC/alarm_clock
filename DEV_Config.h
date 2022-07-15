@@ -46,9 +46,9 @@
 **/
 #define EPD_SCK_PIN PIN_SPI_SCK
 #define EPD_MOSI_PIN PIN_SPI_MOSI
-#define EPD_CS_PIN 5
+#define EPD_CS_PIN 18
 #define EPD_RST_PIN 3
-#define EPD_DC_PIN 1
+#define EPD_DC_PIN 20
 #define EPD_BUSY_PIN 2
 
 #define GPIO_PIN_SET 1
