@@ -6,34 +6,13 @@
 #include "DEV_Config.h"
 #include "EPD.h"
 #include "GUI_Paint.h"
+#include "ZeroTimer.h"
 #include "alarm_flash_storage.h"
+#include "button.h"
 #include "imagedata.h"
 #include "music.h"
 #include "screen.h"
 #include "secret.h"
-
-#define NUM_BUTTON 11
-#define BUTTON_PIN_0 0
-#define BUTTON_PIN_1 6
-#define BUTTON_PIN_2 11
-#define BUTTON_PIN_3 12
-#define BUTTON_PIN_4 13
-#define BUTTON_PIN_5 14
-#define BUTTON_PIN_6 16
-#define BUTTON_PIN_7 17
-#define BUTTON_PIN_8 18
-#define BUTTON_PIN_9 19
-#define BUTTON_PIN_10 20
-
-#define BUTTON_PRESSED_EVENT 1
-#define BUTTON_PRESSED_EVENT_CLR 0
-
-static uint8_t buttons_state[NUM_BUTTON];
-static constexpr uint8_t buttons_pin[NUM_BUTTON]{
-        BUTTON_PIN_0, BUTTON_PIN_1, BUTTON_PIN_2, BUTTON_PIN_3,
-        BUTTON_PIN_4, BUTTON_PIN_5, BUTTON_PIN_6, BUTTON_PIN_7,
-        BUTTON_PIN_8, BUTTON_PIN_9, BUTTON_PIN_10};
-static uint8_t buttons_event[NUM_BUTTON];
 
 static RTCZero rtc;
 static uint8_t alarm_match{0};
@@ -127,27 +106,8 @@ void init_rtc() {
     rtc.enableAlarm(rtc.MATCH_SS);
 }
 
-static void check_buttons() {
-    for (uint8_t button = 0; button < NUM_BUTTON; button++) {
-        const uint8_t button_state = digitalRead(buttons_pin[button]);
-        if (buttons_state[button] != button_state and button_state == LOW) {
-            buttons_event[button] = BUTTON_PRESSED_EVENT;
-            Serial.print("Button ");
-            Serial.print(button);
-            Serial.println(" pressed");
-            ui_button_event(button);
-        }
-        buttons_state[button] = button_state;
-    }
-}
-
-static void init_buttons() {
-    for (uint8_t button = 0; button < NUM_BUTTON; button++) {
-        pinMode(buttons_pin[button], INPUT_PULLDOWN);
-    }
-    delay(1000);
-
-    memset(buttons_state, LOW, sizeof(buttons_state));
+void message() {
+    Serial.println("hello");
 }
 
 void setup() {
@@ -158,17 +118,17 @@ void setup() {
     init_buttons();
     init_alarm_flash_storage();
     init_rtc();
-    music_init();
-    music_play();
+    // music_init();
+    // music_play();
 
-    DEV_Module_Init();
-    init_screen();
+    //    DEV_Module_Init();
+    //    init_screen();
 }
 
 /* The main loop -------------------------------------------------------------*/
 void loop() {
     delay(50);
-    check_buttons();
+    //    check_buttons();
 
     if (alarm_match) {
         alarm_match = 0;

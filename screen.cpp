@@ -5,6 +5,7 @@
 #include "GUI_Paint.h"
 #include "alarm_flash_storage.h"
 #include "screen.h"
+#include "button.h"
 
 static RTCZero rtc;
 
@@ -227,48 +228,57 @@ void ui_set_state(const ui_state_t &state) {
  *   8 9 10 0 x 4 x
  * 7                x
  */
-void ui_button_event(const uint8_t button_id) {
-    switch (button_id) {
-        case 6:
-            ui_set_state(menu_clock);
-            break;
-        case 7:
-            ui_set_state(menu_settings);
-            break;
-        default:
-            break;
-    }
-    if (ui_state == menu_settings) {
-        alarm_params_t alarm_0 = get_alarm_0();
-        auto &days_0           = alarm_0.alarm_days.days;
-        switch (button_id) {
-            case 8:
-                days_0.monday = ~days_0.monday;
+void ui_button_event(void) {
+    uint8_t num_button_ack;
+    std::array<button_state_t, NUM_BUTTON> button_action;
+
+    button_get_state(button_action, num_button_ack);
+
+    for(uint8_t button_id = 0; button_id < num_button_ack; button_id++)
+    {
+        const uint8_t pin_id = button_action.at(button_id).pin_id;
+        switch (pin_id) {
+            case 6:
+                ui_set_state(menu_clock);
                 break;
-            case 9:
-                days_0.tuesday = ~days_0.tuesday;
+            case 7:
+                ui_set_state(menu_settings);
                 break;
-            case 10:
-                days_0.wednesday = ~days_0.wednesday;
-                break;
-            case 0:
-                days_0.thursday = ~days_0.thursday;
-                break;
-            case 4:
-                days_0.saturday = ~days_0.saturday;
-                break;
-            case 1:
-                alarm_0.alarm_minute += 5;
-                if (alarm_0.alarm_minute > 55) {
-                    alarm_0.alarm_hour++;
-                    alarm_0.alarm_hour %= 23;
-                    alarm_0.alarm_minute = 0;
-                }
             default:
                 break;
         }
-        alarm_0.is_set = true;
-        set_alarm_0(alarm_0);
+        if (ui_state == menu_settings) {
+            alarm_params_t alarm_0 = get_alarm_0();
+            auto &days_0           = alarm_0.alarm_days.days;
+            switch (pin_id) {
+                case 8:
+                    days_0.monday = ~days_0.monday;
+                    break;
+                case 9:
+                    days_0.tuesday = ~days_0.tuesday;
+                    break;
+                case 10:
+                    days_0.wednesday = ~days_0.wednesday;
+                    break;
+                case 0:
+                    days_0.thursday = ~days_0.thursday;
+                    break;
+                case 4:
+                    days_0.saturday = ~days_0.saturday;
+                    break;
+                case 1:
+                    alarm_0.alarm_minute += 5;
+                    if (alarm_0.alarm_minute > 55) {
+                        alarm_0.alarm_hour++;
+                        alarm_0.alarm_hour %= 23;
+                        alarm_0.alarm_minute = 0;
+                    }
+                default:
+                    break;
+            }
+            alarm_0.is_set = true;
+            set_alarm_0(alarm_0);
+        }
     }
     ui_update();
 }

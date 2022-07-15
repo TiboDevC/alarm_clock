@@ -8,7 +8,7 @@ void screen_update_clock();
 /***************************/
 enum ui_state_t { menu_clock, menu_settings };
 
-void ui_button_event(const uint8_t button_id);
+void ui_button_event(void);
 void ui_update();
 void ui_set_state(const ui_state_t &state);
 
