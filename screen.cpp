@@ -224,9 +224,9 @@ void ui_set_state(const ui_state_t &state) {
 
 /*
  * Button map
- * 6                1
- *   8 9 10 0 x 4 x
- * 7                x
+ * 6                5  16
+ *   x x x x 1 4 x
+ * 7                0  17
  */
 void ui_button_event(void) {
     uint8_t num_button_ack;
