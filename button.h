@@ -20,4 +20,7 @@ struct button_state_t {
 void init_buttons(void);
 void button_get_state(std::array<button_state_t, NUM_BUTTON>& button_action, uint8_t& num_button_ack);
 
+void button_start_polling(void);
+void button_stop_polling(void);
+
 #endif //ALARM_CLOCK_BUTTON_H
