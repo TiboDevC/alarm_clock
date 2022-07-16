@@ -48,6 +48,7 @@ parameter:
 Info:
 ******************************************************************************/
 UBYTE DEV_Module_Init(void) {
+  Serial.println("Init dev module");
   // gpio
   GPIO_Config();
 

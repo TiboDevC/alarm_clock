@@ -105,10 +105,10 @@ void Paint_NewImage(UBYTE* image, UWORD Width, UWORD Height, UWORD Rotate,
   Paint.Scale = 2;
   Paint.WidthByte = (Width % 8 == 0) ? (Width / 8) : (Width / 8 + 1);
   Paint.HeightByte = Height;
-  Serial.print("WidthByte = ");
-  Serial.print(Paint.WidthByte);
-  Serial.print(" HeightByte = ");
-  Serial.println(Paint.HeightByte);
+  // Serial.print("WidthByte = ");
+  // Serial.print(Paint.WidthByte);
+  // Serial.print(" HeightByte = ");
+  // Serial.println(Paint.HeightByte);
   //  Serial.printf(" EPD_WIDTH / 8 = %d\r\n",  122 / 8);
 
   Paint.Rotate = Rotate;
@@ -270,16 +270,16 @@ parameter:
 ******************************************************************************/
 void Paint_Clear(UWORD Color) {
   if (Paint.Scale == 2 || Paint.Scale == 4) {
-    Serial.println(" Paint.Scale == 4");
-    Serial.println(Paint.HeightByte);
-    Serial.println(Paint.WidthByte);
+    // Serial.println(" Paint.Scale == 4");
+    // Serial.println(Paint.HeightByte);
+    // Serial.println(Paint.WidthByte);
     for (UWORD Y = 0; Y < Paint.HeightByte; Y++) {
       for (UWORD X = 0; X < Paint.WidthByte; X++) {  // 8 pixel =  1 byte
         UDOUBLE Addr = X + Y * Paint.WidthByte;
         Paint.Image[Addr] = Color;
       }
     }
-    Serial.println("Paint_Clear end");
+    // Serial.println("Paint_Clear end");
   }
 }
 
