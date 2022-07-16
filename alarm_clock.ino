@@ -81,6 +81,7 @@ static void alarmMatch() {
 }
 
 void init_rtc() {
+    Serial.println("Init rtc");
     const uint8_t hours{12};
     const uint8_t minutes{34};
     const uint8_t seconds{00};
@@ -112,8 +113,8 @@ void message() {
 
 void setup() {
     Serial.begin(115200);
-    delay(7000);
-    Serial.println("Staring");
+    delay(5000);
+    Serial.println("Starting");
 
     init_buttons();
     init_alarm_flash_storage();
@@ -121,14 +122,17 @@ void setup() {
     // music_init();
     // music_play();
 
-    //    DEV_Module_Init();
-    //    init_screen();
+    DEV_Module_Init();
+    init_screen();
+
+    button_start_polling();
 }
 
 /* The main loop -------------------------------------------------------------*/
 void loop() {
-    delay(50);
-    //    check_buttons();
+    delay(200);
+
+    ui_button_event();
 
     if (alarm_match) {
         alarm_match = 0;
@@ -168,6 +172,6 @@ void loop() {
         rtc.attachInterrupt(alarmMatch);
         rtc.enableAlarm(rtc.MATCH_SS);
 
-        //        rtc.standbyMode();
+        // rtc.standbyMode();
     }
 }
