@@ -6,7 +6,6 @@
 #include "DEV_Config.h"
 #include "EPD.h"
 #include "GUI_Paint.h"
-#include "ZeroTimer.h"
 #include "alarm_flash_storage.h"
 #include "button.h"
 #include "imagedata.h"
