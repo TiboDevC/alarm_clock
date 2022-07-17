@@ -39,14 +39,17 @@ static int connect_to_wifi() {
     int status                = WL_IDLE_STATUS;
     const char ssid[]         = WIFI_SSID_NAME;// your network SSID (name)
     const char pass[]         = WIFI_PWD;
-    const uint8_t max_num_try = 20;
+    const uint8_t max_num_try = 5;
     uint8_t num_try           = 0;
+
+    WiFi.end();
 
     Serial.print("Attempting to connect to SSID: ");
     Serial.println(ssid);
-    status = WiFi.begin(ssid, pass);
     do {
-        delay(500);
+        status = WiFi.begin(ssid, pass);
+        delay(1000);
+        Serial.println(WiFi.status());
         num_try++;
     } while (status != WL_CONNECTED and num_try < max_num_try);
 
