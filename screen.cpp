@@ -29,8 +29,8 @@ uint8_t BlackImage[image_buf_size];
 
 void init_screen() {
     Serial.println("Init screen");
-    EPD_3IN7_4Gray_Init();
-    EPD_3IN7_4Gray_Clear();
+    EPD_3IN7_1Gray_Init();
+    EPD_3IN7_1Gray_Clear();
 
     Paint_NewImage(BlackImage, image_x_size, image_y_size, rotate,
                    initial_background_color);
@@ -87,7 +87,6 @@ void screen_display_param() {
     alarm_0 = get_alarm_0();
     alarm_1 = get_alarm_1();
 
-    EPD_3IN7_4Gray_Clear();
     Paint_Clear(bg_color);
 
     /* Alarm 0 */
