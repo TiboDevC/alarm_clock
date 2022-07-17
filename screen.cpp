@@ -52,19 +52,19 @@ static void draw_days_alarm(const uint16_t start_x, const uint16_t start_y,
 
     if (day_selected) {
         if (bg_color_default == BLACK) {
-            bg_color = BLACK;
-            ft_color = WHITE;
-        } else {
             bg_color = WHITE;
             ft_color = BLACK;
+        } else {
+            bg_color = BLACK;
+            ft_color = WHITE;
         }
     } else {
         if (bg_color_default == BLACK) {
-            bg_color = WHITE;
-            ft_color = BLACK;
-        } else {
             bg_color = BLACK;
             ft_color = WHITE;
+        } else {
+            bg_color = WHITE;
+            ft_color = BLACK;
         }
     }
     Paint_DrawCircle(start_x, start_y, radius_circle, bg_color, DOT_PIXEL_3X3,
