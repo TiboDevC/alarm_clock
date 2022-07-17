@@ -88,12 +88,12 @@ function :  Software reset
 parameter:
 ******************************************************************************/
 static void EPD_3IN7_Reset(void) {
-  DEV_Digital_Write(EPD_RST_PIN, 1);
-  DEV_Delay_ms(300);
-  DEV_Digital_Write(EPD_RST_PIN, 0);
-  DEV_Delay_ms(3);
-  DEV_Digital_Write(EPD_RST_PIN, 1);
-  DEV_Delay_ms(300);
+    DEV_Digital_Write(EPD_RST_PIN, 1);
+    DEV_Delay_ms(50);
+    DEV_Digital_Write(EPD_RST_PIN, 0);
+    DEV_Delay_ms(3);
+    DEV_Digital_Write(EPD_RST_PIN, 1);
+    DEV_Delay_ms(50);
 }
 
 /******************************************************************************
