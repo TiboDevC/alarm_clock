@@ -111,10 +111,13 @@ void screen_display_param() {
 
     draw_days_alarm(start_x + 40 * 0, start_y_1, days_1.monday, "l", bg_color);
     draw_days_alarm(start_x + 40 * 1, start_y_1, days_1.tuesday, "m", bg_color);
-    draw_days_alarm(start_x + 40 * 2, start_y_1, days_1.wednesday, "m", bg_color);
-    draw_days_alarm(start_x + 40 * 3, start_y_1, days_1.thursday, "j", bg_color);
+    draw_days_alarm(start_x + 40 * 2, start_y_1, days_1.wednesday, "m",
+                    bg_color);
+    draw_days_alarm(start_x + 40 * 3, start_y_1, days_1.thursday, "j",
+                    bg_color);
     draw_days_alarm(start_x + 40 * 4, start_y_1, days_1.friday, "v", bg_color);
-    draw_days_alarm(start_x + 40 * 5, start_y_1, days_1.saturday, "s", bg_color);
+    draw_days_alarm(start_x + 40 * 5, start_y_1, days_1.saturday, "s",
+                    bg_color);
     draw_days_alarm(start_x + 40 * 6, start_y_1, days_1.sunday, "d", bg_color);
 
     EPD_3IN7_1Gray_Display(BlackImage);
