@@ -121,12 +121,12 @@ static void EPD_3IN7_SendData(UBYTE Data) {
 }
 
 static void EPD_3IN7_ReadBusy_HIGH(void) {
-    Debug("e-Paper busy\r\n");
+    // Debug("e-Paper busy\r\n");
     UBYTE busy;
     do {
         busy = DEV_Digital_Read(EPD_BUSY_PIN);
     } while (busy);
-    Debug("e-Paper busy release\r\n");
+    // Debug("e-Paper busy release\r\n");
 }
 
 static void EPD_3IN7_common_init(void)

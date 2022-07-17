@@ -360,14 +360,10 @@ void ui_button_event(void) {
             if (pin_id == 6) {
                 alarm_params_t alarm_0 = get_alarm_0();
                 alarm_0.is_set         = !alarm_0.is_set;
-                Serial.print("Alarm0: ");
-                Serial.println(alarm_0.is_set);
                 set_alarm_0(alarm_0);
             } else if (pin_id == 7) {
                 alarm_params_t alarm_1 = get_alarm_1();
                 alarm_1.is_set         = !alarm_1.is_set;
-                Serial.print("Alarm1: ");
-                Serial.println(alarm_1.is_set);
                 set_alarm_1(alarm_1);
             }
         }
