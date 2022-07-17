@@ -73,6 +73,8 @@ static void draw_days_alarm(const uint16_t start_x, const uint16_t start_y,
                         character, &Font24, bg_color, ft_color);
 }
 
+static uint8_t alarm_select{0};
+
 void screen_display_param() {
     constexpr uint16_t start_x{150};
     constexpr uint16_t start_y{130};
@@ -119,6 +121,14 @@ void screen_display_param() {
     draw_days_alarm(start_x + 40 * 5, start_y_1, days_1.saturday, "s",
                     bg_color);
     draw_days_alarm(start_x + 40 * 6, start_y_1, days_1.sunday, "d", bg_color);
+
+    if (alarm_select == 0) {
+        Paint_DrawCircle(100, start_y, 5, ft_color, DOT_PIXEL_3X3,
+                         DRAW_FILL_FULL);
+    } else {
+        Paint_DrawCircle(100, start_y_1, 5, ft_color, DOT_PIXEL_3X3,
+                         DRAW_FILL_FULL);
+    }
 
     EPD_3IN7_1Gray_Display(BlackImage);
 }
@@ -238,6 +248,8 @@ void screen_update_clock() {
 /**********************/
 
 static ui_state_t ui_state{menu_clock};
+static uint64_t last_button_time{0};
+static constexpr uint64_t timeout_setting_ms = 30 * 1000; // 30 seconds
 
 void ui_set_state(const ui_state_t &state) {
     ui_state = state;
@@ -249,6 +261,11 @@ void ui_set_state(const ui_state_t &state) {
     }
 }
 
+ui_state_t ui_get_state(void)
+{
+    return ui_state;
+}
+
 /*
  * Button map
  * 6                5  16
@@ -258,6 +275,7 @@ void ui_set_state(const ui_state_t &state) {
 void ui_button_event(void) {
     uint8_t num_button_ack;
     std::array<button_state_t, NUM_BUTTON> button_action;
+    const uint64_t curr_time = millis();
 
     button_get_state(button_action, num_button_ack);
 
@@ -265,29 +283,44 @@ void ui_button_event(void) {
     int16_t clock_time;
 
     for (uint8_t button_id = 0; button_id < num_button_ack; button_id++) {
-        const uint8_t pin_id = button_action.at(button_id).pin_id;
-        screen_need_update   = 1;
-        if (button_action.at(button_id).action == LONG_PRESS) {
-            switch (pin_id) {
-                case 6:
-                case 7:
-                    if(ui_state == menu_clock)
-                    {
-                        ui_set_state(menu_settings);
+        const uint8_t pin_id     = button_action.at(button_id).pin_id;
+        const uint8_t action     = button_action.at(button_id).action;
+        const uint8_t push_count = button_action.at(button_id).push_count;
+        last_button_time = curr_time;
+        screen_need_update       = 1;
+        if (action == LONG_PRESS) {
+            if (pin_id == 6 or pin_id == 7) {
+                if (ui_state == menu_clock) {
+                    // Select the alarm to configure
+                    if (pin_id == 6) {
+                        alarm_select = 0;
+                    } else {
+                        alarm_select = 1;
                     }
-                    else
-                    {
-                        ui_set_state(menu_clock);
-                    }
-                    break;
-                default:
-                    break;
+                    ui_set_state(menu_settings);
+                } else {
+                    ui_set_state(menu_clock);
+                }
             }
-        }
-        if (ui_state == menu_settings) {
-            alarm_params_t alarm_0 = get_alarm_0();
-            clock_time = alarm_0.alarm_minute + alarm_0.alarm_hour * 60;
-            auto &days_0           = alarm_0.alarm_days.days;
+        } else if (ui_state == menu_settings) {
+            alarm_params_t alarm;
+            if (action == SHORT_PRESS) {
+                if (pin_id == 6) {
+                    alarm_select = 0;
+                    continue;
+                } else if (pin_id == 7) {
+                    alarm_select = 1;
+                    continue;
+                }
+            }
+
+            if (alarm_select == 0) {
+                alarm = get_alarm_0();
+            } else {
+                alarm = get_alarm_1();
+            }
+            clock_time   = alarm.alarm_minute + alarm.alarm_hour * 60;
+            auto &days_0 = alarm.alarm_days.days;
             switch (pin_id) {
                 case 13:
                     days_0.wednesday = ~days_0.wednesday;
@@ -299,26 +332,49 @@ void ui_button_event(void) {
                     days_0.friday = ~days_0.friday;
                     break;
                 case 16:
-                    clock_time += 5 * button_action.at(button_id).push_count;
+                    clock_time += 5 * push_count;
                     break;
                 case 17:
-                    clock_time -= 5 * button_action.at(button_id).push_count;
+                    clock_time -= 5 * push_count;
                     break;
                 case 5:
-                    clock_time += (1 * 60) * button_action.at(button_id).push_count;
+                    clock_time += (1 * 60) * push_count;
                     break;
                 case 0:
-                    clock_time -= (1 * 60) * button_action.at(button_id).push_count;
+                    clock_time -= (1 * 60) * push_count;
                     break;
                 default:
                     break;
             }
-            clock_time %= 60 * 24; // Max 24 hours
-            alarm_0.alarm_minute = clock_time % 60;
-            alarm_0.alarm_hour = clock_time / 60;
-            alarm_0.is_set = true;
-            set_alarm_0(alarm_0);
+            clock_time %= 60 * 24;// Max 24 hours
+            alarm.alarm_minute = clock_time % 60;
+            alarm.alarm_hour   = clock_time / 60;
+            alarm.is_set       = true;
+            if (alarm_select == 0) {
+                set_alarm_0(alarm);
+            } else {
+                set_alarm_1(alarm);
+            }
+        } else if (action == SHORT_PRESS) {
+            // Activate/deactivate alarm
+            if (pin_id == 6) {
+                alarm_params_t alarm_0 = get_alarm_0();
+                alarm_0.is_set         = !alarm_0.is_set;
+                Serial.print("Alarm0: ");
+                Serial.println(alarm_0.is_set);
+                set_alarm_0(alarm_0);
+            } else if (pin_id == 7) {
+                alarm_params_t alarm_1 = get_alarm_1();
+                alarm_1.is_set         = !alarm_1.is_set;
+                Serial.print("Alarm1: ");
+                Serial.println(alarm_1.is_set);
+                set_alarm_1(alarm_1);
+            }
         }
+    }
+    if(ui_state == menu_settings and curr_time - last_button_time > timeout_setting_ms)
+    {
+        ui_set_state(menu_clock);
     }
     if (screen_need_update) {
         ui_update();
@@ -335,7 +391,6 @@ void ui_update() {
             break;
         case menu_settings:
             Serial.println("menu_settings state");
-            // EPD_3IN7_4Gray_quick_Clear();
             screen_display_param();
             break;
     }
