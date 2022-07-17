@@ -124,8 +124,7 @@ void setup() {
 
     DEV_Module_Init();
     init_screen();
-
-    button_start_polling();
+    display_hello_ms();
 }
 
 /* The main loop -------------------------------------------------------------*/

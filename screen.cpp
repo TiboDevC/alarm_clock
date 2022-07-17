@@ -395,3 +395,10 @@ void ui_update() {
             break;
     }
 }
+
+void display_hello_ms(void)
+{
+    Paint_Clear(BLACK);
+    Paint_DrawString_EN(100, 100, "Bonjour Thibaut !", &Font24, BLACK, WHITE);
+    EPD_3IN7_1Gray_Display(BlackImage);
+}
