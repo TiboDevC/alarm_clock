@@ -133,7 +133,7 @@ void loop() {
 
     ui_button_event();
 
-    if (alarm_match) {
+    if ((ui_get_state() == menu_clock) and alarm_match) {
         alarm_match = 0;
 
         /* Update NTP time at 5am */
