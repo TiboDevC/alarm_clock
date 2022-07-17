@@ -164,10 +164,11 @@ void screen_update_clock() {
     /* Alarm 0 */
     const alarm_params_t alaram_0 = get_alarm_0();
 
-    if (true) {
+    if (alaram_0.is_set) {
         const uint32_t minute_of_day = hours * 60 + minutes;
         const uint32_t minute_of_day_alarm =
                 alaram_0.alarm_hour * 60 + alaram_0.alarm_minute * 60;
+        uint8_t is_alarm_valid = 0;
 
         sprintf(date_buf, "none");
         for (uint8_t day_it = day_of_week; day_it < day_of_week + 7; day_it++) {
@@ -178,27 +179,31 @@ void screen_update_clock() {
                 if (day_r == day_of_week) {
                     if (minute_of_day < minute_of_day_alarm) {
                         sprintf(date_buf, "auj.");
+                        is_alarm_valid = 1;
                         break;
                     }
                 } else {
                     sprintf(date_buf, "%s", days_short_buf[day_r]);
+                    is_alarm_valid = 1;
                     break;
                 }
             }
         }
 
-        sprintf(date_buf, "%s %2dh%02d", date_buf, alaram_0.alarm_hour,
-                alaram_0.alarm_minute);
-        Paint_DrawString_EN(300, 10, date_buf, &Font20, BLACK, WHITE);
+        if (is_alarm_valid) {
+            sprintf(date_buf, "%s %2dh%02d", date_buf, alaram_0.alarm_hour,
+                    alaram_0.alarm_minute);
+            Paint_DrawString_EN(320, 10, date_buf, &Font20, BLACK, WHITE);
+        }
     }
 
     /* Alarm 1 */
     const alarm_params_t alaram_1 = get_alarm_1();
-    //    if (alaram_0.is_set) {
-    if (true) {
+    if (alaram_1.is_set) {
         const uint32_t minute_of_day = hours * 60 + minutes;
         const uint32_t minute_of_day_alarm =
                 alaram_1.alarm_hour * 60 + alaram_1.alarm_minute * 60;
+        uint8_t is_alarm_valid = 0;
 
         sprintf(date_buf, "none");
         for (uint8_t day_it = day_of_week; day_it < day_of_week + 7; day_it++) {
@@ -209,18 +214,22 @@ void screen_update_clock() {
                 if (day_r == day_of_week) {
                     if (minute_of_day < minute_of_day_alarm) {
                         sprintf(date_buf, "auj.");
+                        is_alarm_valid = 1;
                         break;
                     }
                 } else {
                     sprintf(date_buf, "%s", days_short_buf[day_r]);
+                    is_alarm_valid = 1;
                     break;
                 }
             }
         }
 
-        sprintf(date_buf, "%s %2dh%02d", date_buf, alaram_1.alarm_hour,
-                alaram_1.alarm_minute);
-        Paint_DrawString_EN(300, 50, date_buf, &Font20, BLACK, WHITE);
+        if (is_alarm_valid) {
+            sprintf(date_buf, "%s %2dh%02d", date_buf, alaram_1.alarm_hour,
+                    alaram_1.alarm_minute);
+            Paint_DrawString_EN(320, 50, date_buf, &Font20, BLACK, WHITE);
+        }
     }
 
     EPD_3IN7_1Gray_Display(BlackImage);
