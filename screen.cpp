@@ -242,7 +242,10 @@ static ui_state_t ui_state{menu_clock};
 void ui_set_state(const ui_state_t &state) {
     ui_state = state;
     if (ui_state == menu_settings) {
+        button_start_polling();
         init_screen();
+    } else {
+        button_stop_polling();
     }
 }
 
