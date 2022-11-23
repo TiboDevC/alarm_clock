@@ -27,6 +27,9 @@ enum fsm_handler_rc state_clock_display(struct fsm *fsm, struct fsm_event const 
 			debug("Do not update screen\n");
 		}
 		return FSM_HANDLED();
+	case FSM_EVENT_BUTTON:
+		debug("Button to be handled\n");
+		return FSM_HANDLED();
 	default:
 		break;
 	}

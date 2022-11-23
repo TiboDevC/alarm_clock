@@ -13,6 +13,7 @@
 extern "C" {
 #endif
 
+#include "alarm_clock_fsm.h"
 #include "timer.h"
 
 #ifdef __cplusplus
@@ -80,10 +81,14 @@ static std::array<button_ctx_t, B_LAST_BUTTON> button_states{{
     button_ctx_t(B_MIN_DEC, b_min_dec_pin, B_IRQ),
 }};
 
+static void _dispatch_button_event(const button_evt_t &button_evt)
+{
+	uint32_t evt = ((button_evt.button_id & BUTTON_ID_MSK) << BUTTON_ID_SHIFT) |
+	               ((button_evt.action & BUTTON_ACTION_MSK) << BUTTON_ACTION_SHIFT) |
+	               ((button_evt.push_count & BUTTON_COUNT_MSK) << BUTTON_COUNT_SHIFT) | FSM_EVENT_BUTTON;
+	alarm_clock_fsm_dispatch_event((enum alarm_clock_fsm_event_type) evt);
+}
 
-static uint8_t num_button_ack_{};
-
-static std::array<button_state_t, NUM_BUTTON> button_action_{};
 
 static uint16_t next_timer_value(void)
 {
@@ -114,45 +119,42 @@ static uint16_t next_timer_value(void)
 
 static void cb_button_timer(void)
 {
-	uint8_t        button_used = 0;
-	const uint64_t curr_time   = millis();
-	uint16_t       next_timer  = 0;
+	const uint64_t curr_time  = millis();
+	uint16_t       next_timer = 0;
+	button_evt_t   button_evt;
+	uint32_t       fsm_evt;
 
 	for (auto &button : button_states) {
 		if (button.on_use and button.input_mode == B_IRQ) {
-			uint8_t timer_timeout = 0;
-
 			if (button.state == LOW and curr_time - button.last_state_time > long_press_ms) {
-				timer_timeout                             = 1;
-				button_action_.at(num_button_ack_).action = LONG_PRESS;
+				button_evt.button_id  = button.id;
+				button_evt.action     = SHORT_PRESS;
+				button_evt.push_count = button.push_count;
+				_dispatch_button_event(button_evt);
+
 				SerialUSB.print("Long press ");
 				SerialUSB.println(button.pin_id);
 			} else if (button.state == HIGH and
 			           curr_time - button.last_state_time > short_press_ms) {
-				timer_timeout                                 = 1;
-				button_action_.at(num_button_ack_).action     = SHORT_PRESS;
-				button_action_.at(num_button_ack_).push_count = button.push_count;
 				SerialUSB.print("Short press ");
 				SerialUSB.print(button.pin_id);
 				SerialUSB.print(", count: ");
 				SerialUSB.println(button.push_count);
+
+				button_evt.button_id  = button.id;
+				button_evt.action     = SHORT_PRESS;
+				button_evt.push_count = button.push_count;
+				_dispatch_button_event(button_evt);
+
 				button.push_count = 0;
 			}
-			if (timer_timeout) {
-				detachInterrupt(digitalPinToInterrupt(button.pin_id));
-				button_action_.at(num_button_ack_).pin_id = button.pin_id;
-				button.on_use                             = 0;
-				num_button_ack_++;
-			} else {
-				button_used++;
-			}
 		}
-	}
-	next_timer = next_timer_value();
-	if (next_timer != SHRT_MAX) {
-		call_me_in_x_ms(next_timer, cb_button_timer);
-	} else {
-		// SerialUSB.println("No more active button");
+		next_timer = next_timer_value();
+		if (next_timer != SHRT_MAX) {
+			call_me_in_x_ms(next_timer, cb_button_timer);
+		} else {
+			// SerialUSB.println("No more active button");
+		}
 	}
 }
 
@@ -287,7 +289,7 @@ static SemaphoreHandle_t _button_task_semaphore = nullptr;
 static TaskHandle_t      _button_task           = nullptr;
 
 
-static void a(void)
+void init_buttons(void)
 {
 	BUTTON_INFO("init_buttons\n");
 
@@ -315,20 +317,6 @@ static void a(void)
 	setup_timer4();
 	setup_timer5();
 }
-
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-void init_buttons(void)
-{
-	a();
-}
-
-#ifdef __cplusplus
-}
-#endif
 
 static void _button_start_polling(void *pvParameters)
 {
@@ -375,28 +363,6 @@ void button_stop_polling(void)
 	if (_button_task_semaphore != nullptr) {
 		xSemaphoreGive(_button_task_semaphore);
 	}
-}
-
-void button_get_state(std::array<button_state_t, NUM_BUTTON> &button_action, uint8_t &num_button_ack)
-{
-	noInterrupts();
-	num_button_ack = num_button_ack_;
-	if (num_button_ack_ > 0) {
-		button_action = button_action_;
-		for (unsigned int i = 0; i < num_button_ack_; i++) {
-			const uint8_t pin_id = button_action_.at(i).pin_id;
-			// SerialUSB.print("Reactivate button: ");
-			// SerialUSB.println(pin_id);
-			button_enable_interrupts(pin_id);
-			for (auto &button : button_states) {
-				if (button.pin_id == pin_id and button.input_mode == B_IRQ) {
-					button.state = HIGH;
-				}
-			}
-		}
-		num_button_ack_ = 0;
-	}
-	interrupts();
 }
 
 /***************************************/

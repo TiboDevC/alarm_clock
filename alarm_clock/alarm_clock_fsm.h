@@ -7,6 +7,7 @@
 #include "fsm.h"
 
 #define ALARM_CLOCK_FSM_EVT_MSK 0xFFFF /* 2 bytes for the event, rest for data */
+#define ALARM_CLOCK_FSM_EVT_SHT 16
 
 enum alarm_clock_fsm_event_type {
 	FSM_EVENT_BUTTON = FSM_EVENT_APPLICATION,
