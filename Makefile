@@ -2,7 +2,7 @@ TARGET     := mkrwifi1010
 SKETCH     := alarm_clock
 
 # Board specific flags, TODO include it from bootloader definition
-BOARD_FLAGS = -DUSB_VID=0x2341 -DUSB_PID=0x8054
+BOARD_FLAGS = -DUSB_VID=0x2341 -DUSB_PID=0x8054 -DF_CPU=48000000 -DPinStatus=uint8_t
 
 # Directory Configuration
 OBJDIR      = obj
@@ -41,8 +41,8 @@ TARGET_CXX_SRC := $(wildcard $(SKETCH)/*.cpp)
 
 VARIANT_DIR = lib/ArduinoCore-samd/variants/mkrwifi1010
 VARIANT_SRC = $(VARIANT_DIR)/variant.cpp
-CMSIS_DIR   = lib/CMSIS
-SAM_DIR     = lib/CMSIS-Atmel
+CMSIS_DIR   = lib/CMSIS_5/CMSIS/Core
+SAM_DIR     = lib/CMSIS-Atmel/CMSIS/CMSIS/Device/ATMEL
 
 SKETCH_SRC = alarm_clock/reveil_freertos.ino
 
@@ -97,7 +97,7 @@ CPUFLAGS    = -mcpu=cortex-m0plus -mthumb -ggdb3 -Os
 CCXXFLAGS   = $(BOARD_FLAGS) $(CPUFLAGS) -Wall -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter -Wno-switch -Wno-ignored-qualifiers
 CCXXFLAGS  += -fno-exceptions -ffunction-sections -fdata-sections -Wno-expansion-to-defined
 
-CXXFLAGS   += -Wno-class-memaccess -Wno-address-of-packed-member -Wno-format-overflow -Wno-restrict -Wno-maybe-uninitialized
+CXXFLAGS   += -Wno-class-memaccess -Wno-address-of-packed-member -Wno-format-overflow -Wno-restrict -Wno-maybe-uninitialized -Wno-sized-deallocation
 
 LCFLAGS     = $(CCXXFLAGS) -std=gnu11
 
