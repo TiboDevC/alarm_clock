@@ -1,2 +1,13 @@
 /.idea
+/obj
+/config.mk
+.size_done
 secret.h
+
+*.o
+*.d
+*.bin
+*.elf
+*.hex
+*.map
+*.swp

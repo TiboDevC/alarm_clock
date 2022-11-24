@@ -1,0 +1,21 @@
+[submodule "lib/FlashStorage_SAMD"]
+	path = lib/FlashStorage_SAMD
+	url = git@github.com:khoih-prog/FlashStorage_SAMD.git
+[submodule "lib/Arduino-FreeRTOS-SAMD21"]
+	path = lib/Arduino-FreeRTOS-SAMD21
+	url = git@github.com:BriscoeTech/Arduino-FreeRTOS-SAMD21.git
+[submodule "lib/AudioZero"]
+	path = lib/AudioZero
+	url = git@github.com:arduino-libraries/AudioZero.git
+[submodule "lib/SD"]
+	path = lib/SD
+	url = git@github.com:arduino-libraries/SD.git
+[submodule "lib/ArduinoCore-samd"]
+	path = lib/ArduinoCore-samd
+	url = git@github.com:arduino/ArduinoCore-samd.git
+[submodule "lib/RTCZero"]
+	path = lib/RTCZero
+	url = git@github.com:arduino-libraries/RTCZero.git
+[submodule "lib/WiFiNINA"]
+	path = lib/WiFiNINA
+	url = git@github.com:arduino-libraries/WiFiNINA.git
