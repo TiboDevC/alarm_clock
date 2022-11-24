@@ -2,16 +2,15 @@
 #define ALARM_CLOCK_SCREEN_H
 
 void init_screen();
-void display_hello_ms();
+void display_hello_msg();
 void screen_display_param();
 void screen_update_clock();
+void ui_update();
 
 /***************************/
 enum ui_state_t { menu_clock, menu_settings };
 
 void ui_button_event(void);
-void ui_update();
-void ui_set_state(const ui_state_t &state);
-ui_state_t ui_get_state(void);
+void ui_start_task(void);
 
-#endif//ALARM_CLOCK_SCREEN_H
+#endif // ALARM_CLOCK_SCREEN_H

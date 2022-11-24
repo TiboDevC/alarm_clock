@@ -4,4 +4,4 @@
 void music_init();
 void music_play();
 
-#endif//ALARM_CLOCK_MUSIC_H
+#endif // ALARM_CLOCK_MUSIC_H

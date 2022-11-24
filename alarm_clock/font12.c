@@ -42,7 +42,7 @@
 //  Font data for Courier New 12pt
 // 
 
-const uint8_t Font12_Table[] = 
+static const uint8_t Font12_Table[] =
 {
 	// @0 ' ' (7 pixels wide)
 	0x00, //        
@@ -1375,7 +1375,7 @@ const uint8_t Font12_Table[] =
 	0x00, //        
 };
 
-sFONT Font12 = {
+const sFONT Font12 = {
   Font12_Table,
   7, /* Width */
   12, /* Height */

@@ -1,0 +1,10 @@
+void     init_rtc(void);
+void     rtc_set_epoch(uint64_t epoch);
+void     rtc_set_hours(uint8_t hours);
+uint64_t rtc_get_epoch(void);
+uint8_t  rtc_get_day(void);
+uint8_t  rtc_get_month(void);
+uint8_t  rtc_get_year(void);
+uint8_t  rtc_get_hours(void);
+uint8_t  rtc_get_minutes(void);
+uint8_t  rtc_get_seconds(void);

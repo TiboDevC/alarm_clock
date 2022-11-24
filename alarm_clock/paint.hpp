@@ -1,25 +1,25 @@
 #pragma once
 
 enum img_rotation_t {
-    rotate_0 = 0,
-    rotate_90,
-    rotate_180,
-    rotate_270,
+	rotate_0 = 0,
+	rotate_90,
+	rotate_180,
+	rotate_270,
 };
 
 enum grey_scale_t {
-    grey_scale_2 = 8,
-    grey_scale_4 = 4,
+	grey_scale_2 = 8,
+	grey_scale_4 = 4,
 };
 
 enum color_t {
-    black = 0,
-    grey_0,
-    grey_1,
-    white,
+	black = 0,
+	grey_0,
+	grey_1,
+	white,
 };
 
-class EPD_Image {
+/*class EPD_Image {
 public:
     EPD_Image() = delete;
 
@@ -37,4 +37,4 @@ public:
     const grey_scale_t grey_scale{};
 
 private:
-};
+};*/

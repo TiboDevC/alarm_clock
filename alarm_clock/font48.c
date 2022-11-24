@@ -4788,7 +4788,7 @@ const uint8_t FontCustom_Table [] =
 };
 
 /* Based on font ../../Downloads/cafe_matcha.ttf */
-sFONT FontCustom = {
+const sFONT FontCustom = {
         FontCustom_Table,
         88, /* Width */
         176, /* Height */

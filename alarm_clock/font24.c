@@ -40,7 +40,7 @@
 
 // go run main.go --width=2 --height=23 --xoffset=0 --yoffset=23 -s 30 -d  -f AGENCYR.TTF
 
-const uint8_t Font24_Table [] = 
+const uint8_t Font24_Table [] =
 {
 
   //   32
@@ -2325,7 +2325,7 @@ const uint8_t Font24_Table [] =
   0x00, 0x00,  // ................
 };
 
-sFONT Font24 = {
+const sFONT Font24 = {
   Font24_Table,
   16, /* Width */
   23, /* Height */

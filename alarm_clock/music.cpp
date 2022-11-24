@@ -4,15 +4,16 @@
 
 #include "music.h"
 
-void music_init() {
-    Serial.print("Initializing SD card...");
+void music_init()
+{
+	Serial.print("Initializing SD card...");
 
-    if (!SD.begin(4)) {
-        Serial.println(" failed!");
-        while (true)
-            ;
-    }
-    AudioZero.begin(44100);
+	if (!SD.begin(4)) {
+		Serial.println(" failed!");
+		while (true)
+			;
+	}
+	AudioZero.begin(44100);
 }
 
 /*
@@ -22,22 +23,23 @@ void music_init() {
  * Mono
  */
 
-void music_play() {
-    // open wave file from sdcard
-    File myFile = SD.open("STR1.wav");
+void music_play()
+{
+	// open wave file from sdcard
+	File myFile = SD.open("STR1.wav");
 
-    if (!myFile) {
-        // if the file didn't open, print an error and stop
-        Serial.println("error opening music file");
+	if (!myFile) {
+		// if the file didn't open, print an error and stop
+		Serial.println("error opening music file");
 
-        while (true)
-            ;
-    }
+		while (true)
+			;
+	}
 
-    Serial.println("Playing");
+	Serial.println("Playing");
 
-    // until the file is not finished
-    AudioZero.play(myFile);
+	// until the file is not finished
+	AudioZero.play(myFile);
 
-    Serial.println("End of file. Thank you for listening!");
+	Serial.println("End of file. Thank you for listening!");
 }
