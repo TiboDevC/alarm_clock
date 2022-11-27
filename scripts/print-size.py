@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # print-size.py: pretty-print the output of GNU Binutils size(1)
 #
 # Copyright (C) 2019 Allen Wild <allenwild93@gmail.com>
