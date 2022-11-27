@@ -19,7 +19,7 @@ extern "C" {
 }
 #endif
 
-#define BUTTON_INFO(x...) Serial.print("[button]" x)
+#define BUTTON_INFO(x...) SerialUSB.print("[button]" x)
 
 constexpr int button_adc_tolerance  = 10; /* Number of ADC steps to accept button */
 constexpr int button_adc_unselected = 10; /* Number of ADC steps to consider button not selected */
@@ -94,15 +94,15 @@ static uint16_t next_timer_value(void)
 		if (button.on_use) {
 			if (button.state == LOW) {
 				timer_button = long_press_ms - (curr_time - button.last_state_time);
-				// Serial.print("Start long press timer: ");
+				// SerialUSB.print("Start long press timer: ");
 			} else if (button.state == HIGH) {
-				// Serial.print("Start short press timer: ");
+				// SerialUSB.print("Start short press timer: ");
 				timer_button = short_press_ms - (curr_time - button.last_state_time);
 			}
-			// Serial.println(timer_button);
+			// SerialUSB.println(timer_button);
 			if (timer_button <= 0) {
-				// Serial.print("Abnormal_2: ");
-				// Serial.println(timer_button);
+				// SerialUSB.print("Abnormal_2: ");
+				// SerialUSB.println(timer_button);
 			}
 			if (timer_button < min_timer) {
 				min_timer = timer_button;
@@ -125,17 +125,17 @@ static void cb_button_timer(void)
 			if (button.state == LOW and curr_time - button.last_state_time > long_press_ms) {
 				timer_timeout                             = 1;
 				button_action_.at(num_button_ack_).action = LONG_PRESS;
-				Serial.print("Long press ");
-				Serial.println(button.pin_id);
+				SerialUSB.print("Long press ");
+				SerialUSB.println(button.pin_id);
 			} else if (button.state == HIGH and
 			           curr_time - button.last_state_time > short_press_ms) {
 				timer_timeout                                 = 1;
 				button_action_.at(num_button_ack_).action     = SHORT_PRESS;
 				button_action_.at(num_button_ack_).push_count = button.push_count;
-				Serial.print("Short press ");
-				Serial.print(button.pin_id);
-				Serial.print(", count: ");
-				Serial.println(button.push_count);
+				SerialUSB.print("Short press ");
+				SerialUSB.print(button.pin_id);
+				SerialUSB.print(", count: ");
+				SerialUSB.println(button.push_count);
 				button.push_count = 0;
 			}
 			if (timer_timeout) {
@@ -152,7 +152,7 @@ static void cb_button_timer(void)
 	if (next_timer != SHRT_MAX) {
 		call_me_in_x_ms(next_timer, cb_button_timer);
 	} else {
-		// Serial.println("No more active button");
+		// SerialUSB.println("No more active button");
 	}
 }
 
@@ -161,17 +161,17 @@ template <uint8_t pin_id> static void button_handler(void)
 	const uint64_t curr_time = millis();
 	uint8_t        state;
 	uint16_t       next_timer;
-	// Serial.print("Button ");
-	// Serial.println(pin_id);
+	// SerialUSB.print("Button ");
+	// SerialUSB.println(pin_id);
 
 	for (auto &button : button_states) {
 		if (button.pin_id == pin_id) {
 			state = digitalRead(button.pin_id);
 			if (state == button.state and state == LOW) {
-				// Serial.println("Abnormal_1");
+				// SerialUSB.println("Abnormal_1");
 				continue;
 			} else if (state == button.state and state == HIGH) {
-				// Serial.println("Abnormal_0");
+				// SerialUSB.println("Abnormal_0");
 				continue;
 			} else if (state != button.state and state == LOW) {
 				// launch long press timer
@@ -251,10 +251,10 @@ static void handle_timer5_poll_button(void)
 				    button.push_count > 0) {
 					if ((curr_time - button.last_state_time) < long_press_ms) {
 						/* Button released */
-						Serial.print("Button ");
-						Serial.print(button.id);
-						Serial.print(", count: ");
-						Serial.println(button.push_count);
+						SerialUSB.print("Button ");
+						SerialUSB.print(button.id);
+						SerialUSB.print(", count: ");
+						SerialUSB.println(button.push_count);
 					}
 
 					button.push_count = 0;
@@ -263,9 +263,9 @@ static void handle_timer5_poll_button(void)
 				if ((curr_time - button.last_state_time) > long_press_ms and
 				    button.push_count == 1) {
 					/* Button released */
-					Serial.print("Button ");
-					Serial.print(button.id);
-					Serial.println(", long press");
+					SerialUSB.print("Button ");
+					SerialUSB.print(button.id);
+					SerialUSB.println(", long press");
 					button.push_count++;
 				}
 			}
@@ -385,8 +385,8 @@ void button_get_state(std::array<button_state_t, NUM_BUTTON> &button_action, uin
 		button_action = button_action_;
 		for (unsigned int i = 0; i < num_button_ack_; i++) {
 			const uint8_t pin_id = button_action_.at(i).pin_id;
-			// Serial.print("Reactivate button: ");
-			// Serial.println(pin_id);
+			// SerialUSB.print("Reactivate button: ");
+			// SerialUSB.println(pin_id);
 			button_enable_interrupts(pin_id);
 			for (auto &button : button_states) {
 				if (button.pin_id == pin_id and button.input_mode == B_IRQ) {

@@ -22,7 +22,7 @@ extern "C" {
 }
 #endif /* __cplusplus */
 
-#define SCREEN_INFO(x...) Serial.print("[screen]" x)
+#define SCREEN_INFO(x...) SerialUSB.print("[screen]" x)
 
 static constexpr uint32_t
     image_size(const uint16_t x_size, const uint16_t y_size, const grey_scale_t grey_scale)
@@ -43,7 +43,7 @@ static uint8_t _blackImage[image_buf_size];
 
 void init_screen()
 {
-	Serial.println("Init screen\n");
+	SerialUSB.println("Init screen\n");
 
 	EPD_3IN7_1Gray_Init();
 	EPD_3IN7_1Gray_Clear();
@@ -283,13 +283,13 @@ void ui_update()
 {
 	switch (ui_state) {
 	case menu_clock:
-		Serial.println("menu_clock state");
+		SerialUSB.println("menu_clock state");
 		init_screen();
 		screen_update_clock();
 		EPD_3IN7_Sleep();
 		break;
 	case menu_settings:
-		Serial.println("menu_settings state");
+		SerialUSB.println("menu_settings state");
 		screen_display_param();
 		break;
 	}
@@ -435,7 +435,7 @@ static void _ui_periodic_refresh(void *pvParameters)
 		if (rtc_get_minutes() % screen_refresh_freq_min == 0 and rtc_get_seconds() < 20) {
 			ui_update();
 		} else {
-			Serial.println("Check the next minute");
+			SerialUSB.println("Check the next minute");
 		}
 		vTaskDelay((((60 - rtc_get_seconds()) + 2) * 1000 /
 		            portTICK_PERIOD_MS)); /* Wait next minute + 2 secondes */

@@ -6,10 +6,10 @@
 
 void music_init()
 {
-	Serial.print("Initializing SD card...");
+	SerialUSB.print("Initializing SD card...");
 
 	if (!SD.begin(4)) {
-		Serial.println(" failed!");
+		SerialUSB.println(" failed!");
 		while (true)
 			;
 	}
@@ -30,16 +30,16 @@ void music_play()
 
 	if (!myFile) {
 		// if the file didn't open, print an error and stop
-		Serial.println("error opening music file");
+		SerialUSB.println("error opening music file");
 
 		while (true)
 			;
 	}
 
-	Serial.println("Playing");
+	SerialUSB.println("Playing");
 
 	// until the file is not finished
 	AudioZero.play(myFile);
 
-	Serial.println("End of file. Thank you for listening!");
+	SerialUSB.println("End of file. Thank you for listening!");
 }

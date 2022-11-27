@@ -13,10 +13,10 @@ extern "C" {
 
 void debug(const char *msg)
 {
-	Serial.print(msg);
+	SerialUSB.print(msg);
 }
 
 void debug_num(const unsigned int msg)
 {
-	Serial.print(msg);
+	SerialUSB.print(msg);
 }

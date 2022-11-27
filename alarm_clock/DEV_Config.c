@@ -53,7 +53,7 @@ UBYTE DEV_Module_Init(void)
 	// gpio
 	GPIO_Config();
 
-	// serial printf
+	// SerialUSB printf
 
 	// spi
 	// SPI.setDataMode(SPI_MODE0);
