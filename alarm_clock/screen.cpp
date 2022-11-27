@@ -295,114 +295,92 @@ void ui_update()
  *   x x 13 19 1 x x
  * 7                0  17
  */
-void ui_button_event(void)
+void ui_button_event(const struct button_evt_t *button_evt)
 {
-	uint8_t                                num_button_ack = 0;
-	std::array<button_state_t, NUM_BUTTON> button_action;
-	const uint64_t                         curr_time = millis();
+	uint8_t        num_button_ack = 0;
+	const uint64_t curr_time      = millis();
 
 	//    button_get_state(button_action, num_button_ack);
 
 	uint8_t screen_need_update = 0;
 	int16_t clock_time;
 
-	for (uint8_t button_id = 0; button_id < num_button_ack; button_id++) {
-		const uint8_t pin_id     = button_action.at(button_id).pin_id;
-		const uint8_t action     = button_action.at(button_id).action;
-		const uint8_t push_count = button_action.at(button_id).push_count;
-		last_button_time         = curr_time;
-		screen_need_update       = 1;
-		if (action == LONG_PRESS) {
-			/* Switch between alarm menu and clock screen on lon press */
-			if (pin_id == B_MENU_SETTINGS) {
-				if (ui_state == menu_clock) {
-					/* Select the alarm to configure */
-					if (pin_id == B_MENU_CLOCK) {
-						alarm_select = 0;
-					} else {
-						alarm_select = 1;
-					}
-					ui_set_state(menu_settings);
-				}
-			} else if (pin_id == B_MENU_CLOCK) {
-				ui_set_state(menu_clock);
-			}
-		} else if (ui_state == menu_settings) {
-			alarm_params_t alarm;
-			if (action == SHORT_PRESS) {
-				if (pin_id == B_MENU_CLOCK) {
-					alarm_select = 0;
-					continue;
-				} else if (pin_id == B_MENU_SETTINGS) {
-					alarm_select = 1;
-					continue;
-				}
-			}
+	last_button_time   = curr_time;
+	screen_need_update = 1;
 
-			if (alarm_select == 0) {
-				alarm = get_alarm_0();
-			} else {
-				alarm = get_alarm_1();
+	if (ui_state == menu_settings) {
+		alarm_params_t alarm;
+		if (button_evt->action == SHORT_PRESS) {
+			if (button_evt->button_id == B_MENU_CLOCK) {
+				alarm_select = 0;
+			} else if (button_evt->button_id == B_MENU_SETTINGS) {
+				alarm_select = 1;
 			}
-			clock_time   = alarm.alarm_minute + (alarm.alarm_hour * 60);
-			auto &days_0 = alarm.alarm_days.days;
-			switch (pin_id) {
-			case B_DAY_MONDAY:
-				days_0.monday = ~days_0.monday;
-				break;
-			case B_DAY_TUESDAY:
-				days_0.tuesday = ~days_0.tuesday;
-				break;
-			case B_DAY_WEDNESDAY:
-				days_0.wednesday = ~days_0.wednesday;
-				break;
-			case B_DAY_THURSDAY:
-				days_0.thursday = ~days_0.thursday;
-				break;
-			case B_DAY_FRIDAY:
-				days_0.friday = ~days_0.friday;
-				break;
-			case B_DAY_SATURDAY:
-				days_0.saturday = ~days_0.saturday;
-				break;
-			case B_DAY_SUNDAY:
-				days_0.sunday = ~days_0.sunday;
-				break;
-			case B_MIN_INC:
-				clock_time += 5 * push_count;
-				break;
-			case B_MIN_DEC:
-				clock_time -= 5 * push_count;
-				break;
-			case B_HOUR_INC:
-				clock_time += (1 * 60) * push_count;
-				break;
-			case B_HOUR_DEC:
-				clock_time -= (1 * 60) * push_count;
-				break;
-			default:
-				break;
-			}
-			clock_time %= 60 * 24; /* Max 24 hours */
-			alarm.alarm_minute = clock_time % 60;
-			alarm.alarm_hour   = clock_time / 60;
-			alarm.is_set       = true;
-			if (alarm_select == 0) {
-				set_alarm_0(alarm);
-			} else {
-				set_alarm_1(alarm);
-			}
-		} else if (action == SHORT_PRESS and ui_state == menu_clock) {
-			/* Activate/deactivate alarm in clock screen */
-			if (pin_id == B_MENU_CLOCK) {
-				alarm_params_t alarm_0 = get_alarm_0();
-				alarm_0.is_set         = !alarm_0.is_set;
-				set_alarm_0(alarm_0);
-			} else if (pin_id == B_MENU_SETTINGS) {
-				alarm_params_t alarm_1 = get_alarm_1();
-				alarm_1.is_set         = !alarm_1.is_set;
-				set_alarm_1(alarm_1);
-			}
+		}
+
+		if (alarm_select == 0) {
+			alarm = get_alarm_0();
+		} else {
+			alarm = get_alarm_1();
+		}
+		clock_time   = alarm.alarm_minute + (alarm.alarm_hour * 60);
+		auto &days_0 = alarm.alarm_days.days;
+		switch (button_evt->button_id) {
+		case B_DAY_MONDAY:
+			days_0.monday = ~days_0.monday;
+			break;
+		case B_DAY_TUESDAY:
+			days_0.tuesday = ~days_0.tuesday;
+			break;
+		case B_DAY_WEDNESDAY:
+			days_0.wednesday = ~days_0.wednesday;
+			break;
+		case B_DAY_THURSDAY:
+			days_0.thursday = ~days_0.thursday;
+			break;
+		case B_DAY_FRIDAY:
+			days_0.friday = ~days_0.friday;
+			break;
+		case B_DAY_SATURDAY:
+			days_0.saturday = ~days_0.saturday;
+			break;
+		case B_DAY_SUNDAY:
+			days_0.sunday = ~days_0.sunday;
+			break;
+		case B_MIN_INC:
+			clock_time += 5 * button_evt->push_count;
+			break;
+		case B_MIN_DEC:
+			clock_time -= 5 * button_evt->push_count;
+			break;
+		case B_HOUR_INC:
+			clock_time += (1 * 60) * button_evt->push_count;
+			break;
+		case B_HOUR_DEC:
+			clock_time -= (1 * 60) * button_evt->push_count;
+			break;
+		default:
+			break;
+		}
+		clock_time %= 60 * 24; /* Max 24 hours */
+		alarm.alarm_minute = clock_time % 60;
+		alarm.alarm_hour   = clock_time / 60;
+		alarm.is_set       = true;
+		if (alarm_select == 0) {
+			set_alarm_0(alarm);
+		} else {
+			set_alarm_1(alarm);
+		}
+	} else if (button_evt->action == SHORT_PRESS and ui_state == menu_clock) {
+		/* Activate/deactivate alarm in clock screen */
+		if (button_evt->button_id == B_MENU_CLOCK) {
+			alarm_params_t alarm_0 = get_alarm_0();
+			alarm_0.is_set         = !alarm_0.is_set;
+			set_alarm_0(alarm_0);
+		} else if (button_evt->button_id == B_MENU_SETTINGS) {
+			alarm_params_t alarm_1 = get_alarm_1();
+			alarm_1.is_set         = !alarm_1.is_set;
+			set_alarm_1(alarm_1);
 		}
 	}
 
