@@ -129,17 +129,19 @@ static void cb_button_timer(void)
 	for (auto &button : button_states) {
 		if (button.on_use and button.input_mode == B_IRQ) {
 			if (button.state == LOW and curr_time - button.last_state_time > long_press_ms) {
+				button.on_use         = 0;
 				button_evt.button_id  = button.id;
 				button_evt.action     = LONG_PRESS;
 				button_evt.push_count = button.push_count;
-				_dispatch_button_event(button_evt);
+				SerialUSB.print("[button] Long press ");
+				SerialUSB.println(button.id);
 
-				SerialUSB.print("Long press ");
-				SerialUSB.println(button.pin_id);
+				_dispatch_button_event(button_evt);
 			} else if (button.state == HIGH and
 			           curr_time - button.last_state_time > short_press_ms) {
-				SerialUSB.print("Short press ");
-				SerialUSB.print(button.pin_id);
+				button.on_use = 0;
+				SerialUSB.print("[button] Short press ");
+				SerialUSB.print(button.id);
 				SerialUSB.print(", count: ");
 				SerialUSB.println(button.push_count);
 
@@ -151,12 +153,12 @@ static void cb_button_timer(void)
 				button.push_count = 0;
 			}
 		}
-		next_timer = next_timer_value();
-		if (next_timer != SHRT_MAX) {
-			call_me_in_x_ms(next_timer, cb_button_timer);
-		} else {
-			// SerialUSB.println("No more active button");
-		}
+	}
+	next_timer = next_timer_value();
+	if (next_timer != SHRT_MAX) {
+		call_me_in_x_ms(next_timer, cb_button_timer);
+	} else {
+		// SerialUSB.println("No more active button");
 	}
 }
 
@@ -178,11 +180,12 @@ template <uint8_t pin_id> static void button_handler(void)
 				// SerialUSB.println("Abnormal_0");
 				continue;
 			} else if (state != button.state and state == LOW) {
+				button.on_use = 1;
 				// launch long press timer
 			} else if (state != button.state and state == HIGH) {
+				button.on_use = 1;
 				button.push_count++;
 			}
-			button.on_use          = 1;
 			button.state           = state;
 			button.last_state_time = curr_time;
 			next_timer             = next_timer_value();
