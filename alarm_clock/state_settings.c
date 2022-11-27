@@ -10,6 +10,10 @@ enum fsm_handler_rc state_settings(struct fsm *fsm, struct fsm_event const *even
 	case FSM_EVENT_ENTRY:
 		/* Enter in clock screen, update screen status */
 		ui_set_state(menu_settings);
+		button_start_polling();
+		return FSM_HANDLED();
+	case FSM_EVENT_EXIT:
+		button_stop_polling();
 		return FSM_HANDLED();
 	default:
 		break;
