@@ -13,6 +13,10 @@ enum fsm_handler_rc state_clock_display(struct fsm *fsm, struct fsm_event const 
 	enum alarm_clock_fsm_event_type event_alarm_clock = event->type & ALARM_CLOCK_FSM_EVT_MSK;
 
 	switch (event_alarm_clock) {
+	case FSM_EVENT_ENTRY:
+		/* Enter in clock screen, update screen status */
+		ui_set_state(menu_clock);
+		return FSM_HANDLED();
 	case FSM_EVENT_RTC_WAKE_UP:
 		if ((rtc_get_minutes() % SCREEN_REFRESH_FREQ_MIN == 0 && rtc_get_seconds() < 20) ||
 		    ((_last_epoch_refresh_time - rtc_get_epoch()) > SCREEN_REFRESH_FREQ_MIN * 60)) {
