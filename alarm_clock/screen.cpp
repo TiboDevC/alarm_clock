@@ -271,12 +271,6 @@ static constexpr uint64_t timeout_setting_ms = 30 * 1000; // 30 seconds
 void ui_set_state(const enum ui_state_t state)
 {
 	ui_state = state;
-	if (ui_state == menu_settings) {
-		button_start_polling();
-		init_screen();
-	} else {
-		button_stop_polling();
-	}
 }
 
 void ui_update()
