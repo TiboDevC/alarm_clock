@@ -1,5 +1,6 @@
 #include "alarm_clock_fsm.h"
 
+#include "button.h"
 #include "debug.h"
 #include "screen.h"
 #include "rtc_tool.h"

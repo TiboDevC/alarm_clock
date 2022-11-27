@@ -8,12 +8,12 @@
 #include <semphr.h>
 #include <task.h>
 
-#include "button.hpp"
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include "alarm_clock_fsm.h"
+#include "button.h"
 #include "timer.h"
 
 #ifdef __cplusplus

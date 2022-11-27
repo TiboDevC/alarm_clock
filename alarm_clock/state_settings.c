@@ -1,6 +1,6 @@
 #include "alarm_clock_fsm.h"
 
-#include "button.hpp"
+#include "button.h"
 #include "screen.h"
 
 enum fsm_handler_rc state_settings(struct fsm *fsm, struct fsm_event const *event)

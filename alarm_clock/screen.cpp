@@ -6,15 +6,15 @@
 #include <RTCZero.h>
 
 #include "alarm_flash_storage.h"
-#include "button.hpp"
-
 #ifdef __cplusplus
+
 extern "C" {
 #endif /* __cplusplus */
-
 #include "DEV_Config.h"
+
 #include "EPD.h"
 #include "GUI_Paint.h"
+#include "button.h"
 #include "rtc_tool.h"
 #include "screen.h"
 

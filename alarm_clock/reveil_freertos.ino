@@ -14,17 +14,17 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
-#include "button.hpp"
 #include "wifi_tool.h"
-
 #ifdef __cplusplus
+
 extern "C" {
 #endif
-
 #include "DEV_Config.h"
+
 #include "EPD.h"
 #include "GUI_Paint.h"
 #include "alarm_clock_fsm.h"
+#include "button.h"
 #include "rtc_tool.h"
 #include "screen.h"
 #include "timer.h"
