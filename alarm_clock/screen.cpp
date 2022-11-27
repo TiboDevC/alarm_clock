@@ -268,7 +268,7 @@ static ui_state_t         ui_state{menu_clock};
 static uint64_t           last_button_time{0};
 static constexpr uint64_t timeout_setting_ms = 30 * 1000; // 30 seconds
 
-void ui_set_state(const ui_state_t &state)
+void ui_set_state(const enum ui_state_t state)
 {
 	ui_state = state;
 	if (ui_state == menu_settings) {
