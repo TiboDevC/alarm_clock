@@ -43,7 +43,7 @@ extern "C" {
 #define BUTTON_PIN 16
 
 #define ERROR_LED_LIGHTUP_STATE \
-	HIGH // the state that makes the led light up on your board, either low or high
+   HIGH // the state that makes the led light up on your board, either low or high
 
 // Select the serial port the project should use and communicate over
 // Some boards use SerialUSB, some use Serial
@@ -63,46 +63,46 @@ TaskHandle_t Handle_monitorTask;
 //**************************************************************************
 void myDelayUs(int us)
 {
-	vTaskDelay(us / portTICK_PERIOD_US);
+   vTaskDelay(us / portTICK_PERIOD_US);
 }
 
 void myDelayMs(int ms)
 {
-	vTaskDelay((ms * 1000) / portTICK_PERIOD_US);
+   vTaskDelay((ms * 1000) / portTICK_PERIOD_US);
 }
 
 void myDelayMsUntil(TickType_t *previousWakeTime, int ms)
 {
-	vTaskDelayUntil(previousWakeTime, (ms * 1000) / portTICK_PERIOD_US);
+   vTaskDelayUntil(previousWakeTime, (ms * 1000) / portTICK_PERIOD_US);
 }
 
 //*****************************************************************
 
 void setup()
 {
-	SerialUSB.begin(115200);
+   SerialUSB.begin(115200);
 
-	delay(1000); // prevents usb driver crash on startup, do not omit this
+   delay(1000); // prevents usb driver crash on startup, do not omit this
 
-	SerialUSB.println("");
-	SerialUSB.println("******************************");
-	SerialUSB.println("        Program start         ");
-	SerialUSB.println("******************************");
-	SerialUSB.flush();
+   SerialUSB.println("");
+   SerialUSB.println("******************************");
+   SerialUSB.println("        Program start         ");
+   SerialUSB.println("******************************");
+   SerialUSB.flush();
 
-	alarm_clock_fsm();
+   alarm_clock_fsm();
 
-	// Start the RTOS, this function will never return and will schedule the tasks.
-	vTaskStartScheduler();
+   // Start the RTOS, this function will never return and will schedule the tasks.
+   vTaskStartScheduler();
 
-	// error scheduler failed to start
-	// should never get here
-	while (1) {
-		SerialUSB.print(".");
-		SerialUSB.println("Scheduler Failed! \n");
-		SerialUSB.flush();
-		delay(1000);
-	}
+   // error scheduler failed to start
+   // should never get here
+   while (1) {
+       SerialUSB.print(".");
+       SerialUSB.println("Scheduler Failed! \n");
+       SerialUSB.flush();
+       delay(1000);
+   }
 }
 
 //*****************************************************************
@@ -111,9 +111,9 @@ void setup()
 //*****************************************************************
 void loop()
 {
-	// Optional commands, can comment/uncomment below
-	SerialUSB.print("."); // print out dots in terminal, we only do this when the RTOS is in the idle state
-	delay(1000);       // delay is interrupt friendly, unlike vNopDelayMS
+   // Optional commands, can comment/uncomment below
+   SerialUSB.print("."); // print out dots in terminal, we only do this when the RTOS is in the idle state
+   delay(1000);       // delay is interrupt friendly, unlike vNopDelayMS
 }
 
 

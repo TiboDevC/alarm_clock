@@ -44,7 +44,7 @@ VARIANT_SRC = $(VARIANT_DIR)/variant.cpp
 CMSIS_DIR   = lib/CMSIS_5/CMSIS/Core
 SAM_DIR     = lib/CMSIS-Atmel/CMSIS/CMSIS/Device/ATMEL
 
-SKETCH_SRC = alarm_clock/reveil_freertos.ino
+SKETCH_SRC = alarm_clock/alarm_clock.ino
 
 COMPORT     ?= /dev/ttyACM0
 BOSSAC      ?= bossac
