@@ -415,43 +415,6 @@ void ui_button_event(void)
 	}
 }
 
-#define SCREEN_TASK_STACK_SIZE 200
-
-static StaticTask_t _screen_task_buffer;
-static StackType_t  _screen_stack[SCREEN_TASK_STACK_SIZE];
-static TaskHandle_t _screen_task = nullptr;
-
-static void _ui_periodic_refresh(void *pvParameters)
-{
-	constexpr int screen_refresh_freq_min = 5; /* Refresh screen every x minutes */
-
-	while (1) {
-		if (rtc_get_minutes() % screen_refresh_freq_min == 0 and rtc_get_seconds() < 20) {
-			ui_update();
-		} else {
-			SerialUSB.println("Check the next minute");
-		}
-		vTaskDelay((((60 - rtc_get_seconds()) + 2) * 1000 /
-		            portTICK_PERIOD_MS)); /* Wait next minute + 2 secondes */
-	}
-}
-
-void ui_start_task(void)
-{
-	if (_screen_task == nullptr) {
-		_screen_task = xTaskCreateStatic(_ui_periodic_refresh,
-		                                 "Screen refresh",
-		                                 SCREEN_TASK_STACK_SIZE,
-		                                 NULL,
-		                                 tskIDLE_PRIORITY + 2,
-		                                 _screen_stack,
-		                                 &_screen_task_buffer);
-
-	} else {
-		SCREEN_INFO("Could not start task!\n");
-	}
-}
-
 void display_hello_msg(void)
 {
 	Paint_Clear(BLACK);

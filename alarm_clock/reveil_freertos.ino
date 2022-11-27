@@ -92,8 +92,6 @@ void setup()
 
 	alarm_clock_fsm();
 
-	//    ui_start_task();
-
 	// Start the RTOS, this function will never return and will schedule the tasks.
 	vTaskStartScheduler();
 
