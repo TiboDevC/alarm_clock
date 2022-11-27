@@ -86,6 +86,8 @@ static void _dispatch_button_event(const button_evt_t &button_evt)
 	uint32_t evt = ((button_evt.button_id & BUTTON_ID_MSK) << BUTTON_ID_SHIFT) |
 	               ((button_evt.action & BUTTON_ACTION_MSK) << BUTTON_ACTION_SHIFT) |
 	               ((button_evt.push_count & BUTTON_COUNT_MSK) << BUTTON_COUNT_SHIFT) | FSM_EVENT_BUTTON;
+	// SerialUSB.print("[button] dispatch event: ");
+	// SerialUSB.println(evt);
 	alarm_clock_fsm_dispatch_event((enum alarm_clock_fsm_event_type) evt);
 }
 
@@ -128,7 +130,7 @@ static void cb_button_timer(void)
 		if (button.on_use and button.input_mode == B_IRQ) {
 			if (button.state == LOW and curr_time - button.last_state_time > long_press_ms) {
 				button_evt.button_id  = button.id;
-				button_evt.action     = SHORT_PRESS;
+				button_evt.action     = LONG_PRESS;
 				button_evt.push_count = button.push_count;
 				_dispatch_button_event(button_evt);
 
