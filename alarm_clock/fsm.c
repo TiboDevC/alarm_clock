@@ -85,9 +85,7 @@ void fsm_dispatch(struct fsm *fsm, struct fsm_event const *event)
 	fsm_event_handler_t prev_state = fsm->state;
 
 	fsm_trace_event(fsm, event);
-	debug("Launch state\n");
 	rc = (*fsm->state)(fsm, event);
-	debug("Launch state end\n");
 
 	if (FSM_RC_TRANSITION == rc) {
 		fsm_trace_transition(fsm, prev_state, fsm->state);

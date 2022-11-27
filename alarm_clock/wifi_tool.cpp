@@ -49,6 +49,8 @@ static int connect_to_wifi()
 	SerialUSB.print("Attempting to connect to SSID: ");
 	SerialUSB.println(ssid);
 	do {
+		SerialUSB.print("Attempt: ");
+		SerialUSB.println(num_try);
 		status = WiFi.begin(ssid, pass);
 		delay(1000);
 		SerialUSB.println(WiFi.status());
@@ -59,6 +61,7 @@ static int connect_to_wifi()
 		printWiFiStatus();
 		return 0;
 	}
+	SerialUSB.println("Could not connect to Wifi");
 	return -1;
 }
 

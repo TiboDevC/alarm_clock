@@ -84,6 +84,8 @@ static TaskHandle_t _fsm_task_handler = NULL;
 
 void alarm_clock_fsm(void)
 {
+	debug("[fsm] Starting FSM!\n");
+
 	fsm.event_name_getter = NULL;
 	fsm.event_name_getter = NULL;
 
