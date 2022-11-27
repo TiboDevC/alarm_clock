@@ -13,6 +13,7 @@ enum alarm_clock_fsm_event_type {
 	FSM_EVENT_BUTTON = FSM_EVENT_APPLICATION,
 	FSM_EVENT_ALARM_FIRES,
 	FSM_EVENT_RTC_WAKE_UP,
+	INTERNAL_FORCE_SIZE = 0xFFFFFFFF,
 };
 
 int  alarm_clock_fsm_dispatch_event(enum alarm_clock_fsm_event_type event_type);
