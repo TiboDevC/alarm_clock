@@ -1,7 +1,23 @@
 #include "alarm_clock_fsm.h"
 
+#include "EPD_3in7.h"
 #include "button.h"
 #include "screen.h"
+
+static uint64_t _settings_entry_time;
+
+static enum fsm_handler_rc _handle_button(struct fsm *fsm, uint32_t evt)
+{
+	struct button_evt_t evt_button;
+	evt_button.button_id  = (evt >> BUTTON_ID_SHIFT) & BUTTON_ID_MSK;
+	evt_button.action     = (evt >> BUTTON_ACTION_SHIFT) & BUTTON_ACTION_MSK;
+	evt_button.push_count = (evt >> BUTTON_COUNT_SHIFT) & BUTTON_COUNT_MSK;
+
+	if (evt_button.action == LONG_PRESS && evt_button.button_id == B_MENU_CLOCK) {
+		return FSM_TRANSITION(&state_settings);
+	}
+	return FSM_HANDLED();
+}
 
 enum fsm_handler_rc state_settings(struct fsm *fsm, struct fsm_event const *event)
 {
@@ -14,11 +30,15 @@ enum fsm_handler_rc state_settings(struct fsm *fsm, struct fsm_event const *even
 		init_screen();
 		ui_update();
 		button_start_polling();
+		_settings_entry_time = rtc_get_epoch();
 		return FSM_HANDLED();
 	case FSM_EVENT_EXIT:
 		button_stop_polling();
 		EPD_3IN7_Sleep();
 		return FSM_HANDLED();
+	case FSM_EVENT_BUTTON:
+		_settings_entry_time = rtc_get_epoch();
+		return _handle_button(fsm, event->type);
 	default:
 		break;
 	}

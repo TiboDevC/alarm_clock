@@ -11,7 +11,7 @@
 
 static uint64_t _last_epoch_refresh_time;
 
-static void _handle_button(uint32_t evt)
+static enum fsm_handler_rc _handle_button(struct fsm *fsm, uint32_t evt)
 {
 	struct button_evt_t evt_button;
 	evt_button.button_id  = (evt >> BUTTON_ID_SHIFT) & BUTTON_ID_MSK;
@@ -25,6 +25,16 @@ static void _handle_button(uint32_t evt)
 	debug(", push_count: ");
 	debug_num(evt_button.push_count);
 	debug("\n");
+
+	if (evt_button.action == LONG_PRESS) {
+		if (evt_button.button_id == B_MENU_SETTINGS) {
+			return FSM_TRANSITION(&state_settings);
+		}
+	} else if (evt_button.action == SHORT_PRESS) {
+		/* Dispatch event to screen */
+		ui_button_event(&evt_button);
+	}
+	return FSM_HANDLED();
 }
 
 enum fsm_handler_rc state_clock_display(struct fsm *fsm, struct fsm_event const *event)
@@ -48,8 +58,7 @@ enum fsm_handler_rc state_clock_display(struct fsm *fsm, struct fsm_event const 
 		}
 		return FSM_HANDLED();
 	case FSM_EVENT_BUTTON:
-		_handle_button(event->type);
-		return FSM_HANDLED();
+		return _handle_button(fsm, event->type);
 	default:
 		break;
 	}
