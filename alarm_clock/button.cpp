@@ -231,6 +231,8 @@ static void handle_timer5_poll_button(void)
 	const int      adc_b_day_0 = analogRead(b_day_0_pin);
 	const int      adc_b_day_1 = analogRead(b_day_1_pin);
 	int            adc_value, button_current_state;
+	button_evt_t   button_evt;
+
 	for (auto &button : button_states) {
 		if (button.input_mode == B_ANALOG) {
 			if (button.pin_id == b_day_0_pin) {
@@ -262,6 +264,11 @@ static void handle_timer5_poll_button(void)
 						SerialUSB.print(button.id);
 						SerialUSB.print(", count: ");
 						SerialUSB.println(button.push_count);
+
+						button_evt.button_id  = button.id;
+						button_evt.action     = SHORT_PRESS;
+						button_evt.push_count = button.push_count;
+						_dispatch_button_event(button_evt);
 					}
 
 					button.push_count = 0;
@@ -273,6 +280,12 @@ static void handle_timer5_poll_button(void)
 					SerialUSB.print("Button ");
 					SerialUSB.print(button.id);
 					SerialUSB.println(", long press");
+
+					button_evt.button_id  = button.id;
+					button_evt.action     = LONG_PRESS;
+					button_evt.push_count = button.push_count;
+					_dispatch_button_event(button_evt);
+
 					button.push_count++;
 				}
 			}
