@@ -83,8 +83,6 @@ void setup()
 	SerialUSB.begin(115200);
 
 	delay(1000); // prevents usb driver crash on startup, do not omit this
-	while (!SerialUSB)
-		; // Wait for serial terminal to open port before starting program
 
 	SerialUSB.println("");
 	SerialUSB.println("******************************");
