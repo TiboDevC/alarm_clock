@@ -226,4 +226,4 @@ $(OBJDIR)/%.o: %.ino | $(OBJDIR)
 	@mkdir -p $(abspath $(dir $@))
 	$(_V_CXX_$(V))$(CXX) $(CPPFLAGS) $(CXXFLAGS) -x c++ -c -o $@ $<
 
--include $(wildcard $(OBJDIR)/*.d)
+-include $(patsubst %.o, %.d,$(SRCS))
