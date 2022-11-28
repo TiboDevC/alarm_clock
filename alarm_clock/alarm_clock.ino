@@ -15,29 +15,29 @@ extern "C" {
 
 void setup()
 {
-   SerialUSB.begin(115200);
+	SerialUSB.begin(115200);
 
-   delay(1000); // prevents usb driver crash on startup, do not omit this
+	delay(1000); // prevents usb driver crash on startup, do not omit this
 
-   SerialUSB.println("");
-   SerialUSB.println("******************************");
-   SerialUSB.println("        Program start         ");
-   SerialUSB.println("******************************");
-   SerialUSB.flush();
+	SerialUSB.println("");
+	SerialUSB.println("******************************");
+	SerialUSB.println("        Program start         ");
+	SerialUSB.println("******************************");
+	SerialUSB.flush();
 
-   alarm_clock_fsm();
-   vTaskStartScheduler();
+	alarm_clock_fsm();
+	vTaskStartScheduler();
 
-   while (1) {
-       SerialUSB.print(".");
-       SerialUSB.println("Scheduler Failed! \n");
-       SerialUSB.flush();
-       delay(1000);
-   }
+	while (1) {
+		SerialUSB.print(".");
+		SerialUSB.println("Scheduler Failed! \n");
+		SerialUSB.flush();
+		delay(1000);
+	}
 }
 
 void loop()
 {
-   SerialUSB.print(".");
-   delay(1000);
+	SerialUSB.print(".");
+	delay(1000);
 }
