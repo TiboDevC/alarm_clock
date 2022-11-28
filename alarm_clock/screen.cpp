@@ -183,7 +183,7 @@ void screen_update_clock()
 	                                  "decembre"};
 
 	char clock_buf[16];
-	char date_buf[30];
+	char date_buf[20];
 	char date_buf2[30];
 
 	Paint_Clear(BLACK);
@@ -297,7 +297,6 @@ void ui_update()
  */
 void ui_button_event(const struct button_evt_t *button_evt)
 {
-	uint8_t        num_button_ack = 0;
 	const uint64_t curr_time      = millis();
 
 	//    button_get_state(button_action, num_button_ack);

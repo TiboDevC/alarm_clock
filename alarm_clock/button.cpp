@@ -224,7 +224,7 @@ static void button_enable_interrupts(const uint8_t pin_id)
 	}
 }
 
-static void handle_timer5_poll_button(void)
+static void _handle_timer5_poll_button(void)
 {
 	const uint64_t curr_time   = millis();
 	const int      adc_b_day_0 = analogRead(b_day_0_pin);
@@ -341,10 +341,10 @@ static void _button_start_polling(void *pvParameters)
 	TickType_t    xLastWakeTime = xTaskGetTickCount();
 
 	while (xSemaphoreTake(_button_task_semaphore, 0) == pdFALSE) {
-		handle_timer5_poll_button();
+		_handle_timer5_poll_button();
 		vTaskDelayUntil(&xLastWakeTime, period_ms);
 	}
-	handle_timer5_poll_button();
+	_handle_timer5_poll_button();
 	BUTTON_INFO("Delete button task\n");
 	xSemaphoreGive(_button_task_semaphore);
 	vTaskDelete(_button_task);
