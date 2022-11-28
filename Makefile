@@ -214,15 +214,15 @@ $(TARGET_BIN): $(TARGET_ELF)
 $(TARGET_HEX): $(TARGET_ELF)
 	$(_V_HEX_$(V))$(OBJCOPY) -O ihex $< $@
 
-$(OBJDIR)/%.o: %.c | $(OBJDIR)
+$(OBJDIR)/%.o: %.c
 	@mkdir -p $(abspath $(dir $@))
 	$(_V_CC_$(V))$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
-$(OBJDIR)/%.o: %.cpp | $(OBJDIR)
+$(OBJDIR)/%.o: %.cpp
 	@mkdir -p $(abspath $(dir $@))
 	$(_V_CXX_$(V))$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
-$(OBJDIR)/%.o: %.ino | $(OBJDIR)
+$(OBJDIR)/%.o: %.ino
 	@mkdir -p $(abspath $(dir $@))
 	$(_V_CXX_$(V))$(CXX) $(CPPFLAGS) $(CXXFLAGS) -x c++ -c -o $@ $<
 
