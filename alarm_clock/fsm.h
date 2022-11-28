@@ -54,7 +54,7 @@ static inline enum fsm_handler_rc transition_guard(struct fsm *fsm, fsm_event_ha
 
 #define FSM_HANDLED()          (FSM_RC_HANDLED)
 #define FSM_IGNORED()          (FSM_RC_IGNORED)
-#define FSM_TRANSITION(target) transition_guard(&fsm->fsm, (fsm_event_handler_t) (target))
+#define FSM_TRANSITION(target) transition_guard(fsm, (fsm_event_handler_t) (target))
 
 void fsm_init(struct fsm             *fsm,
               char                   *name,
