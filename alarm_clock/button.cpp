@@ -124,7 +124,6 @@ static void cb_button_timer(void)
 	const uint64_t curr_time  = millis();
 	uint16_t       next_timer = 0;
 	button_evt_t   button_evt;
-	uint32_t       fsm_evt;
 
 	for (auto &button : button_states) {
 		if (button.on_use and button.input_mode == B_IRQ) {
