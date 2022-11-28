@@ -39,12 +39,30 @@ LIBRARIES_CXX_SRC += $(foreach dir,$(LIBRARIES_DIRS), $(wildcard $(dir)*/*.cpp))
 TARGET_CC_SRC  := $(wildcard $(SKETCH)/*.c)
 TARGET_CXX_SRC := $(wildcard $(SKETCH)/*.cpp)
 
-VARIANT_DIR = lib/ArduinoCore-samd/variants/mkrwifi1010
-VARIANT_SRC = $(VARIANT_DIR)/variant.cpp
-CMSIS_DIR   = lib/CMSIS_5/CMSIS/Core
-SAM_DIR     = lib/CMSIS-Atmel/CMSIS/CMSIS/Device/ATMEL
+VARIANT_DIR := lib/ArduinoCore-samd/variants/mkrwifi1010
+VARIANT_SRC := $(VARIANT_DIR)/variant.cpp
+CMSIS_DIR   := lib/CMSIS_5/CMSIS/Core
+SAM_DIR     := lib/CMSIS-Atmel/CMSIS/CMSIS/Device/ATMEL
 
-SKETCH_SRC = alarm_clock/alarm_clock.ino
+SKETCH_SRC := alarm_clock/alarm_clock.ino
+
+# List all .o files
+CORE_OBJS := $(patsubst %.c,$(OBJDIR)/%.o,$(CORE_CC_SRC)) \
+             $(patsubst %.cpp,$(OBJDIR)/%.o,$(CORE_CXX_SRC)) \
+             $(patsubst %.c,$(OBJDIR)/%.o,$(CORE_LIBRAIRIES_CC_SRC)) \
+             $(patsubst %.cpp,$(OBJDIR)/%.o,$(CORE_LIBRAIRIES_CXX_SRC))
+
+LIBRARIES_OBJS := $(patsubst %.c,$(OBJDIR)/%.o,$(LIBRARIES_CC_SRC)) \
+                  $(patsubst %.cpp,$(OBJDIR)/%.o,$(LIBRARIES_CXX_SRC))
+
+TARGET_OBJ := $(patsubst %.cpp,$(OBJDIR)/%.o,$(TARGET_CXX_SRC)) \
+              $(patsubst %.c,$(OBJDIR)/%.o,$(TARGET_CC_SRC))
+
+VARIANT_OBJ := $(patsubst %.cpp,$(OBJDIR)/%.o,$(VARIANT_SRC))
+
+SKETCH_OBJ := $(patsubst %.ino,$(OBJDIR)/%.o,$(SKETCH_SRC))
+
+SRCS := $(CORE_OBJS) $(LIBRARIES_OBJS) $(TARGET_OBJ) $(VARIANT_OBJ) $(SKETCH_OBJ)
 
 COMPORT     ?= /dev/ttyACM0
 BOSSAC      ?= bossac
@@ -94,10 +112,12 @@ LCPPFLAGS  += -MMD -MP
 CPUFLAGS    = -mcpu=cortex-m0plus -mthumb -ggdb3 -Os
 
 # used in CFLAGS/CXXFLAGS/ASFLAGS, but not LDFLAGS
-CCXXFLAGS   = $(BOARD_FLAGS) $(CPUFLAGS) -Wall -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter -Wno-switch -Wno-ignored-qualifiers
+CCXXFLAGS  := $(BOARD_FLAGS) $(CPUFLAGS) -Wall -Wextra -Werror -Wno-unused-parameter -Wno-switch -Wno-ignored-qualifiers
 CCXXFLAGS  += -fno-exceptions -ffunction-sections -fdata-sections -Wno-expansion-to-defined
 
-CXXFLAGS   += -Wno-class-memaccess -Wno-address-of-packed-member -Wno-format-overflow -Wno-restrict -Wno-maybe-uninitialized -Wno-sized-deallocation
+# Too many warning in Arduino source code, silent them
+CXXFLAGS_EXTRA_ARDUINO := -Wno-class-memaccess -Wno-address-of-packed-member -Wno-format-overflow -Wno-restrict -Wno-maybe-uninitialized 
+CXXFLAGS_EXTRA_ARDUINO += -Wno-sized-deallocation -Wno-unused-variable
 
 LCFLAGS     = $(CCXXFLAGS) -std=gnu11
 
@@ -111,31 +131,18 @@ LLDFLAGS   += $(if $(filter $(PRINTF_FLOAT),1), $(PRINTF_FLOAT_FLAG))
 LLDFLAGS   += -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--unresolved-symbols=report-all
 LLDFLAGS   += -Wl,--warn-common -Wl,--warn-section-align
 LLDFLAGS   += -Wl,-Map=$(OBJDIR)/$(TARGET).map
-LLDFLAGS   += -L$(OBJDIR) -L$(CMSIS_DIR)
+LLDFLAGS   += -static -L$(OBJDIR) -L$(CMSIS_DIR) -Wl,--as-needed
+
+LIBS       := -l:arduino_libraries_lib.a -l:arduino_core_lib.a
 
 define override_flags
 override $(1) := $$(strip $$(L$(1)) $$($(1)))
 endef
 $(foreach f,CPPFLAGS CFLAGS CXXFLAGS ASFLAGS LDFLAGS LIBS,$(eval $(call override_flags,$(f))))
 
-CORE_OBJS := $(patsubst %.c,$(OBJDIR)/%.o,$(CORE_CC_SRC)) \
-            $(patsubst %.cpp,$(OBJDIR)/%.o,$(CORE_CXX_SRC)) \
-            $(patsubst %.c,$(OBJDIR)/%.o,$(CORE_LIBRAIRIES_CC_SRC)) \
-            $(patsubst %.cpp,$(OBJDIR)/%.o,$(CORE_LIBRAIRIES_CXX_SRC))
-
-LIBRARIES_OBJS := $(patsubst %.c,$(OBJDIR)/%.o,$(LIBRARIES_CC_SRC)) \
-                 $(patsubst %.cpp,$(OBJDIR)/%.o,$(LIBRARIES_CXX_SRC))
-
-TARGET_OBJ := $(patsubst %.cpp,$(OBJDIR)/%.o,$(TARGET_CXX_SRC)) \
-             $(patsubst %.c,$(OBJDIR)/%.o,$(TARGET_CC_SRC))
-
-VARIANT_OBJ := $(patsubst %.cpp,$(OBJDIR)/%.o,$(VARIANT_SRC))
-
-SKETCH_OBJ := $(patsubst %.ino,$(OBJDIR)/%.o,$(SKETCH_SRC))
-
-TARGET_ELF  = $(OBJDIR)/$(TARGET).elf
-TARGET_BIN  = $(OBJDIR)/$(TARGET).bin
-TARGET_HEX  = $(OBJDIR)/$(TARGET).hex
+TARGET_ELF  := $(OBJDIR)/$(TARGET).elf
+TARGET_BIN  := $(OBJDIR)/$(TARGET).bin
+TARGET_HEX  := $(OBJDIR)/$(TARGET).hex
 
 V ?= 0
 _V_CC_0        = @echo "  CC      " $<;
@@ -186,17 +193,26 @@ disvim: $(TARGET_ELF)
 .PHONY: hex
 hex: $(TARGET_HEX)
 
-$(TARGET_ELF): $(TARGET_OBJ) $(CORE_OBJS) $(LIBRARIES_OBJS) $(VARIANT_OBJ) $(SKETCH_OBJ) $(LDSCRIPT)
-	+$(_V_LD_$(V))$(CXXLD) $(LDFLAGS) -T$(LDSCRIPT) -o $@ $(CORE_OBJS) $(LIBRARIES_OBJS) $(TARGET_OBJ) $(VARIANT_OBJ) $(SKETCH_OBJ) -Wl,--as-needed $(LIBS)
+# Create static libraries of Arduino source code and libraries
+arduino_core_lib: CXXFLAGS += $(CXXFLAGS_EXTRA_ARDUINO)
+arduino_core_lib: $(CORE_OBJS)
+	$(_V_AR_$(V))ar -r -o $(OBJDIR)/$@.a $^
+
+arduino_libraries_lib: CXXFLAGS += $(CXXFLAGS_EXTRA_ARDUINO)
+arduino_libraries_lib: $(LIBRARIES_OBJS)
+	$(_V_AR_$(V))ar -r -o $(OBJDIR)/$@.a $^
+
+# Generic targets
+$(SRCS): Makefile
+
+$(TARGET_ELF): arduino_core_lib arduino_libraries_lib $(TARGET_OBJ) $(VARIANT_OBJ) $(SKETCH_OBJ) $(LDSCRIPT)
+	$(_V_LD_$(V))$(CXXLD) $(LDFLAGS) -T$(LDSCRIPT) -o $@ $(TARGET_OBJ) $(VARIANT_OBJ) $(SKETCH_OBJ) $(LIBS)
 
 $(TARGET_BIN): $(TARGET_ELF)
 	$(_V_BIN_$(V))$(OBJCOPY) -O binary $< $@
 
 $(TARGET_HEX): $(TARGET_ELF)
 	$(_V_HEX_$(V))$(OBJCOPY) -O ihex $< $@
-
-$(OBJDIR):
-	@mkdir -p $(abspath $(dir $@))
 
 $(OBJDIR)/%.o: %.c | $(OBJDIR)
 	@mkdir -p $(abspath $(dir $@))
