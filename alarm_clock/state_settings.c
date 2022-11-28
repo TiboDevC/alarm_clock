@@ -3,6 +3,7 @@
 #include "EPD_3in7.h"
 #include "button.h"
 #include "screen.h"
+#include "rtc_tool.h"
 
 static uint64_t _settings_entry_time;
 
