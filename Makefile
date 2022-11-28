@@ -2,10 +2,10 @@ TARGET     := mkrwifi1010
 SKETCH     := alarm_clock
 
 # Board specific flags, TODO include it from bootloader definition
-BOARD_FLAGS = -DUSB_VID=0x2341 -DUSB_PID=0x8054 -DF_CPU=48000000 -DPinStatus=uint8_t
+BOARD_FLAGS := -DUSB_VID=0x2341 -DUSB_PID=0x8054 -DF_CPU=48000000 -DPinStatus=uint8_t
 
 # Directory Configuration
-OBJDIR      = obj
+OBJDIR      := obj
 
 # Arduino Core library
 CORE         := ArduinoCore-samd/cores/arduino/ ArduinoCore-samd/cores/arduino/USB/
@@ -66,12 +66,12 @@ SRCS := $(CORE_OBJS) $(LIBRARIES_OBJS) $(TARGET_OBJ) $(VARIANT_OBJ) $(SKETCH_OBJ
 
 COMPORT     ?= /dev/ttyACM0
 BOSSAC      ?= bossac
-BOSSAC_FLAGS = --erase --write --verify --reset --usb-port --port=$(COMPORT)
+BOSSAC_FLAGS := --erase --write --verify --reset --usb-port --port=$(COMPORT)
 OS          := $(shell uname -s)
 ifeq ($(OS),Linux)
-RESET_SCRIPT = scripts/reset-arduino-linux.sh -q $(COMPORT)
+RESET_SCRIPT := scripts/reset-arduino-linux.sh -q $(COMPORT)
 else
-RESET_SCRIPT = scripts/ard-reset-arduino --zero $(COMPORT)
+RESET_SCRIPT := scripts/ard-reset-arduino --zero $(COMPORT)
 endif
 
 # my bossa-git AUR package sets the version to the Arch pkgver, which is 1.8.rXX.gYYYYYYY since
@@ -104,12 +104,12 @@ export GDB     = $(TOOLCHAIN_BIN)arm-none-eabi-gdb
 # Sketches can set PRINTF_FLOAT=1 to build with this option (adds 12kB)
 PRINTF_FLOAT_FLAG = -Wl,--require-defined=_printf_float
 
-LCPPFLAGS   = -D__SAMD21G18A__ -DUSBCON $(SOURCE_VERSION_FLAG)
+LCPPFLAGS  := -D__SAMD21G18A__ -DUSBCON $(SOURCE_VERSION_FLAG)
 LCPPFLAGS  += -I$(SKETCH) $(CORE_INC) $(CORE_LIBRAIRIES_INC) $(LIBRARIES_INC) -I$(CMSIS_DIR)/Include -I$(SAM_DIR) -I$(VARIANT_DIR)
 LCPPFLAGS  += -MMD -MP
 
 # common flags
-CPUFLAGS    = -mcpu=cortex-m0plus -mthumb -ggdb3 -Os
+CPUFLAGS   := -mcpu=cortex-m0plus -mthumb -ggdb3 -Os
 
 # used in CFLAGS/CXXFLAGS/ASFLAGS, but not LDFLAGS
 CCXXFLAGS  := $(BOARD_FLAGS) $(CPUFLAGS) -Wall -Wextra -Werror -Wno-unused-parameter -Wno-switch -Wno-ignored-qualifiers
@@ -119,14 +119,14 @@ CCXXFLAGS  += -fno-exceptions -ffunction-sections -fdata-sections -Wno-expansion
 CXXFLAGS_EXTRA_ARDUINO := -Wno-class-memaccess -Wno-address-of-packed-member -Wno-format-overflow -Wno-restrict -Wno-maybe-uninitialized 
 CXXFLAGS_EXTRA_ARDUINO += -Wno-sized-deallocation -Wno-unused-variable
 
-LCFLAGS     = $(CCXXFLAGS) -std=gnu11
+LCFLAGS    := $(CCXXFLAGS) -std=gnu11
 
-LCXXFLAGS   = $(CCXXFLAGS) -std=gnu++17 -fno-rtti -fno-threadsafe-statics
+LCXXFLAGS  := $(CCXXFLAGS) -std=gnu++17 -fno-rtti -fno-threadsafe-statics
 
-LASFLAGS    = $(CCXXFLAGS)
+LASFLAGS   := $(CCXXFLAGS)
 
 LDSCRIPT   ?= $(VARIANT_DIR)/linker_scripts/gcc/flash_with_bootloader.ld
-LLDFLAGS    = $(CPUFLAGS) --specs=nano.specs --specs=nosys.specs
+LLDFLAGS   := $(CPUFLAGS) --specs=nano.specs --specs=nosys.specs
 LLDFLAGS   += $(if $(filter $(PRINTF_FLOAT),1), $(PRINTF_FLOAT_FLAG))
 LLDFLAGS   += -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--unresolved-symbols=report-all
 LLDFLAGS   += -Wl,--warn-common -Wl,--warn-section-align
