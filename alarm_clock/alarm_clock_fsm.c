@@ -76,7 +76,7 @@ static void _fsm_task(void *pvParameters)
 }
 
 
-#define FSM_TASK_STACK_SIZE 600
+#define FSM_TASK_STACK_SIZE 400
 
 static StaticTask_t _fsm_task_buffer;
 static StackType_t  _fsm_stack[FSM_TASK_STACK_SIZE];
