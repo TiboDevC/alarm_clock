@@ -7,6 +7,10 @@
 extern "C" {
 #endif /* __cplusplus */
 
+#include "FreeRTOS.h"
+#include "semphr.h"
+#include "task.h"
+
 #include "music.h"
 
 #ifdef __cplusplus
@@ -26,6 +30,11 @@ int music_init()
 	return 0;
 }
 
+void music_deinit()
+{
+	AudioZero.end();
+}
+
 /*
  * https://audio.online-convert.com/convert-to-wav
  * 8 bits
@@ -33,21 +42,55 @@ int music_init()
  * Mono
  */
 
-void music_play()
+#define MUSIC_TASK_STACK_SIZE 300
+
+static StaticTask_t _music_task_buffer;
+static StackType_t  _music_stack[MUSIC_TASK_STACK_SIZE];
+static TaskHandle_t _music_task_handler = NULL;
+
+static SemaphoreHandle_t _sempahore_music = NULL;
+static StaticSemaphore_t _semaphore_music_buffer;
+
+static void _music_task(void *pvParameters)
 {
 	// open wave file from sdcard
 	File myFile = SD.open("STR1.wav");
 
-	if (!myFile) {
-		// if the file didn't open, print an error and stop
-		SerialUSB.println("error opening music file");
-		return;
+	if (myFile) {
+		SerialUSB.println("[music] Playing music");
+
+		while (xSemaphoreTake(_sempahore_music, 0) == pdFALSE and myFile.available()) {
+			AudioZero.play(myFile);
+		}
 	}
 
-	SerialUSB.println("Playing");
+	SerialUSB.println("[music] Stop playing music");
+	myFile.close();
+	_music_task_handler = NULL;
+	vTaskDelete(_music_task_handler);
+}
 
-	// until the file is not finished
-	AudioZero.play(myFile);
+void music_play()
+{
+	if (_sempahore_music == NULL) {
+		_sempahore_music = xSemaphoreCreateBinaryStatic(&_semaphore_music_buffer);
+	}
+	xSemaphoreTake(_sempahore_music, 0);
+	if (_music_task_handler == NULL) {
+		SerialUSB.println("[music] Start music task");
+		_music_task_handler = xTaskCreateStatic(_music_task,
+		                                        "Music task",
+		                                        MUSIC_TASK_STACK_SIZE,
+		                                        NULL,
+		                                        tskIDLE_PRIORITY + 2,
+		                                        _music_stack,
+		                                        &_music_task_buffer);
+	}
+}
 
-	SerialUSB.println("End of file. Thank you for listening!");
+void music_stop()
+{
+	if (_sempahore_music != NULL) {
+		xSemaphoreGive(_sempahore_music);
+	}
 }
