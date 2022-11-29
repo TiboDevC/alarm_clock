@@ -347,8 +347,8 @@ static void _button_start_polling(void *pvParameters)
 	_handle_timer5_poll_button();
 	BUTTON_INFO("Delete button task\n");
 	xSemaphoreGive(_button_task_semaphore);
-	vTaskDelete(_button_task);
 	_button_task = nullptr;
+	vTaskDelete(_button_task);
 }
 
 void button_start_polling(void)
