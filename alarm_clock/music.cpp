@@ -1,18 +1,29 @@
 #include <SD.h>
 #include <SPI.h>
 
+#include "audio.h"
+#ifdef __cplusplus
+
+extern "C" {
+#endif /* __cplusplus */
+
 #include "music.h"
 
-void music_init()
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
+int music_init()
 {
-	SerialUSB.print("Initializing SD card...");
+	SerialUSB.print("[music] Initializing...");
 
 	if (!SD.begin(4)) {
 		SerialUSB.println(" failed!");
-		while (true)
-			;
+		return -1;
 	}
 	AudioZero.begin(44100);
+	SerialUSB.println(" done!");
+	return 0;
 }
 
 /*
