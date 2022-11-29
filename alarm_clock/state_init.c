@@ -5,6 +5,7 @@
 #include "debug.h"
 #include "rtc_tool.h"
 #include "screen.h"
+#include "timer.h"
 #include "wifi_tool.h"
 
 enum fsm_handler_rc state_init(struct fsm *fsm, struct fsm_event const *event)
@@ -14,6 +15,7 @@ enum fsm_handler_rc state_init(struct fsm *fsm, struct fsm_event const *event)
 	switch (event_alarm_clock) {
 	case FSM_EVENT_INIT:
 		debug("[state_init] event_init\n");
+		setup_gclk();
 		init_buttons();
 
 		DEV_Module_Init();

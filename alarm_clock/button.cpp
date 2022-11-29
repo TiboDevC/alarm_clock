@@ -330,7 +330,6 @@ void init_buttons(void)
 	}
 
 	/* Init debounce button timers */
-	setup_gclk();
 	setup_timer4();
 }
 
