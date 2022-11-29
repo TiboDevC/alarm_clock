@@ -22,6 +22,8 @@ enum fsm_handler_rc state_alarm_ongoing(struct fsm *fsm, struct fsm_event const 
 		return FSM_HANDLED();
 	case FSM_EVENT_BUTTON:
 		/* If a button is pushed, stop the alarm */
+		music_stop();
+		music_deinit();
 		return FSM_TRANSITION(&state_clock_display);
 	default:
 		break;
