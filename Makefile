@@ -194,18 +194,18 @@ disvim: $(TARGET_ELF)
 hex: $(TARGET_HEX)
 
 # Create static libraries of Arduino source code and libraries
-arduino_core_lib: CXXFLAGS += $(CXXFLAGS_EXTRA_ARDUINO)
-arduino_core_lib: $(CORE_OBJS)
-	$(_V_AR_$(V))ar -r -o $(OBJDIR)/$@.a $^
+$(OBJDIR)/arduino_core_lib.a: CXXFLAGS += $(CXXFLAGS_EXTRA_ARDUINO)
+$(OBJDIR)/arduino_core_lib.a: $(CORE_OBJS)
+	$(_V_AR_$(V))ar -r -o $@ $^
 
-arduino_libraries_lib: CXXFLAGS += $(CXXFLAGS_EXTRA_ARDUINO)
-arduino_libraries_lib: $(LIBRARIES_OBJS)
-	$(_V_AR_$(V))ar -r -o $(OBJDIR)/$@.a $^
+$(OBJDIR)/arduino_libraries_lib.a: CXXFLAGS += $(CXXFLAGS_EXTRA_ARDUINO)
+$(OBJDIR)/arduino_libraries_lib.a: $(LIBRARIES_OBJS)
+	$(_V_AR_$(V))ar -r -o $@ $^
 
 # Generic targets
 $(SRCS): Makefile
 
-$(TARGET_ELF): arduino_core_lib arduino_libraries_lib $(TARGET_OBJ) $(VARIANT_OBJ) $(SKETCH_OBJ) $(LDSCRIPT)
+$(TARGET_ELF): $(OBJDIR)/arduino_core_lib.a $(OBJDIR)/arduino_libraries_lib.a $(TARGET_OBJ) $(VARIANT_OBJ) $(SKETCH_OBJ) $(LDSCRIPT)
 	$(_V_LD_$(V))$(CXXLD) $(LDFLAGS) -T$(LDSCRIPT) -o $@ $(TARGET_OBJ) $(VARIANT_OBJ) $(SKETCH_OBJ) $(LIBS)
 
 $(TARGET_BIN): $(TARGET_ELF)
