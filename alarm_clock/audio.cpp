@@ -65,28 +65,25 @@ void AudioZeroClass::end()
 
 void AudioZeroClass::play(File myFile)
 {
-	while (myFile.available()) {
-		if (!__StartFlag) {
-			myFile.read(__WavSamples, __NumberOfSamples);
-			__HeadIndex = 0;
+	if (!__StartFlag) {
+		myFile.read(__WavSamples, __NumberOfSamples);
+		__HeadIndex = 0;
 
-			/*once the buffer is filled for the first time the counter can be started*/
-			tcStartCounter();
-			__StartFlag = true;
-		} else {
-			uint32_t current__SampleIndex = __SampleIndex;
+		/*once the buffer is filled for the first time the counter can be started*/
+		tcStartCounter();
+		__StartFlag = true;
+	} else {
+		uint32_t current__SampleIndex = __SampleIndex;
 
-			if (current__SampleIndex > __HeadIndex) {
-				myFile.read(&__WavSamples[__HeadIndex], current__SampleIndex - __HeadIndex);
-				__HeadIndex = current__SampleIndex;
-			} else if (current__SampleIndex < __HeadIndex) {
-				myFile.read(&__WavSamples[__HeadIndex], __NumberOfSamples - 1 - __HeadIndex);
-				myFile.read(__WavSamples, current__SampleIndex);
-				__HeadIndex = current__SampleIndex;
-			}
+		if (current__SampleIndex > __HeadIndex) {
+			myFile.read(&__WavSamples[__HeadIndex], current__SampleIndex - __HeadIndex);
+			__HeadIndex = current__SampleIndex;
+		} else if (current__SampleIndex < __HeadIndex) {
+			myFile.read(&__WavSamples[__HeadIndex], __NumberOfSamples - 1 - __HeadIndex);
+			myFile.read(__WavSamples, current__SampleIndex);
+			__HeadIndex = current__SampleIndex;
 		}
 	}
-	myFile.close();
 }
 
 
@@ -110,7 +107,6 @@ void AudioZeroClass::dacConfigure(void)
  */
 void AudioZeroClass::tcConfigure(uint32_t sampleRate)
 {
-	Serial.println("[Tibo] synch0");
 	while (GCLK->STATUS.bit.SYNCBUSY)
 		;
 
