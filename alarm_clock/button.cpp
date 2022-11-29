@@ -332,7 +332,6 @@ void init_buttons(void)
 	/* Init debounce button timers */
 	setup_gclk();
 	setup_timer4();
-	setup_timer5();
 }
 
 static void _button_start_polling(void *pvParameters)
