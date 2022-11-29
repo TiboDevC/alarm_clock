@@ -41,9 +41,7 @@ void music_play()
 	if (!myFile) {
 		// if the file didn't open, print an error and stop
 		SerialUSB.println("error opening music file");
-
-		while (true)
-			;
+		return;
 	}
 
 	SerialUSB.println("Playing");
