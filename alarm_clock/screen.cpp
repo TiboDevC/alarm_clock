@@ -197,7 +197,7 @@ void screen_update_clock()
 
 	if (alaram_0.is_set) {
 		const uint32_t minute_of_day       = hours * 60 + minutes;
-		const uint32_t minute_of_day_alarm = alaram_0.alarm_hour * 60 + alaram_0.alarm_minute * 60;
+		const uint32_t minute_of_day_alarm = alaram_0.alarm_hour * 60 + alaram_0.alarm_minute;
 		uint8_t        is_alarm_valid      = 0;
 
 		sprintf(date_buf, "none");
@@ -230,7 +230,7 @@ void screen_update_clock()
 	const alarm_params_t alaram_1 = get_alarm_1();
 	if (alaram_1.is_set) {
 		const uint32_t minute_of_day       = hours * 60 + minutes;
-		const uint32_t minute_of_day_alarm = alaram_1.alarm_hour * 60 + alaram_1.alarm_minute * 60;
+		const uint32_t minute_of_day_alarm = alaram_1.alarm_hour * 60 + alaram_1.alarm_minute;
 		uint8_t        is_alarm_valid      = 0;
 
 		sprintf(date_buf, "none");
