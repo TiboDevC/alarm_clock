@@ -2,8 +2,11 @@
 
 #include "EPD_3in7.h"
 #include "button.h"
-#include "screen.h"
+#include "debug.h"
 #include "rtc_tool.h"
+#include "screen.h"
+
+#define SETTING_SCREEN_TIMEOUT_SEC 60
 
 static uint64_t _settings_entry_time;
 
@@ -15,8 +18,10 @@ static enum fsm_handler_rc _handle_button(struct fsm *fsm, uint32_t evt)
 	evt_button.push_count = (evt >> BUTTON_COUNT_SHIFT) & BUTTON_COUNT_MSK;
 
 	if (evt_button.action == LONG_PRESS && evt_button.button_id == B_MENU_CLOCK) {
-		return FSM_TRANSITION(&state_settings);
+		return FSM_TRANSITION(&state_clock_display);
 	}
+	ui_button_event(&evt_button);
+	ui_update();
 	return FSM_HANDLED();
 }
 
@@ -40,6 +45,12 @@ enum fsm_handler_rc state_settings(struct fsm *fsm, struct fsm_event const *even
 	case FSM_EVENT_BUTTON:
 		_settings_entry_time = rtc_get_epoch();
 		return _handle_button(fsm, event->type);
+	case FSM_EVENT_RTC_WAKE_UP:
+		if (rtc_get_epoch() - _settings_entry_time > SETTING_SCREEN_TIMEOUT_SEC) {
+			debug("[state_settings] Timeout, return to clock display\n");
+			return FSM_TRANSITION(&state_clock_display);
+		}
+		return FSM_HANDLED();
 	default:
 		break;
 	}

@@ -90,7 +90,7 @@ static void draw_days_alarm(const uint16_t start_x,
 	    offset_text_x + start_x, start_y + offset_text_y, character, &Font24, bg_color, ft_color);
 }
 
-static uint8_t alarm_select{0};
+static uint8_t _alarm_select{0};
 
 void screen_display_param()
 {
@@ -137,7 +137,7 @@ void screen_display_param()
 	draw_days_alarm(start_x + 40 * 5, start_y_1, days_1.saturday, "s", bg_color);
 	draw_days_alarm(start_x + 40 * 6, start_y_1, days_1.sunday, "d", bg_color);
 
-	if (alarm_select == 0) {
+	if (_alarm_select == 0) {
 		Paint_DrawCircle(100, start_y, 5, ft_color, DOT_PIXEL_3X3, DRAW_FILL_FULL);
 	} else {
 		Paint_DrawCircle(100, start_y_1, 5, ft_color, DOT_PIXEL_3X3, DRAW_FILL_FULL);
@@ -299,64 +299,60 @@ void ui_button_event(const struct button_evt_t *button_evt)
 {
 	const uint64_t curr_time      = millis();
 
-	//    button_get_state(button_action, num_button_ack);
-
-	uint8_t screen_need_update = 0;
 	int16_t clock_time;
 
 	last_button_time   = curr_time;
-	screen_need_update = 1;
 
 	if (ui_state == menu_settings) {
 		alarm_params_t alarm;
 		if (button_evt->action == SHORT_PRESS) {
 			if (button_evt->button_id == B_MENU_CLOCK) {
-				alarm_select = 0;
+				_alarm_select = 0;
 			} else if (button_evt->button_id == B_MENU_SETTINGS) {
-				alarm_select = 1;
+				_alarm_select = 1;
 			}
 		}
 
-		if (alarm_select == 0) {
+		if (_alarm_select == 0) {
 			alarm = get_alarm_0();
 		} else {
 			alarm = get_alarm_1();
 		}
 		clock_time   = alarm.alarm_minute + (alarm.alarm_hour * 60);
-		auto &days_0 = alarm.alarm_days.days;
+		auto &alarm_days = alarm.alarm_days.days;
 		switch (button_evt->button_id) {
 		case B_DAY_MONDAY:
-			days_0.monday = ~days_0.monday;
+			alarm_days.monday = ~alarm_days.monday;
 			break;
 		case B_DAY_TUESDAY:
-			days_0.tuesday = ~days_0.tuesday;
+			alarm_days.tuesday = ~alarm_days.tuesday;
 			break;
 		case B_DAY_WEDNESDAY:
-			days_0.wednesday = ~days_0.wednesday;
+			alarm_days.wednesday = ~alarm_days.wednesday;
 			break;
 		case B_DAY_THURSDAY:
-			days_0.thursday = ~days_0.thursday;
+			alarm_days.thursday = ~alarm_days.thursday;
 			break;
 		case B_DAY_FRIDAY:
-			days_0.friday = ~days_0.friday;
+			alarm_days.friday = ~alarm_days.friday;
 			break;
 		case B_DAY_SATURDAY:
-			days_0.saturday = ~days_0.saturday;
+			alarm_days.saturday = ~alarm_days.saturday;
 			break;
 		case B_DAY_SUNDAY:
-			days_0.sunday = ~days_0.sunday;
+			alarm_days.sunday = ~alarm_days.sunday;
 			break;
 		case B_MIN_INC:
-			clock_time += 5 * button_evt->push_count;
+			clock_time += 5u * button_evt->push_count;
 			break;
 		case B_MIN_DEC:
-			clock_time -= 5 * button_evt->push_count;
+			clock_time -= 5u * button_evt->push_count;
 			break;
 		case B_HOUR_INC:
-			clock_time += (1 * 60) * button_evt->push_count;
+			clock_time += (1u * 60u) * button_evt->push_count;
 			break;
 		case B_HOUR_DEC:
-			clock_time -= (1 * 60) * button_evt->push_count;
+			clock_time -= (1u * 60u) * button_evt->push_count;
 			break;
 		default:
 			break;
@@ -365,11 +361,32 @@ void ui_button_event(const struct button_evt_t *button_evt)
 		alarm.alarm_minute = clock_time % 60;
 		alarm.alarm_hour   = clock_time / 60;
 		alarm.is_set       = true;
-		if (alarm_select == 0) {
+		if (_alarm_select == 0) {
 			set_alarm_0(alarm);
+			SerialUSB.print("[screen] Setting alarm 0\n");
 		} else {
 			set_alarm_1(alarm);
+			SerialUSB.print("[screen] Setting alarm 1\n");
 		}
+		SerialUSB.print("Monday ");
+		SerialUSB.println(alarm.alarm_days.days.monday);
+		SerialUSB.print("Tuesday ");
+		SerialUSB.println(alarm.alarm_days.days.tuesday);
+		SerialUSB.print("Wednesday ");
+		SerialUSB.println(alarm.alarm_days.days.wednesday);
+		SerialUSB.print("Thursday ");
+		SerialUSB.println(alarm.alarm_days.days.thursday);
+		SerialUSB.print("Friday ");
+		SerialUSB.println(alarm.alarm_days.days.friday);
+		SerialUSB.print("Saturday ");
+		SerialUSB.println(alarm.alarm_days.days.saturday);
+		SerialUSB.print("Sunday ");
+		SerialUSB.println(alarm.alarm_days.days.sunday);
+		SerialUSB.print("At: ");
+		SerialUSB.print(alarm.alarm_hour);
+		SerialUSB.print("h");
+		SerialUSB.println(alarm.alarm_minute);
+
 	} else if (button_evt->action == SHORT_PRESS and ui_state == menu_clock) {
 		/* Activate/deactivate alarm in clock screen */
 		if (button_evt->button_id == B_MENU_CLOCK) {
@@ -381,14 +398,6 @@ void ui_button_event(const struct button_evt_t *button_evt)
 			alarm_1.is_set         = !alarm_1.is_set;
 			set_alarm_1(alarm_1);
 		}
-	}
-
-	if (ui_state == menu_settings and curr_time - last_button_time > timeout_setting_ms) {
-		/* Timeout, go display clock screen */
-		ui_set_state(menu_clock);
-	}
-	if (screen_need_update) {
-		ui_update();
 	}
 }
 
