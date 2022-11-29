@@ -1,4 +1,3 @@
-#include <AudioZero.h>
 #include <SD.h>
 #include <SPI.h>
 

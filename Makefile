@@ -23,7 +23,6 @@ CORE_LIBRAIRIES_CXX_SRC := $(foreach dir,$(CORE_LIBRAIRIES_DIR), $(wildcard $(di
 
 LIBRARIES  := FlashStorage_SAMD
 LIBRARIES  += Arduino-FreeRTOS-SAMD21
-LIBRARIES  += AudioZero
 LIBRARIES  += SD
 LIBRARIES  += RTCZero
 LIBRARIES  += WiFiNINA
