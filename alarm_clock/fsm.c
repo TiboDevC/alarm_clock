@@ -46,9 +46,7 @@ void fsm_init(struct fsm               *fsm,
 	/* Initialize tracing utilities and configuration */
 	strncpy(fsm->name, name, FSM_NAME_MAX_LEN);
 	fsm->name[FSM_NAME_MAX_LEN] = '\0';
-
-	debug("Init FSM\n");
-
+	
 	fsm->state_name_getter = NULL;
 	fsm->trace_transitions = 0;
 	fsm->event_name_getter = NULL;
@@ -62,8 +60,6 @@ void fsm_init(struct fsm               *fsm,
 	(*fsm->state)(fsm, init_event);
 	/* Enter default state set by the initial pseudo state event handler. */
 	(*fsm->state)(fsm, &fsm_entry_event);
-
-	debug("END init FSM\n");
 }
 
 static void _assert_if_transition(enum fsm_handler_rc rc)
