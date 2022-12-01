@@ -40,6 +40,7 @@ static enum fsm_handler_rc _handle_button(struct fsm *fsm, uint32_t evt)
 enum fsm_handler_rc state_clock_display(struct fsm *fsm, struct fsm_event const *event)
 {
 	enum alarm_clock_fsm_event_type event_alarm_clock = event->type & ALARM_CLOCK_FSM_EVT_MSK;
+	uint64_t epoch;
 
 	switch (event_alarm_clock) {
 	case FSM_EVENT_ENTRY:
@@ -48,13 +49,14 @@ enum fsm_handler_rc state_clock_display(struct fsm *fsm, struct fsm_event const 
 		ui_update();
 		return FSM_HANDLED();
 	case FSM_EVENT_RTC_WAKE_UP:
-		if ((rtc_get_minutes() % SCREEN_REFRESH_FREQ_MIN == 0 && rtc_get_seconds() < 20) ||
-		    ((_last_epoch_refresh_time - rtc_get_epoch()) > SCREEN_REFRESH_FREQ_MIN * 60)) {
-			_last_epoch_refresh_time = rtc_get_epoch();
-			debug("Update screen\n");
+		epoch = rtc_get_epoch();
+		if (rtc_get_minutes() % SCREEN_REFRESH_FREQ_MIN == 0 ||
+		    (epoch - _last_epoch_refresh_time > SCREEN_REFRESH_FREQ_MIN * 60)) {
+			STATE_CLOCK_DISPLAY_INFO("Update screen\n");
+			_last_epoch_refresh_time = epoch;
 			ui_update();
 		} else {
-			debug("Do not update screen\n");
+			STATE_CLOCK_DISPLAY_INFO("Do not update screen yet\n");
 		}
 		return FSM_HANDLED();
 	case FSM_EVENT_BUTTON:
