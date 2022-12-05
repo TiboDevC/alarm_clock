@@ -115,6 +115,9 @@ void AudioZeroClass::tcConfigure(uint32_t sampleRate)
 	NVIC_SetPriority(TC5_IRQn, 0);
 	NVIC_EnableIRQ(TC5_IRQn);
 
+	REG_TC5_INTFLAG |= TC_INTFLAG_OVF;  // Clear the interrupt flags
+	REG_TC5_INTENSET = TC_INTENSET_OVF; // Enable TC5 interrupts
+
 	REG_TC5_CTRLA |= TC_CTRLA_PRESCALER_DIV1 | TC_CTRLA_WAVEGEN_MFRQ | TC_CTRLA_MODE_COUNT16;
 	while (TC5->COUNT16.STATUS.bit.SYNCBUSY)
 		;
