@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2015 by 
+ * Copyright (c) 2015 by
  Arturo Guadalupi <a.guadalupi@arduino.cc>
  Angelo Scialabba <a.scialabba@arduino.cc>
  Claudio Indellicati <c.indellicati@arduino.cc> <bitron.it@gmail.com>
- 
+
  * Audio library for Arduino Zero.
  *
  * This file is free software; you can redistribute it and/or modify
@@ -11,7 +11,7 @@
  * or the GNU Lesser General Public License version 2.1, both as
  * published by the Free Software Foundation.
  */
-	
+
 #ifndef AUDIOZERO_H
 #define AUDIOZERO_H
 
@@ -33,12 +33,8 @@ public:
 
 private:
 	static void dacConfigure(void);
-	static void tcConfigure(uint32_t sampleRate);
 	static bool tcIsSyncing(void);
-	static void tcStartCounter(void);
 	static void tcReset(void);
-	void tcEnable(void);
-	static void tcDisable(void);
 };
 
 extern AudioZeroClass AudioZero;

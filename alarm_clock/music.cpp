@@ -17,7 +17,7 @@ extern "C" {
 }
 #endif /* __cplusplus */
 
-int music_init(uint8_t volume_percent)
+int music_init(const uint8_t volume_percent)
 {
 	SerialUSB.print("[music] Initializing...");
 

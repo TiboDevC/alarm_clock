@@ -7,11 +7,10 @@
 #define TIMER_CLOCK_FREQ       48000000 /* Hz */
 #define TIMER_CLOCK_FREQ_DIV   16
 #define TIMER_TIMER4_FREQ_DIV  256
-#define TIMER_TIMER5_FREQ_DIV  64
 #define TIMER_TIMER5_FREQ_TCC0 100 /* Hz */
 
 static const uint32_t freq_timer2_ = (TIMER_CLOCK_FREQ / TIMER_CLOCK_FREQ_DIV) / TIMER_TIMER4_FREQ_DIV;
-static const uint32_t freq_timer5_ = (TIMER_CLOCK_FREQ / TIMER_CLOCK_FREQ_DIV) / TIMER_TIMER5_FREQ_DIV;
+static const uint32_t freq_timer5_ = (TIMER_CLOCK_FREQ / TIMER_CLOCK_FREQ_DIV);
 
 void (*cb_timer4_)(void);
 void (*cb_timer5_)(void);
@@ -94,9 +93,9 @@ static void _setup_timer4(uint16_t clk_div_)
  * Timer5 used to poll buttons at frequency TIMER_TIMER5_FREQ_TCC0
  * Configure the timer but do not start it
  */
-static void _setup_timer5(uint16_t clk_div_)
+static void _setup_timer5(uint32_t sample_rate)
 {
-	const uint16_t tcc0 = freq_timer5_ / TIMER_TIMER5_FREQ_TCC0;
+	const uint16_t tcc0 = (freq_timer5_ / sample_rate) - 1;
 
 	REG_TC5_CTRLA |= TC_CTRLA_SWRST; // Reset timer5
 
@@ -107,33 +106,8 @@ static void _setup_timer5(uint16_t clk_div_)
 	REG_TC5_INTFLAG |= TC_INTFLAG_OVF;  // Clear the interrupt flags
 	REG_TC5_INTENSET = TC_INTENSET_OVF; // Enable TC5 interrupts
 
-	uint16_t prescale = 0;
-	// debug("clk_div_: ");
-	// debug(clk_div_);
-	switch (clk_div_) {
-	case 1:
-		prescale = TC_CTRLA_PRESCALER(0);
-		break;
-	case 2:
-		prescale = TC_CTRLA_PRESCALER(1);
-		break;
-	case 4:
-		prescale = TC_CTRLA_PRESCALER(2);
-		break;
-	case 8:
-		prescale = TC_CTRLA_PRESCALER(3);
-		break;
-	case 16:
-		prescale = TC_CTRLA_PRESCALER(4);
-		break;
-	case 64:
-		prescale = TC_CTRLA_PRESCALER(5);
-		break;
-	default:
-		prescale = TC_CTRLA_PRESCALER(6);
-		break;
-	}
-	REG_TC5_CTRLA |= prescale | TC_CTRLA_WAVEGEN_MFRQ | TC_CTRLA_MODE_COUNT16; // Timer in 16 bits mode
+	REG_TC5_CTRLA |=
+	    TC_CTRLA_PRESCALER_DIV1_Val | TC_CTRLA_WAVEGEN_MFRQ | TC_CTRLA_MODE_COUNT16; // Timer in 16 bits mode
 	while (TC5->COUNT16.STATUS.bit.SYNCBUSY)
 		; // Wait for synchronization
 
@@ -147,12 +121,6 @@ void call_me_in_x_ms(uint32_t ms, void (*cb)(void))
 {
 	float    freq = 1000 / (float) (ms);
 	uint16_t tcc0 = (float) (freq_timer2_) / freq;
-	// debug("cmi: ");
-	// debug(ms);
-	// debug(", freq: ");
-	// debug(freq);
-	// debug(", tcc0: ");
-	// debug(tcc0);
 
 	TC4->COUNT16.CTRLA.bit.ENABLE = 0;
 	while (TC4->COUNT16.STATUS.bit.SYNCBUSY)
@@ -180,10 +148,10 @@ void setup_timer4()
 
 
 /* Configure timer5, do not start it */
-void setup_timer5()
+void setup_timer5(const uint32_t sample_rate)
 {
 	debug("setup_timer5\n");
-	_setup_timer5(TIMER_TIMER5_FREQ_DIV);
+	_setup_timer5(sample_rate);
 }
 
 /* Register a cb for timer5 and start the timer, setup_timer5 must be called first */
@@ -221,16 +189,8 @@ void TC4_Handler()
 
 void TC5_Handler()
 {
-	if (TC5->COUNT16.INTFLAG.bit.OVF && (TC5->COUNT16.INTENSET.bit.OVF)) {
-		/*write your interrupt code here*/
-		/*debug("int: ");
-	    debug(counter++);
-	    debug(", count: ");
-	    debug(REG_TC5_COUNT16_COUNT);*/
-		TC5->COUNT16.INTFLAG.reg = TC_INTFLAG_OVF;
-
-		if (cb_timer5_ != NULL) {
-			(*cb_timer5_)();
-		}
+	if (cb_timer5_ != NULL) {
+		(*cb_timer5_)();
 	}
+	TC5->COUNT16.INTFLAG.reg = 0xFF;
 }
