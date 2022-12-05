@@ -17,7 +17,7 @@ enum fsm_handler_rc state_alarm_ongoing(struct fsm *fsm, struct fsm_event const 
 		STATE_CLOCK_DISPLAY_INFO("Ring alarm!\n");
 		pinMode(PIN_SWITCH_SPEAKER, OUTPUT);
 		digitalWrite(PIN_SWITCH_SPEAKER, HIGH);
-		if (music_init() == 0) {
+		if (music_init(50) == 0) {
 			music_play();
 		} else {
 			STATE_CLOCK_DISPLAY_INFO("Alarm play failed\n");

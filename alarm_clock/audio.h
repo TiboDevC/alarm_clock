@@ -26,19 +26,19 @@ class AudioZeroClass{
 public:
 
 	AudioZeroClass() {};
-	void begin(uint32_t sampleRate);
-//	void prepare(int volume); //not implemented yet
-	void play(File myFile) ;
-	void end();
+	static void begin(uint32_t sampleRate);
+	static void set_volume(uint8_t volume_percent);
+	static void play(File myFile) ;
+	static void end();
 
 private:
-	void dacConfigure(void);
-	void tcConfigure(uint32_t sampleRate);
-	bool tcIsSyncing(void);
-	void tcStartCounter(void);
-	void tcReset(void);
+	static void dacConfigure(void);
+	static void tcConfigure(uint32_t sampleRate);
+	static bool tcIsSyncing(void);
+	static void tcStartCounter(void);
+	static void tcReset(void);
 	void tcEnable(void);
-	void tcDisable(void);
+	static void tcDisable(void);
 };
 
 extern AudioZeroClass AudioZero;

@@ -55,9 +55,10 @@ void AudioZeroClass::end()
 	analogWrite(A0, 0);
 }
 
-/*void AudioZeroClass::prepare(int volume){
-//Not Implemented yet
-}*/
+void AudioZeroClass::set_volume(uint8_t volume_percent)
+{
+	_volume_percent = volume_percent;
+}
 
 void AudioZeroClass::play(File myFile)
 {
@@ -170,10 +171,10 @@ extern "C" {
 
 void Audio_Handler(void)
 {
+	uint32_t sample;
 	if (__SampleIndex < MUSIC_BUFFER_SIZE - 1) {
-		analogWrite(A0, _music_buffer[__SampleIndex++]);
-		// Clear the interrupt
-		TC5->COUNT16.INTFLAG.bit.MC0 = 1;
+		sample = _music_buffer[__SampleIndex++] * 100 / _volume_percent;
+		analogWrite(A0, sample);
 	} else {
 		__SampleIndex = 0;
 	}

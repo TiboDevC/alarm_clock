@@ -17,7 +17,7 @@ extern "C" {
 }
 #endif /* __cplusplus */
 
-int music_init()
+int music_init(uint8_t volume_percent)
 {
 	SerialUSB.print("[music] Initializing...");
 
@@ -25,14 +25,15 @@ int music_init()
 		SerialUSB.println(" failed!");
 		return -1;
 	}
-	AudioZero.begin(44100);
+	AudioZeroClass::begin(44100);
+	AudioZeroClass::set_volume(volume_percent);
 	SerialUSB.println(" done!");
 	return 0;
 }
 
 void music_deinit()
 {
-	AudioZero.end();
+	AudioZeroClass::end();
 }
 
 /*
@@ -60,7 +61,7 @@ static void _music_task(void *pvParameters)
 		SerialUSB.println("[music] Playing music");
 
 		while (xSemaphoreTake(_sempahore_music, 0) == pdFALSE and myFile.available()) {
-			AudioZero.play(myFile);
+			AudioZeroClass::play(myFile);
 		}
 	}
 
