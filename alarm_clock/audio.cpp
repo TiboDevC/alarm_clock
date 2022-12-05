@@ -33,19 +33,15 @@ extern "C" {
 bool              __StartFlag;
 volatile uint32_t __SampleIndex;
 uint32_t          __HeadIndex;
-uint32_t          __NumberOfSamples; // Number of samples to read in block
-uint8_t          *__WavSamples;
 
-int __Volume;
+static uint8_t _volume_percent = 100;
+#define MUSIC_BUFFER_SIZE (1024)
+static uint8_t _music_buffer[MUSIC_BUFFER_SIZE];
 
 void AudioZeroClass::begin(uint32_t sampleRate)
 {
-	__StartFlag       = false;
-	__SampleIndex     = 0;    // in order to start from the beginning
-	__NumberOfSamples = 1024; // samples to read to have a buffer
-
-	/*Allocate the buffer where the samples are stored*/
-	__WavSamples = (uint8_t *) malloc(__NumberOfSamples * sizeof(uint8_t));
+	__StartFlag   = false;
+	__SampleIndex = 0; // in order to start from the beginning
 
 	/*Modules configuration */
 	dacConfigure();
@@ -66,7 +62,7 @@ void AudioZeroClass::end()
 void AudioZeroClass::play(File myFile)
 {
 	if (!__StartFlag) {
-		myFile.read(__WavSamples, __NumberOfSamples);
+		myFile.read(_music_buffer, MUSIC_BUFFER_SIZE);
 		__HeadIndex = 0;
 
 		/*once the buffer is filled for the first time the counter can be started*/
@@ -76,11 +72,11 @@ void AudioZeroClass::play(File myFile)
 		uint32_t current__SampleIndex = __SampleIndex;
 
 		if (current__SampleIndex > __HeadIndex) {
-			myFile.read(&__WavSamples[__HeadIndex], current__SampleIndex - __HeadIndex);
+			myFile.read(&_music_buffer[__HeadIndex], current__SampleIndex - __HeadIndex);
 			__HeadIndex = current__SampleIndex;
 		} else if (current__SampleIndex < __HeadIndex) {
-			myFile.read(&__WavSamples[__HeadIndex], __NumberOfSamples - 1 - __HeadIndex);
-			myFile.read(__WavSamples, current__SampleIndex);
+			myFile.read(&_music_buffer[__HeadIndex], MUSIC_BUFFER_SIZE - 1 - __HeadIndex);
+			myFile.read(_music_buffer, current__SampleIndex);
 			__HeadIndex = current__SampleIndex;
 		}
 	}
@@ -93,7 +89,7 @@ void AudioZeroClass::play(File myFile)
  * Configures the DAC to use the module's default configuration, with output
  * channel mode configured for event triggered conversions.
  */
-void AudioZeroClass::dacConfigure(void)
+void AudioZeroClass::dacConfigure()
 {
 	analogWriteResolution(10);
 	analogWrite(A0, 0);
@@ -107,6 +103,7 @@ void AudioZeroClass::dacConfigure(void)
  */
 void AudioZeroClass::tcConfigure(uint32_t sampleRate)
 {
+	const uint32_t freq_timer5 = (SystemCoreClock / TIMER_CLOCK_FREQ_DIV);
 	while (GCLK->STATUS.bit.SYNCBUSY)
 		;
 
@@ -122,7 +119,9 @@ void AudioZeroClass::tcConfigure(uint32_t sampleRate)
 	while (TC5->COUNT16.STATUS.bit.SYNCBUSY)
 		;
 
-	REG_TC5_COUNT16_CC0 = (uint16_t) (SystemCoreClock / sampleRate - 1);
+	REG_TC5_COUNT16_CC0 = (uint16_t) (freq_timer5 / sampleRate - 1);
+	Serial.print("CC0: ");
+	Serial.println(REG_TC5_COUNT16_CC0);
 	while (TC5->COUNT16.STATUS.bit.SYNCBUSY)
 		;
 }
@@ -168,15 +167,15 @@ extern "C" {
 
 void Audio_Handler(void)
 {
-	if (__SampleIndex < __NumberOfSamples - 1) {
-		analogWrite(A0, __WavSamples[__SampleIndex++]);
-
+	if (__SampleIndex < MUSIC_BUFFER_SIZE - 1) {
+		analogWrite(A0, _music_buffer[__SampleIndex++]);
 		// Clear the interrupt
 		TC5->COUNT16.INTFLAG.bit.MC0 = 1;
 	} else {
-		__SampleIndex                = 0;
-		TC5->COUNT16.INTFLAG.bit.MC0 = 1;
+		__SampleIndex = 0;
 	}
+	// Clear the interrupt
+	TC5->COUNT16.INTFLAG.bit.MC0 = 1;
 }
 
 void TC5_Handler(void) __attribute__((weak, alias("Audio_Handler")));
