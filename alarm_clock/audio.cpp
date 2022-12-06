@@ -123,7 +123,7 @@ static void audio_handler(void)
 {
 	uint32_t sample;
 	if (__SampleIndex < MUSIC_BUFFER_SIZE - 1) {
-		sample = ((uint32_t) _music_buffer[__SampleIndex++]) * 100 / _volume_percent;
+		sample = ((uint32_t) _music_buffer[__SampleIndex++]) * _volume_percent / 100;
 		analogWrite(A0, sample);
 	} else {
 		__SampleIndex = 0;
