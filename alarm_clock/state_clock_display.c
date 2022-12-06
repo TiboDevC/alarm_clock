@@ -5,7 +5,7 @@
 #include "rtc_tool.h"
 #include "screen.h"
 
-#define SCREEN_REFRESH_FREQ_MIN 2 /* Refresh screen every x minutes */
+#define SCREEN_REFRESH_FREQ_MIN 5 /* Refresh screen every x minutes */
 
 #define STATE_CLOCK_DISPLAY_INFO(x...) debug("[state_clock_display] " x)
 
