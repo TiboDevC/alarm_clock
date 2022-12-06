@@ -19,6 +19,11 @@ void setup()
 
 	delay(1000); // prevents usb driver crash on startup, do not omit this
 
+	if (!SerialUSB.available()) {
+		/* Disable serial if not available */
+		SerialUSB.end();
+	}
+
 	SerialUSB.println("");
 	SerialUSB.println("******************************");
 	SerialUSB.println("        Program start         ");
