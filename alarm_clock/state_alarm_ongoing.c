@@ -6,8 +6,6 @@
 
 #define STATE_CLOCK_DISPLAY_INFO(x...) debug("[state_alarm_ongoing] " x)
 
-#define PIN_SWITCH_SPEAKER 21
-
 enum fsm_handler_rc state_alarm_ongoing(struct fsm *fsm, struct fsm_event const *event)
 {
 	enum alarm_clock_fsm_event_type event_alarm_clock = event->type & ALARM_CLOCK_FSM_EVT_MSK;

@@ -8,6 +8,7 @@ extern "C" {
 #endif
 
 #include "alarm_clock_fsm.h"
+#include "music.h"
 
 #ifdef __cplusplus
 }
@@ -15,6 +16,10 @@ extern "C" {
 
 void setup()
 {
+	/* Disable speaker first */
+	pinMode(PIN_SWITCH_SPEAKER, OUTPUT);
+	digitalWrite(PIN_SWITCH_SPEAKER, HIGH);
+
 	SerialUSB.begin(115200);
 
 	delay(1000); // prevents usb driver crash on startup, do not omit this
