@@ -42,7 +42,10 @@ void init_rtc(void)
 	rtc.setDay(day);
 	rtc.setMonth(month);
 	rtc.setYear(year);
+}
 
+void rtc_start_interrupt(void)
+{
 	/* Wake up device every seconds */
 	rtc.setAlarmSeconds(0);
 	rtc.attachInterrupt(_rtc_alarm_cb);

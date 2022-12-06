@@ -26,6 +26,8 @@ enum fsm_handler_rc state_init(struct fsm *fsm, struct fsm_event const *event)
 		wifi_update_rtc();
 		screen_update_clock();
 
+		rtc_start_interrupt();
+
 		debug("[state_init] event_init ends\n");
 
 		fsm->state = (fsm_event_handler_t) &state_clock_display;
