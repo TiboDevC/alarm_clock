@@ -4,7 +4,7 @@
 #include <FreeRTOS.h>
 #include <semphr.h>
 
-#include "fsm.h"
+#include "fsm/fsm.h"
 
 #define ALARM_CLOCK_FSM_EVT_MSK 0xFFFF /* 2 bytes for the event, rest for data */
 #define ALARM_CLOCK_FSM_EVT_SHT 16

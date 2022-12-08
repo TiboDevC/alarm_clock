@@ -41,6 +41,7 @@ TARGET_CC_SRC  += $(wildcard $(SKETCH)/font/*.c)
 TARGET_CC_SRC  += $(wildcard $(SKETCH)/drv/screen/*.c)
 TARGET_CC_SRC  += $(wildcard $(SKETCH)/drv/timer/*.c)
 TARGET_CC_SRC  += $(wildcard $(SKETCH)/ui/*.c)
+TARGET_CC_SRC  += $(wildcard $(SKETCH)/fsm/*.c)
 
 VARIANT_DIR := lib/ArduinoCore-samd/variants/mkrwifi1010
 VARIANT_SRC := $(VARIANT_DIR)/variant.cpp
