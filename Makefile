@@ -55,8 +55,6 @@ VARIANT_SRC := $(VARIANT_DIR)/variant.cpp
 CMSIS_DIR   := lib/CMSIS_5/CMSIS/Core
 SAM_DIR     := lib/CMSIS-Atmel/CMSIS/CMSIS/Device/ATMEL
 
-SKETCH_SRC := alarm_clock/alarm_clock.ino
-
 # List all .o files
 CORE_OBJS := $(patsubst %.c,$(OBJDIR)/%.o,$(CORE_CC_SRC)) \
              $(patsubst %.cpp,$(OBJDIR)/%.o,$(CORE_CXX_SRC)) \
@@ -71,9 +69,7 @@ TARGET_OBJ := $(patsubst %.cpp,$(OBJDIR)/%.o,$(TARGET_CXX_SRC)) \
 
 VARIANT_OBJ := $(patsubst %.cpp,$(OBJDIR)/%.o,$(VARIANT_SRC))
 
-SKETCH_OBJ := $(patsubst %.ino,$(OBJDIR)/%.o,$(SKETCH_SRC))
-
-SRCS := $(CORE_OBJS) $(LIBRARIES_OBJS) $(TARGET_OBJ) $(VARIANT_OBJ) $(SKETCH_OBJ)
+SRCS := $(CORE_OBJS) $(LIBRARIES_OBJS) $(TARGET_OBJ) $(VARIANT_OBJ)
 
 COMPORT     ?= /dev/ttyACM0
 BOSSAC      ?= bossac
@@ -216,8 +212,8 @@ $(OBJDIR)/arduino_libraries_lib.a: $(LIBRARIES_OBJS)
 # Generic targets
 $(SRCS): Makefile
 
-$(TARGET_ELF): $(OBJDIR)/arduino_core_lib.a $(OBJDIR)/arduino_libraries_lib.a $(TARGET_OBJ) $(VARIANT_OBJ) $(SKETCH_OBJ) $(LDSCRIPT)
-	$(_V_LD_$(V))$(CXXLD) $(LDFLAGS) -T$(LDSCRIPT) -o $@ $(TARGET_OBJ) $(VARIANT_OBJ) $(SKETCH_OBJ) $(LIBS)
+$(TARGET_ELF): $(OBJDIR)/arduino_core_lib.a $(OBJDIR)/arduino_libraries_lib.a $(TARGET_OBJ) $(VARIANT_OBJ) $(LDSCRIPT)
+	$(_V_LD_$(V))$(CXXLD) $(LDFLAGS) -T$(LDSCRIPT) -o $@ $(TARGET_OBJ) $(VARIANT_OBJ) $(LIBS)
 
 $(TARGET_BIN): $(TARGET_ELF)
 	$(_V_BIN_$(V))$(OBJCOPY) -O binary $< $@
@@ -232,9 +228,5 @@ $(OBJDIR)/%.o: %.c
 $(OBJDIR)/%.o: %.cpp
 	@mkdir -p $(abspath $(dir $@))
 	$(_V_CXX_$(V))$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
-
-$(OBJDIR)/%.o: %.ino
-	@mkdir -p $(abspath $(dir $@))
-	$(_V_CXX_$(V))$(CXX) $(CPPFLAGS) $(CXXFLAGS) -x c++ -c -o $@ $<
 
 -include $(patsubst %.o, %.d,$(SRCS))
