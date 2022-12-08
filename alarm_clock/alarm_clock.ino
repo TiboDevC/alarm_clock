@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-#include "alarm_clock_fsm.h"
+#include "fsm/alarm_clock_fsm.h"
 #include "music/music.h"
 
 #ifdef __cplusplus

@@ -12,9 +12,9 @@
 extern "C" {
 #endif
 
-#include "alarm_clock_fsm.h"
 #include "button.h"
 #include "drv/timer/timer.h"
+#include "fsm/alarm_clock_fsm.h"
 
 #ifdef __cplusplus
 }
