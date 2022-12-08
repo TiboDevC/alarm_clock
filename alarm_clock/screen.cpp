@@ -1,8 +1,3 @@
-#include <array>
-
-#include <FreeRTOS.h>
-#include <task.h>
-
 #include <RTCZero.h>
 
 #ifdef __cplusplus
