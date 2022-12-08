@@ -97,3 +97,14 @@ uint8_t rtc_get_seconds()
 {
 	return rtc.getSeconds();
 }
+
+enum rtc_days_t rtc_get_weekday()
+/* Calculate day of week in proleptic Gregorian calendar. Sunday == 0. */
+{
+	int adjustment, mm, yy;
+	adjustment = (14 - rtc.getMonth()) / 12;
+	mm         = rtc.getMonth() + 12 * adjustment - 2;
+	yy         = rtc.getYear() - adjustment;
+	return static_cast<rtc_days_t>(
+	    (rtc.getDay() + (13 * mm - 1) / 5 + yy + yy / 4 - yy / 100 + yy / 400) % 7);
+}
