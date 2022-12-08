@@ -5,7 +5,7 @@
 #include "flash_storage/alarm_flash_storage.h"
 #include "rtc_tool.h"
 #include "ui/screen.h"
-#include "wifi_tool.h"
+#include "wifi/wifi_tool.h"
 
 #define SCREEN_REFRESH_FREQ_MIN             5                  /* Refresh screen every x minutes */
 #define SCREEN_WIFI_EPOCH_TIME_INTERVAl_SEC (60 * 60 * 24 * 8) /* Perform wifi sync every x sec max */
