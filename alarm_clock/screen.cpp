@@ -3,13 +3,13 @@
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
-#include "GUI_Paint.h"
 #include "alarm_flash_storage.h"
 #include "button.h"
 #include "drv/screen/DEV_Config.h"
 #include "drv/screen/EPD.h"
 #include "rtc_tool.h"
 #include "screen.h"
+#include "ui/GUI_Paint.h"
 
 #ifdef __cplusplus
 }
