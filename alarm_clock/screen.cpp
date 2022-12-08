@@ -277,11 +277,11 @@ void ui_update()
  */
 void ui_button_event(const struct button_evt_t *button_evt)
 {
-	const uint64_t curr_time      = millis();
+	const uint64_t curr_time = millis();
 
 	int16_t clock_time;
 
-	last_button_time   = curr_time;
+	last_button_time = curr_time;
 
 	if (ui_state == menu_settings) {
 		alarm_params_t alarm;
@@ -298,7 +298,7 @@ void ui_button_event(const struct button_evt_t *button_evt)
 		} else {
 			alarm = get_alarm_1();
 		}
-		clock_time   = alarm.alarm_minute + (alarm.alarm_hour * 60);
+		clock_time       = alarm.alarm_minute + (alarm.alarm_hour * 60);
 		auto &alarm_days = alarm.alarm_days.days;
 		switch (button_evt->button_id) {
 		case B_DAY_MONDAY:

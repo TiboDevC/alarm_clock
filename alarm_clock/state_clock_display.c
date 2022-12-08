@@ -126,7 +126,7 @@ static void _wifi_sync_epoch(void)
 enum fsm_handler_rc state_clock_display(struct fsm *fsm, struct fsm_event const *event)
 {
 	enum alarm_clock_fsm_event_type event_alarm_clock = event->type & ALARM_CLOCK_FSM_EVT_MSK;
-	uint64_t epoch;
+	uint64_t                        epoch;
 
 	switch (event_alarm_clock) {
 	case FSM_EVENT_ENTRY:

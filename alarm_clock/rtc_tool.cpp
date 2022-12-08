@@ -16,13 +16,11 @@ static RTCZero rtc;
 
 void _rtc_alarm_cb()
 {
-	SerialUSB.println("Alarm match!");
 	alarm_clock_fsm_dispatch_event(FSM_EVENT_RTC_WAKE_UP);
 }
 
 void init_rtc(void)
 {
-	SerialUSB.println("Init rtc");
 	const uint8_t hours{12};
 	const uint8_t minutes{34};
 	const uint8_t seconds{00};
