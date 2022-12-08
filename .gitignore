@@ -3,7 +3,7 @@
 /config.mk
 .size_done
 .idea
-secret.h
+wifi_credentials.h
 
 *.o
 *.d

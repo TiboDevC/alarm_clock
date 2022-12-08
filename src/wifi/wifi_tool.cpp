@@ -2,7 +2,7 @@
 #include <WiFiNINA.h>
 
 #include "NTP.h"
-#include "secret.h"
+#include "wifi_credentials.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,7 +17,7 @@ extern "C" {
 #endif
 
 #if !defined(WIFI_SSID_NAME) || !defined(WIFI_PWD)
-#warning "secret.h must be created and define WIFI_SSID_NAME and WIFI_PWD"
+#warning "wifi_credentials.h must be created and define WIFI_SSID_NAME and WIFI_PWD"
 #endif /* WIFI_SSID_NAME */
 
 static WiFiUDP wifiUdp;
