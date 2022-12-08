@@ -119,7 +119,7 @@ LCPPFLAGS  += -MMD -MP
 CPUFLAGS   := -mcpu=cortex-m0plus -mthumb -ggdb3 -Os
 
 # used in CFLAGS/CXXFLAGS/ASFLAGS, but not LDFLAGS
-CCXXFLAGS  := $(BOARD_FLAGS) $(CPUFLAGS) -Wall -Wextra -Werror -Wno-unused-parameter -Wno-switch -Wno-ignored-qualifiers
+CCXXFLAGS  := $(BOARD_FLAGS) $(CPUFLAGS) -Wall -Wextra -Wno-unused-parameter -Wno-switch -Wno-ignored-qualifiers
 CCXXFLAGS  += -fno-exceptions -ffunction-sections -fdata-sections -Wno-expansion-to-defined
 
 # Too many warning in Arduino source code, silent them
