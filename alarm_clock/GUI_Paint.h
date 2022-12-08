@@ -81,7 +81,7 @@
 #include "debug.h"
 #include "drv/screen/DEV_Config.h"
 #include "font/fonts.h"
-#include "paint.hpp"
+#include "paint.h"
 
 /**
  * Image attributes
