@@ -1,5 +1,5 @@
 TARGET     := mkrwifi1010
-SKETCH     := alarm_clock
+SKETCH     := src
 
 # Board specific flags, TODO include it from bootloader definition
 BOARD_FLAGS := -DUSB_VID=0x2341 -DUSB_PID=0x8054 -DF_CPU=48000000 -DPinStatus=uint8_t
