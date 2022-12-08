@@ -6,7 +6,7 @@
 #include "drv/screen/DEV_Config.h"
 #include "rtc_tool.h"
 #include "screen.h"
-#include "timer.h"
+#include "drv/timer/timer.h"
 #include "wifi_tool.h"
 
 enum fsm_handler_rc state_init(struct fsm *fsm, struct fsm_event const *event)

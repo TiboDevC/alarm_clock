@@ -14,7 +14,7 @@ extern "C" {
 
 #include "alarm_clock_fsm.h"
 #include "button.h"
-#include "timer.h"
+#include "drv/timer/timer.h"
 
 #ifdef __cplusplus
 }

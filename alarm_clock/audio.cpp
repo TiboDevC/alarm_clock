@@ -22,7 +22,7 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#include "timer.h"
+#include "drv/timer/timer.h"
 
 static void audio_handler(void);
 
