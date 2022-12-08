@@ -1,15 +1,78 @@
 #include "alarm_clock_fsm.h"
 
+#include "alarm_flash_storage.h"
 #include "button.h"
 #include "debug.h"
 #include "rtc_tool.h"
 #include "screen.h"
 
-#define SCREEN_REFRESH_FREQ_MIN 5 /* Refresh screen every x minutes */
+#define SCREEN_REFRESH_FREQ_MIN             5                  /* Refresh screen every x minutes */
+#define SCREEN_WIFI_EPOCH_TIME_INTERVAl_SEC (60 * 60 * 24 * 8) /* Perform wifi sync every x sec max */
 
 #define STATE_CLOCK_DISPLAY_INFO(x...) debug("[state_clock_display] " x)
 
 static uint64_t _last_epoch_refresh_time;
+static uint64_t _last_wifi_epoch_sync_time = 0;
+
+static int is_alarm_ringing(void)
+{
+	const struct alarm_params_t alarm_0 = get_alarm_0();
+
+	const enum rtc_days_t rtc_day    = rtc_get_weekday();
+	const uint8_t         rtc_hour   = rtc_get_hours();
+	const uint8_t         rtc_minute = rtc_get_minutes();
+
+	if (!alarm_0.is_set) {
+		return -1;
+	}
+	if (rtc_hour != alarm_0.alarm_hour) {
+		return -1;
+	}
+	if (!(rtc_minute >= alarm_0.alarm_minute && rtc_minute <= alarm_0.alarm_minute + 3)) {
+		return -1;
+	}
+	switch (rtc_day) {
+	case rtc_monday:
+		if (!alarm_0.alarm_days.days.monday) {
+			return -1;
+		}
+		break;
+	case rtc_tuesday:
+		if (!alarm_0.alarm_days.days.tuesday) {
+			return -1;
+		}
+		break;
+	case rtc_wednesday:
+		if (!alarm_0.alarm_days.days.wednesday) {
+			return -1;
+		}
+		break;
+	case rtc_thursday:
+		if (!alarm_0.alarm_days.days.thursday) {
+			return -1;
+		}
+		break;
+	case rtc_friday:
+		if (!alarm_0.alarm_days.days.friday) {
+			return -1;
+		}
+		break;
+	case rtc_saturday:
+		if (!alarm_0.alarm_days.days.saturday) {
+			return -1;
+		}
+		break;
+	case rtc_sunday:
+		if (!alarm_0.alarm_days.days.sunday) {
+			return -1;
+		}
+		break;
+	}
+	if (alarm_0.rings_tomorrow) {
+		return -1;
+	}
+	return 0;
+}
 
 static enum fsm_handler_rc _handle_button(struct fsm *fsm, uint32_t evt)
 {
@@ -57,6 +120,9 @@ enum fsm_handler_rc state_clock_display(struct fsm *fsm, struct fsm_event const 
 			ui_update();
 		} else {
 			STATE_CLOCK_DISPLAY_INFO("Do not update screen yet\n");
+		}
+		if (is_alarm_ringing() == 0) {
+			return FSM_TRANSITION(&state_alarm_ongoing);
 		}
 		return FSM_HANDLED();
 	case FSM_EVENT_BUTTON:
