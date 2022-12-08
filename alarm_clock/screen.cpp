@@ -5,15 +5,13 @@
 
 #include <RTCZero.h>
 
-#include "alarm_flash_storage.h"
 #ifdef __cplusplus
-
 extern "C" {
 #endif /* __cplusplus */
 #include "DEV_Config.h"
-
 #include "EPD.h"
 #include "GUI_Paint.h"
+#include "alarm_flash_storage.h"
 #include "button.h"
 #include "rtc_tool.h"
 #include "screen.h"
@@ -146,26 +144,13 @@ void screen_display_param()
 	EPD_3IN7_1Gray_Display(_blackImage);
 }
 
-static int weekday(int year, int month, int day)
-/* Calculate day of week in proleptic Gregorian calendar. Sunday == 0. */
-{
-	int adjustment, mm, yy;
-	if (year < 2000)
-		year += 2000;
-	adjustment = (14 - month) / 12;
-	mm         = month + 12 * adjustment - 2;
-	yy         = year - adjustment;
-	return (day + (13 * mm - 1) / 5 + yy + yy / 4 - yy / 100 + yy / 400) % 7;
-}
-
 void screen_update_clock()
 {
 	const uint8_t day         = rtc_get_day();
 	const uint8_t month       = rtc_get_month();
-	const uint8_t year        = rtc_get_year();
 	const uint8_t hours       = rtc_get_hours();
 	const uint8_t minutes     = rtc_get_minutes();
-	const uint8_t day_of_week = weekday(year, month, day);
+	const uint8_t day_of_week = rtc_get_weekday();
 	const char   *days_buf[]  = {"dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"};
 	const char   *days_short_buf[] = {"dim.", "lun.", "mar.", "mer.", "jeu.", "vend.", "same."};
 	const char   *months_buf[]     = {"",
@@ -362,10 +347,10 @@ void ui_button_event(const struct button_evt_t *button_evt)
 		alarm.alarm_hour   = clock_time / 60;
 		alarm.is_set       = true;
 		if (_alarm_select == 0) {
-			set_alarm_0(alarm);
+			set_alarm_0(&alarm);
 			SerialUSB.print("[screen] Setting alarm 0\n");
 		} else {
-			set_alarm_1(alarm);
+			set_alarm_1(&alarm);
 			SerialUSB.print("[screen] Setting alarm 1\n");
 		}
 		SerialUSB.print("Monday ");
@@ -392,11 +377,11 @@ void ui_button_event(const struct button_evt_t *button_evt)
 		if (button_evt->button_id == B_MENU_CLOCK) {
 			alarm_params_t alarm_0 = get_alarm_0();
 			alarm_0.is_set         = !alarm_0.is_set;
-			set_alarm_0(alarm_0);
+			set_alarm_0(&alarm_0);
 		} else if (button_evt->button_id == B_MENU_SETTINGS) {
 			alarm_params_t alarm_1 = get_alarm_1();
 			alarm_1.is_set         = !alarm_1.is_set;
-			set_alarm_1(alarm_1);
+			set_alarm_1(&alarm_1);
 		}
 	}
 }

@@ -1,7 +1,15 @@
 #include "Arduino.h"
 #include <FlashStorage_SAMD.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #include "alarm_flash_storage.h"
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 FlashStorage(alarm_0_flash, alarm_params_t);
 FlashStorage(alarm_1_flash, alarm_params_t);
@@ -16,10 +24,10 @@ void init_alarm_flash_storage()
 	alarm_1_flash.read(alarm_1_ram);
 }
 
-void set_alarm_0(alarm_params_t &alarm)
+void set_alarm_0(alarm_params_t *alarm)
 {
-	alarm_0_ram = alarm;
-	alarm_0_flash.write(alarm);
+	alarm_0_ram = *alarm;
+	alarm_0_flash.write(*alarm);
 }
 
 alarm_params_t get_alarm_0()
@@ -27,10 +35,10 @@ alarm_params_t get_alarm_0()
 	return alarm_0_ram;
 }
 
-void set_alarm_1(alarm_params_t &alarm)
+void set_alarm_1(alarm_params_t *alarm)
 {
-	alarm_1_ram = alarm;
-	alarm_1_flash.write(alarm);
+	alarm_1_ram = *alarm;
+	alarm_1_flash.write(*alarm);
 }
 
 alarm_params_t get_alarm_1()
