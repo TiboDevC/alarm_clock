@@ -16,6 +16,10 @@ extern "C" {
 }
 #endif
 
+#if !defined(WIFI_SSID_NAME) || !defined(WIFI_PWD)
+#warning "secret.h must be created and define WIFI_SSID_NAME and WIFI_PWD"
+#endif /* WIFI_SSID_NAME */
+
 static WiFiUDP wifiUdp;
 static NTP     ntp(wifiUdp);
 
