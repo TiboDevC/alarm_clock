@@ -1,8 +1,8 @@
 #include "alarm_clock_fsm.h"
 
-#include "EPD_3in7.h"
 #include "button.h"
 #include "debug.h"
+#include "drv/screen/EPD_3in7.h"
 #include "rtc_tool.h"
 #include "screen.h"
 

@@ -81,9 +81,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "DEV_Config.h"
 #include "GUI_Paint.h"
 #include "debug.h"
+#include "drv/screen/DEV_Config.h"
 
 static PAINT Paint;
 

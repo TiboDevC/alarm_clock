@@ -1,9 +1,9 @@
 #include "alarm_clock_fsm.h"
 
-#include "DEV_Config.h"
 #include "alarm_flash_storage.h"
 #include "button.h"
 #include "debug.h"
+#include "drv/screen/DEV_Config.h"
 #include "rtc_tool.h"
 #include "screen.h"
 #include "timer.h"

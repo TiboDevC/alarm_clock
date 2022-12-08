@@ -78,9 +78,9 @@
 #ifndef __GUI_PAINT_H
 #define __GUI_PAINT_H
 
-#include "DEV_Config.h"
 #include "debug.h"
-#include "fonts.h"
+#include "drv/screen/DEV_Config.h"
+#include "font/fonts.h"
 #include "paint.hpp"
 
 /**
