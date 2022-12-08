@@ -36,6 +36,7 @@ LIBRARIES_CC_SRC  += $(foreach dir,$(LIBRARIES_DIRS), $(wildcard $(dir)*/*.c))
 LIBRARIES_CXX_SRC += $(foreach dir,$(LIBRARIES_DIRS), $(wildcard $(dir)*/*.cpp))
 
 TARGET_CC_SRC  := $(wildcard $(SKETCH)/*.c)
+TARGET_CC_SRC  += $(wildcard $(SKETCH)/font/*.c)
 TARGET_CXX_SRC := $(wildcard $(SKETCH)/*.cpp)
 
 VARIANT_DIR := lib/ArduinoCore-samd/variants/mkrwifi1010
