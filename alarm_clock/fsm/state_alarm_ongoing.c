@@ -2,7 +2,7 @@
 
 #include "Arduino.h"
 #include "debug.h"
-#include "music.h"
+#include "music/music.h"
 
 #define STATE_CLOCK_DISPLAY_INFO(x...) debug("[state_alarm_ongoing] " x)
 

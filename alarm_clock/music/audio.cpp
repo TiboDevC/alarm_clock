@@ -12,8 +12,8 @@
  * published by the Free Software Foundation.
  */
 
-#include <SD.h>
-#include <SPI.h>
+#include "SD.h"
+#include "SPI.h"
 
 #include "audio.h"
 

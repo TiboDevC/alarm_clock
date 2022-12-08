@@ -8,7 +8,7 @@ extern "C" {
 #endif
 
 #include "alarm_clock_fsm.h"
-#include "music.h"
+#include "music/music.h"
 
 #ifdef __cplusplus
 }
