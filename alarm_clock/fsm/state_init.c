@@ -1,6 +1,6 @@
 #include "alarm_clock_fsm.h"
 
-#include "button.h"
+#include "button/button.h"
 #include "debug.h"
 #include "drv/screen/DEV_Config.h"
 #include "drv/timer/timer.h"

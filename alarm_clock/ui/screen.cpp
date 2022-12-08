@@ -3,7 +3,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
-#include "button.h"
+#include "button/button.h"
 #include "drv/screen/DEV_Config.h"
 #include "drv/screen/EPD.h"
 #include "flash_storage/alarm_flash_storage.h"
