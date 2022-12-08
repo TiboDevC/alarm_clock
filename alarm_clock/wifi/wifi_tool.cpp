@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-#include "rtc_tool.h"
+#include "rtc/rtc_tool.h"
 #include "ui/screen.h"
 #include "wifi_tool.h"
 

@@ -5,7 +5,7 @@
 #include "drv/screen/DEV_Config.h"
 #include "drv/timer/timer.h"
 #include "flash_storage/alarm_flash_storage.h"
-#include "rtc_tool.h"
+#include "rtc/rtc_tool.h"
 #include "ui/screen.h"
 #include "wifi/wifi_tool.h"
 

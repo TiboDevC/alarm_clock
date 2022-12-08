@@ -47,6 +47,7 @@ TARGET_CC_SRC  += $(wildcard $(SKETCH)/music/*.c)
 TARGET_CXX_SRC += $(wildcard $(SKETCH)/music/*.cpp)
 TARGET_CXX_SRC += $(wildcard $(SKETCH)/flash_storage/*.cpp)
 TARGET_CXX_SRC += $(wildcard $(SKETCH)/wifi/*.cpp)
+TARGET_CXX_SRC += $(wildcard $(SKETCH)/rtc/*.cpp)
 
 VARIANT_DIR := lib/ArduinoCore-samd/variants/mkrwifi1010
 VARIANT_SRC := $(VARIANT_DIR)/variant.cpp
