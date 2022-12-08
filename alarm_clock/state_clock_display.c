@@ -5,6 +5,7 @@
 #include "debug.h"
 #include "rtc_tool.h"
 #include "screen.h"
+#include "wifi_tool.h"
 
 #define SCREEN_REFRESH_FREQ_MIN             5                  /* Refresh screen every x minutes */
 #define SCREEN_WIFI_EPOCH_TIME_INTERVAl_SEC (60 * 60 * 24 * 8) /* Perform wifi sync every x sec max */
@@ -100,6 +101,28 @@ static enum fsm_handler_rc _handle_button(struct fsm *fsm, uint32_t evt)
 	return FSM_HANDLED();
 }
 
+static void _wifi_sync_epoch(void)
+{
+	int      need_wifi_sync = 0;
+	uint64_t epoch;
+	epoch = rtc_get_epoch();
+
+	if (epoch - _last_wifi_epoch_sync_time > SCREEN_WIFI_EPOCH_TIME_INTERVAl_SEC) {
+		need_wifi_sync = 1;
+	} else {
+		if (epoch - _last_wifi_epoch_sync_time < (60 * 60) && rtc_get_weekday() == rtc_sunday &&
+		    rtc_get_hours() == 3) {
+			/* Refresh every sunday at 3h */
+			need_wifi_sync = 1;
+		}
+	}
+	if (need_wifi_sync == 1) {
+		_last_wifi_epoch_sync_time = epoch;
+		wifi_update_rtc();
+		ui_update();
+	}
+}
+
 enum fsm_handler_rc state_clock_display(struct fsm *fsm, struct fsm_event const *event)
 {
 	enum alarm_clock_fsm_event_type event_alarm_clock = event->type & ALARM_CLOCK_FSM_EVT_MSK;
@@ -124,6 +147,7 @@ enum fsm_handler_rc state_clock_display(struct fsm *fsm, struct fsm_event const 
 		if (is_alarm_ringing() == 0) {
 			return FSM_TRANSITION(&state_alarm_ongoing);
 		}
+		_wifi_sync_epoch();
 		return FSM_HANDLED();
 	case FSM_EVENT_BUTTON:
 		return _handle_button(fsm, event->type);
