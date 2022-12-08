@@ -44,18 +44,17 @@ static int connect_to_wifi()
 	const uint8_t max_num_try = 5;
 	uint8_t       num_try     = 0;
 
-	WiFi.end();
-
 	SerialUSB.print("Attempting to connect to SSID: ");
 	SerialUSB.println(ssid);
 	do {
 		SerialUSB.print("Attempt: ");
 		SerialUSB.println(num_try);
-		status = WiFi.begin(ssid, pass);
+		WiFi.begin(ssid, pass);
 		delay(1000);
-		SerialUSB.println(WiFi.status());
+		status = WiFi.status();
+		SerialUSB.println(status);
 		num_try++;
-	} while (status != WL_CONNECTED and num_try < max_num_try);
+	} while (status != WL_CONNECTED and status != WL_NO_SHIELD and num_try < max_num_try);
 
 	if (status == WL_CONNECTED) {
 		printWiFiStatus();
@@ -68,6 +67,7 @@ static int connect_to_wifi()
 static void disconnect_wifi()
 {
 	WiFi.disconnect();
+	WiFi.end();
 }
 
 static void init_ntp()
@@ -105,10 +105,10 @@ int wifi_update_rtc(void)
 		SerialUSB.println(ntp.formattedTime("%d. %B %Y")); /* dd. Mmm yyyy */
 		SerialUSB.println(ntp.formattedTime("%A %T"));     /* Www hh:mm:ss */
 		deinit_ntp();
-		disconnect_wifi();
 		return 0;
 	} else {
 		SerialUSB.println("Fail updating epoch");
 	}
+	disconnect_wifi();
 	return -1;
 }
