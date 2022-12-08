@@ -25,8 +25,6 @@ enum fsm_handler_rc state_init(struct fsm *fsm, struct fsm_event const *event)
 		display_hello_msg();
 
 		init_rtc();
-		wifi_update_rtc();
-		screen_update_clock();
 
 		rtc_start_interrupt();
 
