@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _PAINT_H
+#define _PAINT_H
 
 enum img_rotation_t {
 	rotate_0 = 0,
@@ -19,22 +20,4 @@ enum color_t {
 	white,
 };
 
-/*class EPD_Image {
-public:
-    EPD_Image() = delete;
-
-    EPD_Image(const uint16_t x_size, const uint16_t y_size, uint8_t *buf,
-              const img_rotation_t img_rotation, const grey_scale_t grey_scale)
-        : x_size(x_size), y_size(y_size), buf(buf), img_rotation(img_rotation),
-          grey_scale(grey_scale) {
-        memset(buf, white, x_size * y_size / 4);
-    };
-
-    const uint16_t x_size{};
-    const uint16_t y_size{};
-    uint8_t *buf{nullptr};
-    const img_rotation_t img_rotation{};
-    const grey_scale_t grey_scale{};
-
-private:
-};*/
+#endif /* _PAINT_H */
