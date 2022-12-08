@@ -387,3 +387,17 @@ void display_hello_msg(void)
 	Paint_DrawString_EN(100, 100, "Bonjour Tibo !", &Font24, BLACK, WHITE);
 	EPD_3IN7_1Gray_Display(_blackImage);
 }
+
+void display_error(int error)
+{
+	Paint_Clear(BLACK);
+	if (error == 0) {
+		Paint_DrawString_EN(100, 100, "No wifi chip detected!", &Font24, BLACK, WHITE);
+	} else if (error == 1) {
+		Paint_DrawString_EN(100, 100, "Fail connect to wifi!", &Font24, BLACK, WHITE);
+	} else {
+		Paint_DrawString_EN(100, 100, "Unknown error", &Font24, BLACK, WHITE);
+	}
+
+	EPD_3IN7_1Gray_Display(_blackImage);
+}

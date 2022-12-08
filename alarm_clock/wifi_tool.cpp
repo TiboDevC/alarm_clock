@@ -9,6 +9,7 @@ extern "C" {
 #endif
 
 #include "rtc_tool.h"
+#include "ui/screen.h"
 #include "wifi_tool.h"
 
 #ifdef __cplusplus
@@ -59,6 +60,11 @@ static int connect_to_wifi()
 	if (status == WL_CONNECTED) {
 		printWiFiStatus();
 		return 0;
+	} else if (status == WL_NO_SHIELD) {
+		SerialUSB.println("No wifi chip detected!");
+		display_error(0);
+	} else {
+		display_error(1);
 	}
 	SerialUSB.println("Could not connect to Wifi");
 	return -1;

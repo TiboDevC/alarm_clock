@@ -6,6 +6,7 @@ void display_hello_msg();
 void screen_display_param();
 void screen_update_clock();
 void ui_update();
+void display_error(int error);
 
 /***************************/
 enum ui_state_t { menu_clock, menu_settings };

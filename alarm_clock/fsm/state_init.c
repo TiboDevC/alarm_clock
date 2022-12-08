@@ -4,9 +4,9 @@
 #include "button.h"
 #include "debug.h"
 #include "drv/screen/DEV_Config.h"
-#include "rtc_tool.h"
-#include "screen.h"
 #include "drv/timer/timer.h"
+#include "rtc_tool.h"
+#include "ui/screen.h"
 #include "wifi_tool.h"
 
 enum fsm_handler_rc state_init(struct fsm *fsm, struct fsm_event const *event)

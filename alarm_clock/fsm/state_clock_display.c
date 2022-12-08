@@ -4,7 +4,7 @@
 #include "button.h"
 #include "debug.h"
 #include "rtc_tool.h"
-#include "screen.h"
+#include "ui/screen.h"
 #include "wifi_tool.h"
 
 #define SCREEN_REFRESH_FREQ_MIN             5                  /* Refresh screen every x minutes */

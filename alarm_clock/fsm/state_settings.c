@@ -4,7 +4,7 @@
 #include "debug.h"
 #include "drv/screen/EPD_3in7.h"
 #include "rtc_tool.h"
-#include "screen.h"
+#include "ui/screen.h"
 
 #define SETTING_SCREEN_TIMEOUT_SEC 60
 
