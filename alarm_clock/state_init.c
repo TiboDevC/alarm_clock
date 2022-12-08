@@ -1,6 +1,7 @@
 #include "alarm_clock_fsm.h"
 
 #include "DEV_Config.h"
+#include "alarm_flash_storage.h"
 #include "button.h"
 #include "debug.h"
 #include "rtc_tool.h"
@@ -15,6 +16,7 @@ enum fsm_handler_rc state_init(struct fsm *fsm, struct fsm_event const *event)
 	switch (event_alarm_clock) {
 	case FSM_EVENT_INIT:
 		debug("[state_init] event_init\n");
+		init_alarm_flash_storage();
 		setup_gclk();
 		init_buttons();
 
