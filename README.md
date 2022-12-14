@@ -60,11 +60,14 @@ be uploaded soon.
 
 #### Speaker
 
-TODO
+I use a 2W 8ohm speaker with PAM8302A amplifier. Music files are stored on an external SD card.
+Sound is produced with the 10 bit DAC of the Arduino board.
 
 ### Software
 
-Arduino provides drivers for SAMD21 and NINA-W102 (Wifi chip). Waveshare provides a driver for the screen.
+- Arduino provides drivers for SAMD21 and NINA-W102 (Wifi chip)
+- Waveshare provides a driver for the screen
+- Various libraries are used such as `RTCZero` or `FlashStorage_SAMD` developed by the Arduino community 
 This project is mostly focused on the application part.
 
 Application is structured around a Finite State Machine (FSM). There are many ways to implement a FSM, I used
