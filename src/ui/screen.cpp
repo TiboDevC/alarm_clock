@@ -147,7 +147,7 @@ void screen_update_clock()
 	const uint8_t minutes     = rtc_get_minutes();
 	const uint8_t day_of_week = rtc_get_weekday();
 	const char   *days_buf[]  = {"dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"};
-	const char   *days_short_buf[] = {"dim.", "lun.", "mar.", "mer.", "jeu.", "vend.", "same."};
+	const char   *days_short_buf[] = {"dim. ", "lundi", "mardi", "mer. ", "jeudi", "vend.", "same."};
 	const char   *months_buf[]     = {"",
 	                                  "janvier",
 	                                  "fevrier",
