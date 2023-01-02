@@ -286,9 +286,9 @@ void ui_button_event(const struct button_evt_t *button_evt)
 	if (ui_state == menu_settings) {
 		alarm_params_t alarm;
 		if (button_evt->action == SHORT_PRESS) {
-			if (button_evt->button_id == B_MENU_CLOCK) {
+			if (button_evt->button_id == B_MENU_SETTINGS) {
 				_alarm_select = 0;
-			} else if (button_evt->button_id == B_MENU_SETTINGS) {
+			} else if (button_evt->button_id == B_MENU_CLOCK) {
 				_alarm_select = 1;
 			}
 		}
@@ -369,11 +369,11 @@ void ui_button_event(const struct button_evt_t *button_evt)
 
 	} else if (button_evt->action == SHORT_PRESS and ui_state == menu_clock) {
 		/* Activate/deactivate alarm in clock screen */
-		if (button_evt->button_id == B_MENU_CLOCK) {
+		if (button_evt->button_id == B_MENU_SETTINGS) {
 			alarm_params_t alarm_0 = get_alarm_0();
 			alarm_0.is_set         = !alarm_0.is_set;
 			set_alarm_0(&alarm_0);
-		} else if (button_evt->button_id == B_MENU_SETTINGS) {
+		} else if (button_evt->button_id == B_MENU_CLOCK) {
 			alarm_params_t alarm_1 = get_alarm_1();
 			alarm_1.is_set         = !alarm_1.is_set;
 			set_alarm_1(&alarm_1);

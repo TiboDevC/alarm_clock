@@ -68,17 +68,17 @@ static constexpr uint8_t b_min_dec_pin{6};
 static std::array<button_ctx_t, B_LAST_BUTTON> button_states{{
     button_ctx_t(B_MENU_CLOCK, b_menu_0_pin, B_IRQ),
     button_ctx_t(B_MENU_SETTINGS, b_menu_1_pin, B_IRQ),
-    button_ctx_t(B_DAY_MONDAY, b_day_0_pin, B_ANALOG, 935),
-    button_ctx_t(B_DAY_TUESDAY, b_day_0_pin, B_ANALOG, 682),
-    button_ctx_t(B_DAY_WEDNESDAY, b_day_0_pin, B_ANALOG, 511),
+    button_ctx_t(B_DAY_SUNDAY, b_day_0_pin, B_ANALOG, 935),
+    button_ctx_t(B_DAY_SATURDAY, b_day_0_pin, B_ANALOG, 682),
+    button_ctx_t(B_DAY_FRIDAY, b_day_0_pin, B_ANALOG, 511),
     button_ctx_t(B_DAY_THURSDAY, b_day_0_pin, B_ANALOG, 342),
-    button_ctx_t(B_DAY_FRIDAY, b_day_1_pin, B_ANALOG, 937),
-    button_ctx_t(B_DAY_SATURDAY, b_day_1_pin, B_ANALOG, 687),
-    button_ctx_t(B_DAY_SUNDAY, b_day_1_pin, B_ANALOG, 343),
-    button_ctx_t(B_HOUR_INC, b_hour_inc_pin, B_IRQ),
-    button_ctx_t(B_HOUR_DEC, b_hour_dec_pin, B_IRQ),
-    button_ctx_t(B_MIN_INC, b_min_inc_pin, B_IRQ),
-    button_ctx_t(B_MIN_DEC, b_min_dec_pin, B_IRQ),
+    button_ctx_t(B_DAY_WEDNESDAY, b_day_1_pin, B_ANALOG, 937),
+    button_ctx_t(B_DAY_TUESDAY, b_day_1_pin, B_ANALOG, 687),
+    button_ctx_t(B_DAY_MONDAY, b_day_1_pin, B_ANALOG, 343),
+    button_ctx_t(B_MIN_DEC, b_hour_inc_pin, B_IRQ),
+    button_ctx_t(B_MIN_INC, b_hour_dec_pin, B_IRQ),
+    button_ctx_t(B_HOUR_DEC, b_min_inc_pin, B_IRQ),
+    button_ctx_t(B_HOUR_INC, b_min_dec_pin, B_IRQ),
 }};
 
 static void _dispatch_button_event(const button_evt_t &button_evt)
