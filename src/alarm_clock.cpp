@@ -20,8 +20,6 @@ void setup()
 	pinMode(PIN_SWITCH_SPEAKER, OUTPUT);
 	digitalWrite(PIN_SWITCH_SPEAKER, HIGH);
 
-	SerialUSB.begin(115200);
-
 	delay(1000); // prevents usb driver crash on startup, do not omit this
 
 	if (!Serial.available()) {
