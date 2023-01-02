@@ -24,30 +24,30 @@ void setup()
 
 	delay(1000); // prevents usb driver crash on startup, do not omit this
 
-	if (!SerialUSB.available()) {
+	if (!Serial.available()) {
 		/* Disable serial if not available */
-		SerialUSB.end();
+		Serial.end();
 	}
 
-	SerialUSB.println("");
-	SerialUSB.println("******************************");
-	SerialUSB.println("        Program start         ");
-	SerialUSB.println("******************************");
-	SerialUSB.flush();
+	Serial.println("");
+	Serial.println("******************************");
+	Serial.println("        Program start         ");
+	Serial.println("******************************");
+	Serial.flush();
 
 	alarm_clock_fsm();
 	vTaskStartScheduler();
 
 	while (1) {
-		SerialUSB.print(".");
-		SerialUSB.println("Scheduler Failed! \n");
-		SerialUSB.flush();
+		Serial.print(".");
+		Serial.println("Scheduler Failed! \n");
+		Serial.flush();
 		delay(1000);
 	}
 }
 
 void loop()
 {
-	SerialUSB.print(".");
+	Serial.print(".");
 	delay(1000);
 }

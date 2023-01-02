@@ -15,7 +15,7 @@ extern "C" {
 }
 #endif /* __cplusplus */
 
-#define SCREEN_INFO(x...) SerialUSB.print("[screen]" x)
+#define SCREEN_INFO(x...) Serial.print("[screen]" x)
 
 static constexpr uint32_t
     image_size(const uint16_t x_size, const uint16_t y_size, const grey_scale_t grey_scale)
@@ -36,7 +36,7 @@ static uint8_t _blackImage[image_buf_size];
 
 void init_screen()
 {
-	SerialUSB.println("Init screen\n");
+	Serial.println("Init screen\n");
 
 	EPD_3IN7_1Gray_Init();
 	EPD_3IN7_1Gray_Clear();
@@ -257,13 +257,13 @@ void ui_update()
 {
 	switch (ui_state) {
 	case menu_clock:
-		SerialUSB.println("menu_clock state");
+		Serial.println("menu_clock state");
 		init_screen();
 		screen_update_clock();
 		EPD_3IN7_Sleep();
 		break;
 	case menu_settings:
-		SerialUSB.println("menu_settings state");
+		Serial.println("menu_settings state");
 		screen_display_param();
 		break;
 	}
@@ -343,29 +343,29 @@ void ui_button_event(const struct button_evt_t *button_evt)
 		alarm.is_set       = true;
 		if (_alarm_select == 0) {
 			set_alarm_0(&alarm);
-			SerialUSB.print("[screen] Setting alarm 0\n");
+			Serial.print("[screen] Setting alarm 0\n");
 		} else {
 			set_alarm_1(&alarm);
-			SerialUSB.print("[screen] Setting alarm 1\n");
+			Serial.print("[screen] Setting alarm 1\n");
 		}
-		SerialUSB.print("Monday ");
-		SerialUSB.println(alarm.alarm_days.days.monday);
-		SerialUSB.print("Tuesday ");
-		SerialUSB.println(alarm.alarm_days.days.tuesday);
-		SerialUSB.print("Wednesday ");
-		SerialUSB.println(alarm.alarm_days.days.wednesday);
-		SerialUSB.print("Thursday ");
-		SerialUSB.println(alarm.alarm_days.days.thursday);
-		SerialUSB.print("Friday ");
-		SerialUSB.println(alarm.alarm_days.days.friday);
-		SerialUSB.print("Saturday ");
-		SerialUSB.println(alarm.alarm_days.days.saturday);
-		SerialUSB.print("Sunday ");
-		SerialUSB.println(alarm.alarm_days.days.sunday);
-		SerialUSB.print("At: ");
-		SerialUSB.print(alarm.alarm_hour);
-		SerialUSB.print("h");
-		SerialUSB.println(alarm.alarm_minute);
+		Serial.print("Monday ");
+		Serial.println(alarm.alarm_days.days.monday);
+		Serial.print("Tuesday ");
+		Serial.println(alarm.alarm_days.days.tuesday);
+		Serial.print("Wednesday ");
+		Serial.println(alarm.alarm_days.days.wednesday);
+		Serial.print("Thursday ");
+		Serial.println(alarm.alarm_days.days.thursday);
+		Serial.print("Friday ");
+		Serial.println(alarm.alarm_days.days.friday);
+		Serial.print("Saturday ");
+		Serial.println(alarm.alarm_days.days.saturday);
+		Serial.print("Sunday ");
+		Serial.println(alarm.alarm_days.days.sunday);
+		Serial.print("At: ");
+		Serial.print(alarm.alarm_hour);
+		Serial.print("h");
+		Serial.println(alarm.alarm_minute);
 
 	} else if (button_evt->action == SHORT_PRESS and ui_state == menu_clock) {
 		/* Activate/deactivate alarm in clock screen */

@@ -28,17 +28,17 @@ static uint64_t last_ntp_update{};
 static void printWiFiStatus()
 {
 	/* print the SSID of the network you're attached to: */
-	SerialUSB.print("SSID: ");
-	SerialUSB.println(WiFi.SSID());
+	Serial.print("SSID: ");
+	Serial.println(WiFi.SSID());
 	/* print your WiFi shield's IP address: */
 	IPAddress ip = WiFi.localIP();
-	SerialUSB.print("IP Address: ");
-	SerialUSB.println(ip);
+	Serial.print("IP Address: ");
+	Serial.println(ip);
 	/* print the received signal strength: */
 	long rssi = WiFi.RSSI();
-	SerialUSB.print("signal strength (RSSI):");
-	SerialUSB.print(rssi);
-	SerialUSB.println(" dBm");
+	Serial.print("signal strength (RSSI):");
+	Serial.print(rssi);
+	Serial.println(" dBm");
 }
 
 static int connect_to_wifi()
@@ -49,15 +49,15 @@ static int connect_to_wifi()
 	const uint8_t max_num_try = 5;
 	uint8_t       num_try     = 0;
 
-	SerialUSB.print("Attempting to connect to SSID: ");
-	SerialUSB.println(ssid);
+	Serial.print("Attempting to connect to SSID: ");
+	Serial.println(ssid);
 	do {
-		SerialUSB.print("Attempt: ");
-		SerialUSB.println(num_try);
+		Serial.print("Attempt: ");
+		Serial.println(num_try);
 		WiFi.begin(ssid, pass);
 		delay(1000);
 		status = WiFi.status();
-		SerialUSB.println(status);
+		Serial.println(status);
 		num_try++;
 	} while (status != WL_CONNECTED and status != WL_NO_SHIELD and num_try < max_num_try);
 
@@ -65,12 +65,12 @@ static int connect_to_wifi()
 		printWiFiStatus();
 		return 0;
 	} else if (status == WL_NO_SHIELD) {
-		SerialUSB.println("No wifi chip detected!");
+		Serial.println("No wifi chip detected!");
 		display_error(0);
 	} else {
 		display_error(1);
 	}
-	SerialUSB.println("Could not connect to Wifi");
+	Serial.println("Could not connect to Wifi");
 	return -1;
 }
 
@@ -104,20 +104,20 @@ int wifi_update_rtc(void)
 		init_ntp();
 
 		ntp.update();
-		SerialUSB.print("Epoch received: ");
-		SerialUSB.println(static_cast<long unsigned int>(ntp.epoch()));
-		SerialUSB.print("hours: ");
-		SerialUSB.println(ntp.hours());
+		Serial.print("Epoch received: ");
+		Serial.println(static_cast<long unsigned int>(ntp.epoch()));
+		Serial.print("hours: ");
+		Serial.println(ntp.hours());
 		rtc_set_epoch(ntp.epoch());
 		rtc_set_hours(ntp.hours());
 		last_ntp_update = rtc_get_epoch();
-		SerialUSB.println();
-		SerialUSB.println(ntp.formattedTime("%d. %B %Y")); /* dd. Mmm yyyy */
-		SerialUSB.println(ntp.formattedTime("%A %T"));     /* Www hh:mm:ss */
+		Serial.println();
+		Serial.println(ntp.formattedTime("%d. %B %Y")); /* dd. Mmm yyyy */
+		Serial.println(ntp.formattedTime("%A %T"));     /* Www hh:mm:ss */
 		deinit_ntp();
 		return 0;
 	} else {
-		SerialUSB.println("Fail updating epoch");
+		Serial.println("Fail updating epoch");
 	}
 	disconnect_wifi();
 	return -1;

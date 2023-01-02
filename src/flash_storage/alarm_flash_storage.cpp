@@ -19,7 +19,7 @@ static alarm_params_t alarm_1_ram{};
 
 void init_alarm_flash_storage()
 {
-	SerialUSB.println("init_alarm_flash_storage");
+	Serial.println("init_alarm_flash_storage");
 	alarm_0_flash.read(alarm_0_ram);
 	alarm_1_flash.read(alarm_1_ram);
 }

@@ -19,15 +19,15 @@ extern "C" {
 
 int music_init(const uint8_t volume_percent)
 {
-	SerialUSB.print("[music] Initializing...");
+	Serial.print("[music] Initializing...");
 
 	if (!SD.begin(4)) {
-		SerialUSB.println(" failed!");
+		Serial.println(" failed!");
 		return -1;
 	}
 	AudioZeroClass::begin(44100);
 	AudioZeroClass::set_volume(volume_percent);
-	SerialUSB.println(" done!");
+	Serial.println(" done!");
 	return 0;
 }
 
@@ -58,14 +58,14 @@ static void _music_task(void *pvParameters)
 	File myFile = SD.open("STR1.wav");
 
 	if (myFile) {
-		SerialUSB.println("[music] Playing music");
+		Serial.println("[music] Playing music");
 
 		while (xSemaphoreTake(_sempahore_music, 0) == pdFALSE and myFile.available()) {
 			AudioZeroClass::play(myFile);
 		}
 	}
 
-	SerialUSB.println("[music] Stop playing music");
+	Serial.println("[music] Stop playing music");
 	myFile.close();
 	_music_task_handler = NULL;
 	vTaskDelete(_music_task_handler);
@@ -78,7 +78,7 @@ void music_play()
 	}
 	xSemaphoreTake(_sempahore_music, 0);
 	if (_music_task_handler == NULL) {
-		SerialUSB.println("[music] Start music task");
+		Serial.println("[music] Start music task");
 		_music_task_handler = xTaskCreateStatic(_music_task,
 		                                        "Music task",
 		                                        MUSIC_TASK_STACK_SIZE,
