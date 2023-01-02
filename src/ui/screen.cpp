@@ -337,6 +337,9 @@ void ui_button_event(const struct button_evt_t *button_evt)
 		default:
 			break;
 		}
+		if (clock_time < 0) {
+			clock_time += 60 * 24;
+		}
 		clock_time %= 60 * 24; /* Max 24 hours */
 		alarm.alarm_minute = clock_time % 60;
 		alarm.alarm_hour   = clock_time / 60;
