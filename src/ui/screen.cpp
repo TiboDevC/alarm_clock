@@ -7,6 +7,7 @@ extern "C" {
 #include "drv/screen/DEV_Config.h"
 #include "drv/screen/EPD.h"
 #include "flash_storage/alarm_flash_storage.h"
+#include "fsm/alarm_clock_fsm.h"
 #include "rtc/rtc_tool.h"
 #include "screen.h"
 #include "ui/GUI_Paint.h"
@@ -376,10 +377,12 @@ void ui_button_event(const struct button_evt_t *button_evt)
 			alarm_params_t alarm_0 = get_alarm_0();
 			alarm_0.is_set         = !alarm_0.is_set;
 			set_alarm_0(&alarm_0);
+			alarm_clock_fsm_dispatch_event(FSM_EVENT_REFRESH_SCREEN);
 		} else if (button_evt->button_id == B_MENU_CLOCK) {
 			alarm_params_t alarm_1 = get_alarm_1();
 			alarm_1.is_set         = !alarm_1.is_set;
 			set_alarm_1(&alarm_1);
+			alarm_clock_fsm_dispatch_event(FSM_EVENT_REFRESH_SCREEN);
 		}
 	}
 }

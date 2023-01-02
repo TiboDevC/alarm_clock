@@ -134,6 +134,10 @@ enum fsm_handler_rc state_clock_display(struct fsm *fsm, struct fsm_event const 
 		ui_set_state(menu_clock);
 		ui_update();
 		return FSM_HANDLED();
+	case FSM_EVENT_REFRESH_SCREEN:
+		_last_epoch_refresh_time = rtc_get_epoch();
+		ui_update();
+		break;
 	case FSM_EVENT_RTC_WAKE_UP:
 		epoch = rtc_get_epoch();
 		if (rtc_get_minutes() % SCREEN_REFRESH_FREQ_MIN == 0 ||

@@ -58,6 +58,8 @@ static char *alarm_clock_fsm_event_name_getter(const struct fsm_event *event)
 		return "FSM_EVENT_ALARM_FIRES";
 	case FSM_EVENT_RTC_WAKE_UP:
 		return "FSM_EVENT_RTC_WAKE_UP";
+	case FSM_EVENT_REFRESH_SCREEN:
+		return "FSM_EVENT_REFRESH_SCREEN";
 	default:
 		return "UNKNOWN_EVT";
 	}
