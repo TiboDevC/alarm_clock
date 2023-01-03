@@ -23,8 +23,6 @@ extern "C" {
 static WiFiUDP wifiUdp;
 static NTP     ntp(wifiUdp);
 
-static uint64_t last_ntp_update{};
-
 static void printWiFiStatus()
 {
 	/* print the SSID of the network you're attached to: */
@@ -110,7 +108,6 @@ int wifi_update_rtc(void)
 		Serial.println(ntp.hours());
 		rtc_set_epoch(ntp.epoch());
 		rtc_set_hours(ntp.hours());
-		last_ntp_update = rtc_get_epoch();
 		Serial.println();
 		Serial.println(ntp.formattedTime("%d. %B %Y")); /* dd. Mmm yyyy */
 		Serial.println(ntp.formattedTime("%A %T"));     /* Www hh:mm:ss */

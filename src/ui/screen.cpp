@@ -245,9 +245,7 @@ void screen_update_clock()
 
 /**********************/
 
-static ui_state_t         ui_state{menu_clock};
-static uint64_t           last_button_time{0};
-static constexpr uint64_t timeout_setting_ms = 30 * 1000; // 30 seconds
+static ui_state_t ui_state{menu_clock};
 
 void ui_set_state(const enum ui_state_t state)
 {
@@ -278,11 +276,7 @@ void ui_update()
  */
 void ui_button_event(const struct button_evt_t *button_evt)
 {
-	const uint64_t curr_time = millis();
-
 	int16_t clock_time;
-
-	last_button_time = curr_time;
 
 	if (ui_state == menu_settings) {
 		alarm_params_t alarm;

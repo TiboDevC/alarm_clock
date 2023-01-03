@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 
-#define NUM_BUTTON 12
-
 #define BUTTON_ID_SHIFT     ALARM_CLOCK_FSM_EVT_SHT
 #define BUTTON_ID_SIZE      4
 #define BUTTON_ID_MSK       (0x0F)
@@ -12,7 +10,6 @@
 #define BUTTON_ACTION_SIZE  2
 #define BUTTON_ACTION_MSK   (0x01)
 #define BUTTON_COUNT_SHIFT  (BUTTON_ACTION_SHIFT + BUTTON_ACTION_SIZE)
-#define BUTTON_COUNT_SIZE   10
 #define BUTTON_COUNT_MSK    (0x3FF)
 
 enum button_action_t { SHORT_PRESS, LONG_PRESS };
@@ -40,14 +37,8 @@ struct button_evt_t {
 	uint8_t push_count;
 };
 
-struct button_state_t {
-	uint8_t              pin_id;
-	enum button_action_t action;
-	uint8_t              push_count;
-};
-
 void init_buttons(void);
 void button_start_polling(void);
 void button_stop_polling(void);
 
-#endif // ALARM_CLOCK_BUTTON_H
+#endif /* ALARM_CLOCK_BUTTON_H */
