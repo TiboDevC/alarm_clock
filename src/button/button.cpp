@@ -321,11 +321,15 @@ void init_buttons(void)
 	}
 
 	for (auto &button : button_states) {
-		pinMode(button.pin_id, INPUT_PULLUP);
-		delay(200);                                /* Hard delay for pullup to be effective */
-		button.state = digitalRead(button.pin_id); /* Read initial button state */
 		if (button.input_mode == B_IRQ) {
+			pinMode(button.pin_id, INPUT_PULLUP);
+			delay(200);                                /* Hard delay for pullup to be effective */
+			button.state = digitalRead(button.pin_id); /* Read initial button state */
+
 			button_enable_interrupts(button.pin_id);
+		} else {
+			pinMode(button.pin_id, INPUT);
+			button.state = digitalRead(button.pin_id);
 		}
 	}
 
