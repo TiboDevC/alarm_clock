@@ -24,7 +24,7 @@ enum button_id_t {
 	B_DAY_FRIDAY,
 	B_DAY_SATURDAY,
 	B_DAY_SUNDAY,
-	B_HOUR_INC,
+//	B_HOUR_INC,
 	B_HOUR_DEC,
 	B_MIN_INC,
 	B_MIN_DEC,

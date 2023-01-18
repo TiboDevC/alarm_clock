@@ -14,6 +14,8 @@ enum fsm_handler_rc state_init(struct fsm *fsm, struct fsm_event const *event)
 
 	switch (event_alarm_clock) {
 	case FSM_EVENT_INIT:
+		pinMode(LED_BUILTIN, OUTPUT);
+		digitalWrite(LED_BUILTIN, HIGH);
 		debug("[state_init] event_init\n");
 		init_alarm_flash_storage();
 		setup_gclk();

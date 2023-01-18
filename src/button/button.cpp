@@ -63,7 +63,7 @@ static constexpr uint8_t b_day_1_pin{A4};
 static constexpr uint8_t b_hour_inc_pin{0};
 static constexpr uint8_t b_hour_dec_pin{17};
 static constexpr uint8_t b_min_inc_pin{16};
-static constexpr uint8_t b_min_dec_pin{6};
+//static constexpr uint8_t b_min_dec_pin{6}; /* WARNING! Connected to a LED */
 
 static std::array<button_ctx_t, B_LAST_BUTTON> button_states{{
     button_ctx_t(B_MENU_CLOCK, b_menu_0_pin, B_IRQ),
@@ -78,7 +78,7 @@ static std::array<button_ctx_t, B_LAST_BUTTON> button_states{{
     button_ctx_t(B_MIN_DEC, b_hour_inc_pin, B_IRQ),
     button_ctx_t(B_MIN_INC, b_hour_dec_pin, B_IRQ),
     button_ctx_t(B_HOUR_DEC, b_min_inc_pin, B_IRQ),
-    button_ctx_t(B_HOUR_INC, b_min_dec_pin, B_IRQ),
+//    button_ctx_t(B_HOUR_INC, b_min_dec_pin, B_IRQ),
 }};
 
 static void _dispatch_button_event(const button_evt_t &button_evt)
@@ -216,9 +216,9 @@ static void button_enable_interrupts(const uint8_t pin_id)
 	case b_min_inc_pin:
 		attachInterrupt(digitalPinToInterrupt(b_min_inc_pin), button_handler<b_min_inc_pin>, CHANGE);
 		break;
-	case b_min_dec_pin:
-		attachInterrupt(digitalPinToInterrupt(b_min_dec_pin), button_handler<b_min_dec_pin>, CHANGE);
-		break;
+//	case b_min_dec_pin:
+//		attachInterrupt(digitalPinToInterrupt(b_min_dec_pin), button_handler<b_min_dec_pin>, CHANGE);
+//		break;
 	default:
 		break;
 	}
@@ -344,7 +344,7 @@ static void _button_start_polling(void *pvParameters)
 
 	while (xSemaphoreTake(_button_task_semaphore, 0) == pdFALSE) {
 		_handle_timer5_poll_button();
-		vTaskDelayUntil(&xLastWakeTime, period_ms);
+		xTaskDelayUntil(&xLastWakeTime, period_ms);
 	}
 	_handle_timer5_poll_button();
 	BUTTON_INFO("Delete button task\n");

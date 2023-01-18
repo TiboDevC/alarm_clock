@@ -205,6 +205,8 @@ void screen_update_clock()
 			    date_buf2, "%s %2dh%02d", date_buf, alaram_0.alarm_hour, alaram_0.alarm_minute);
 			Paint_DrawString_EN(320, 10, date_buf2, &Font20, BLACK, WHITE);
 		}
+	} else {
+		Serial.print("Update: Alarm0 NOT set\n");
 	}
 
 	/* Alarm 1 */
@@ -238,6 +240,8 @@ void screen_update_clock()
 			    date_buf2, "%s %2dh%02d", date_buf, alaram_1.alarm_hour, alaram_1.alarm_minute);
 			Paint_DrawString_EN(320, 50, date_buf2, &Font20, BLACK, WHITE);
 		}
+	} else {
+		Serial.print("Update: Alarm1 NOT set\n");
 	}
 
 	EPD_3IN7_1Gray_Display(_blackImage);
@@ -323,9 +327,9 @@ void ui_button_event(const struct button_evt_t *button_evt)
 		case B_MIN_DEC:
 			clock_time -= 5u * button_evt->push_count;
 			break;
-		case B_HOUR_INC:
-			clock_time += (1u * 60u) * button_evt->push_count;
-			break;
+//		case B_HOUR_INC:
+//			clock_time += (1u * 60u) * button_evt->push_count;
+//			break;
 		case B_HOUR_DEC:
 			clock_time -= (1u * 60u) * button_evt->push_count;
 			break;

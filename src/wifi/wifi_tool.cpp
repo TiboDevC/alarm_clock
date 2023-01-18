@@ -23,7 +23,7 @@ extern "C" {
 static WiFiUDP wifiUdp;
 static NTP     ntp(wifiUdp);
 
-static void printWiFiStatus()
+static void print_connection_status()
 {
 	/* print the SSID of the network you're attached to: */
 	Serial.print("SSID: ");
@@ -39,12 +39,55 @@ static void printWiFiStatus()
 	Serial.println(" dBm");
 }
 
+static void _print_wifi_status(uint8_t status)
+{
+	Serial.print("Wifi status: ");
+	switch (status) {
+	case WL_NO_MODULE:
+		Serial.println("WL_NO_MODULE");
+		break;
+	case WL_IDLE_STATUS:
+		Serial.println("WL_IDLE_STATUS");
+		break;
+	case WL_NO_SSID_AVAIL:
+		Serial.println("WL_NO_SSID_AVAIL");
+		break;
+	case WL_SCAN_COMPLETED:
+		Serial.println("WL_SCAN_COMPLETED");
+		break;
+	case WL_CONNECTED:
+		Serial.println("WL_CONNECTED");
+		break;
+	case WL_CONNECT_FAILED:
+		Serial.println("WL_CONNECT_FAILED");
+		break;
+	case WL_CONNECTION_LOST:
+		Serial.println("WL_CONNECTION_LOST");
+		break;
+	case WL_DISCONNECTED:
+		Serial.println("WL_DISCONNECTED");
+		break;
+	case WL_AP_LISTENING:
+		Serial.println("WL_AP_LISTENING");
+		break;
+	case WL_AP_CONNECTED:
+		Serial.println("WL_AP_CONNECTED");
+		break;
+	case WL_AP_FAILED:
+		Serial.println("WL_AP_FAILED");
+		break;
+	default:
+		Serial.print("Unknown: ");
+		Serial.println(status);
+	}
+}
+
 static int connect_to_wifi()
 {
 	int           status      = WL_IDLE_STATUS;
 	const char    ssid[]      = WIFI_SSID_NAME; /* your network SSID (name) */
 	const char    pass[]      = WIFI_PWD;
-	const uint8_t max_num_try = 5;
+	const uint8_t max_num_try = 2;
 	uint8_t       num_try     = 0;
 
 	Serial.print("Attempting to connect to SSID: ");
@@ -53,14 +96,15 @@ static int connect_to_wifi()
 		Serial.print("Attempt: ");
 		Serial.println(num_try);
 		WiFi.begin(ssid, pass);
-		delay(1000);
+		delay(10000);
 		status = WiFi.status();
-		Serial.println(status);
+		_print_wifi_status(status);
 		num_try++;
 	} while (status != WL_CONNECTED and status != WL_NO_SHIELD and num_try < max_num_try);
 
+	digitalWrite(LED_BUILTIN, LOW);
 	if (status == WL_CONNECTED) {
-		printWiFiStatus();
+		print_connection_status();
 		return 0;
 	} else if (status == WL_NO_SHIELD) {
 		Serial.println("No wifi chip detected!");

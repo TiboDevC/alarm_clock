@@ -24,52 +24,63 @@ static int is_alarm_ringing(void)
 	const uint8_t         rtc_minute = rtc_get_minutes();
 
 	if (!alarm_0.is_set) {
+		STATE_CLOCK_DISPLAY_INFO("Alarm NOT SET\n");
 		return -1;
 	}
 	if (rtc_hour != alarm_0.alarm_hour) {
+		STATE_CLOCK_DISPLAY_INFO("Alarm hour does not match\n");
 		return -1;
 	}
 	if (!(rtc_minute >= alarm_0.alarm_minute && rtc_minute <= alarm_0.alarm_minute + 3)) {
+		STATE_CLOCK_DISPLAY_INFO("Alarm minute does not match\n");
 		return -1;
 	}
 	switch (rtc_day) {
 	case rtc_monday:
 		if (!alarm_0.alarm_days.days.monday) {
+			STATE_CLOCK_DISPLAY_INFO("Alarm day monday does not match\n");
 			return -1;
 		}
 		break;
 	case rtc_tuesday:
 		if (!alarm_0.alarm_days.days.tuesday) {
+			STATE_CLOCK_DISPLAY_INFO("Alarm day tuesday does not match\n");
 			return -1;
 		}
 		break;
 	case rtc_wednesday:
 		if (!alarm_0.alarm_days.days.wednesday) {
+			STATE_CLOCK_DISPLAY_INFO("Alarm day wednesday does not match\n");
 			return -1;
 		}
 		break;
 	case rtc_thursday:
 		if (!alarm_0.alarm_days.days.thursday) {
+			STATE_CLOCK_DISPLAY_INFO("Alarm day thursday does not match\n");
 			return -1;
 		}
 		break;
 	case rtc_friday:
 		if (!alarm_0.alarm_days.days.friday) {
+			STATE_CLOCK_DISPLAY_INFO("Alarm day friday does not match\n");
 			return -1;
 		}
 		break;
 	case rtc_saturday:
 		if (!alarm_0.alarm_days.days.saturday) {
+			STATE_CLOCK_DISPLAY_INFO("Alarm day saturday does not match\n");
 			return -1;
 		}
 		break;
 	case rtc_sunday:
 		if (!alarm_0.alarm_days.days.sunday) {
+			STATE_CLOCK_DISPLAY_INFO("Alarm day sunday does not match\n");
 			return -1;
 		}
 		break;
 	}
 	if (alarm_0.rings_tomorrow) {
+		STATE_CLOCK_DISPLAY_INFO("Ring tomorrow\n");
 		return -1;
 	}
 	return 0;

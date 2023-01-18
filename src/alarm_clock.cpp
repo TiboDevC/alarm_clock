@@ -33,13 +33,34 @@ static void _idle_task(void *pvParameters)
 	}
 }
 
+#define PRINT_UART_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
+
+static StaticTask_t _print_uart_task_buffer;
+static StackType_t  _print_uart_task_stack[PRINT_UART_TASK_STACK_SIZE];
+
+static void _print_uart_task(void *pvParameters)
+{
+	while (1) {
+		if (Serial.available()) {
+			while (Serial.available()) {
+				Serial.print(Serial.read());
+			}
+		}
+	}
+}
+
 void setup()
 {
 	/* Disable speaker first */
 	pinMode(PIN_SWITCH_SPEAKER, OUTPUT);
-	digitalWrite(PIN_SWITCH_SPEAKER, HIGH);
+	digitalWrite(PIN_SWITCH_SPEAKER, LOW);
 
-	delay(1000); // prevents usb driver crash on startup, do not omit this
+	pinMode(A0, OUTPUT);
+	analogWrite(A0, 0);
+
+	SerialUSB.begin(115200);
+
+	delay(5000); // prevents usb driver crash on startup, do not omit this
 
 	if (!Serial.available()) {
 		/* Disable serial if not available */
@@ -57,11 +78,19 @@ void setup()
 	/* Start IDLE task */
 	xTaskCreateStatic(_idle_task,
 	                  "IDLE task",
-	                  IDLE_TASK_STACK_SIZE + 1,
+	                  IDLE_TASK_STACK_SIZE,
 	                  NULL,
-	                  tskIDLE_PRIORITY,
+	                  tskIDLE_PRIORITY + 1,
 	                  _idle_task_stack,
 	                  &_idle_task_buffer);
+
+	xTaskCreateStatic(_print_uart_task,
+	                  "Print uart task",
+	                  IDLE_TASK_STACK_SIZE,
+	                  NULL,
+	                  tskIDLE_PRIORITY + 1,
+	                  _print_uart_task_stack,
+	                  &_print_uart_task_buffer);
 
 	Serial.println("end alarm_init, start scheduler");
 	vTaskStartScheduler();
