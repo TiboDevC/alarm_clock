@@ -22,3 +22,6 @@
 [submodule "lib/CMSIS_5"]
 	path = lib/CMSIS_5
 	url = git@github.com:ARM-software/CMSIS_5.git
+[submodule "lib/FreeRTOS-Kernel"]
+	path = lib/FreeRTOS-Kernel
+	url = git@github.com:FreeRTOS/FreeRTOS-Kernel.git
