@@ -22,7 +22,6 @@ CORE_LIBRAIRIES_CC_SRC  := $(foreach dir,$(CORE_LIBRAIRIES_DIR), $(wildcard $(di
 CORE_LIBRAIRIES_CXX_SRC := $(foreach dir,$(CORE_LIBRAIRIES_DIR), $(wildcard $(dir)/*.cpp))
 
 LIBRARIES  := FlashStorage_SAMD
-LIBRARIES  += Arduino-FreeRTOS-SAMD21
 LIBRARIES  += SD
 LIBRARIES  += RTCZero
 LIBRARIES  += WiFiNINA
@@ -34,6 +33,20 @@ LIBRARIES_CXX_SRC := $(foreach dir,$(LIBRARIES_DIRS), $(wildcard $(dir)*.cpp))
 # Include 1 depth subfolders, TODO improve subfolder search
 LIBRARIES_CC_SRC  += $(foreach dir,$(LIBRARIES_DIRS), $(wildcard $(dir)*/*.c))
 LIBRARIES_CXX_SRC += $(foreach dir,$(LIBRARIES_DIRS), $(wildcard $(dir)*/*.cpp))
+
+# FreeRTOS source
+FREERTOS_DIR     := lib/FreeRTOS-Kernel
+LIBRARIES_CC_SRC += $(foreach dir,$(FREERTOS_DIR), $(wildcard $(dir)/*.c))
+LIBRARIES_CC_SRC += $(FREERTOS_DIR)/portable/GCC/ARM_CM0/port.c
+LIBRARIES_CC_SRC += $(FREERTOS_DIR)/portable/MemMang/heap_3.c
+LIBRARIES_INC    += -I$(FREERTOS_DIR)/portable/GCC/ARM_CM0
+LIBRARIES_INC    += -I$(FREERTOS_DIR)/include
+# FreeRTOS port
+FREERTOS_PORT_DIR := lib/FreeRTOS_port
+LIBRARIES_INC     += -I$(FREERTOS_PORT_DIR)
+LIBRARIES_CC_SRC  += $(foreach dir,$(FREERTOS_PORT_DIR), $(wildcard $(dir)/*.c))
+LIBRARIES_CXX_SRC += $(foreach dir,$(FREERTOS_PORT_DIR), $(wildcard $(dir)/*.cpp))
+LIBRARIES_CC_SRC  += $(foreach dir,$(FREERTOS_PORT_DIR), $(wildcard $(dir)/*.c))
 
 TARGET_CC_SRC  := $(wildcard $(SKETCH)/*.c)
 TARGET_CXX_SRC := $(wildcard $(SKETCH)/*.cpp)
@@ -119,7 +132,7 @@ LCPPFLAGS  += -MMD -MP
 CPUFLAGS   := -mcpu=cortex-m0plus -mthumb -ggdb3 -Os
 
 # used in CFLAGS/CXXFLAGS/ASFLAGS, but not LDFLAGS
-CCXXFLAGS  := $(BOARD_FLAGS) $(CPUFLAGS) -Wall -Wextra -Wno-unused-parameter -Wno-switch -Wno-ignored-qualifiers
+CCXXFLAGS  := $(BOARD_FLAGS) $(CPUFLAGS) -Wall -Wextra -Werror -Wno-unused-parameter -Wno-switch -Wno-ignored-qualifiers
 CCXXFLAGS  += -fno-exceptions -ffunction-sections -fdata-sections -Wno-expansion-to-defined
 
 # Too many warning in Arduino source code, silent them
@@ -178,7 +191,7 @@ size: $(TARGET_ELF) | $(TARGET_BIN)
 
 .PHONY: upload
 upload: $(TARGET_BIN) all
-	$(_V_RESET_$(V))$(RESET_SCRIPT)
+	#$(_V_RESET_$(V))$(RESET_SCRIPT)
 	$(_V_UPLOAD_$(V))$(BOSSAC) $(BOSSAC_FLAGS) $<
 
 .PHONY: clean

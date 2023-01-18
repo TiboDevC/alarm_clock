@@ -14,6 +14,25 @@ extern "C" {
 }
 #endif
 
+#define IDLE_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
+
+static StaticTask_t _idle_task_buffer;
+static StackType_t  _idle_task_stack[IDLE_TASK_STACK_SIZE];
+
+static void _idle_task(void *pvParameters)
+{
+	constexpr int period_ms     = 1000 / portTICK_PERIOD_MS;
+	TickType_t    xLastWakeTime = xTaskGetTickCount();
+
+	while (1) {
+		xTaskDelayUntil(&xLastWakeTime, period_ms);
+		if (serialEventRun) {
+			serialEventRun();
+		}
+		Serial.print(".");
+	}
+}
+
 void setup()
 {
 	/* Disable speaker first */
@@ -34,6 +53,17 @@ void setup()
 	Serial.flush();
 
 	alarm_clock_fsm();
+
+	/* Start IDLE task */
+	xTaskCreateStatic(_idle_task,
+	                  "IDLE task",
+	                  IDLE_TASK_STACK_SIZE + 1,
+	                  NULL,
+	                  tskIDLE_PRIORITY,
+	                  _idle_task_stack,
+	                  &_idle_task_buffer);
+
+	Serial.println("end alarm_init, start scheduler");
 	vTaskStartScheduler();
 
 	while (1) {
@@ -46,6 +76,7 @@ void setup()
 
 void loop()
 {
-	Serial.print(".");
-	delay(1000);
+	Serial.println("***************** ERROR");
+	/* Should never reach this code */
+	configASSERT(0)
 }

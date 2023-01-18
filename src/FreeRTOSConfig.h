@@ -32,7 +32,7 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
-#include "runTimeStats_hooks.h"
+// #include "runTimeStats_hooks.h"
 
 /*-----------------------------------------------------------
  * Application specific definitions.
@@ -48,7 +48,7 @@
 
 
 #define configUSE_PREEMPTION             1
-#define configUSE_IDLE_HOOK              1
+#define configUSE_IDLE_HOOK              0
 #define configUSE_TICK_HOOK              0
 #define configCPU_CLOCK_HZ               ((unsigned long) F_CPU)
 #define configTICK_RATE_HZ               ((TickType_t) 1000)
@@ -71,12 +71,10 @@
 #define configSUPPORT_DYNAMIC_ALLOCATION 1
 
 /* Run time stats related definitions. */
-#define configGENERATE_RUN_TIME_STATS 1
+#define configGENERATE_RUN_TIME_STATS 0
 
 /* Arduino framework integration */
-#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() \
-	vMainConfigureTimerForRunTimeStats()                            // see runTimeStats_hooks.h
-#define portGET_RUN_TIME_COUNTER_VALUE() ulMainGetRunTimeCounterValue() // see runTimeStats_hooks.h
+
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human
@@ -107,7 +105,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelete               1
 #define INCLUDE_vTaskCleanUpResources     1
 #define INCLUDE_vTaskSuspend              1
-#define INCLUDE_vTaskDelayUntil           1
+#define INCLUDE_xTaskDelayUntil           1
 #define INCLUDE_vTaskDelay                1
 #define INCLUDE_eTaskGetState             1
 
@@ -133,13 +131,6 @@ extern const char *removePath(const char *path);                                
 #define configASSERT(x)                                               \
 	if ((x) == 0) {                                               \
 		rtosFatalErrorSerial(__LINE__, removePath(__FILE__)); \
-	}
-
-// assert you can use to also print the value that caused the failure
-// Useful for debugging, but not FreeRtos standard
-#define configPrintASSERT(x, v1, s, v2)                                               \
-	if ((x) == 0) {                                                               \
-		rtosFatalErrorSerialPrint(__LINE__, removePath(__FILE__), v1, s, v2); \
 	}
 #endif
 
