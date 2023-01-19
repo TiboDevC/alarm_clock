@@ -115,6 +115,7 @@ static int connect_to_wifi()
 		display_error(1);
 	}
 	Serial.println("Could not connect to Wifi");
+	WiFi.end();
 	return -1;
 }
 
@@ -158,10 +159,9 @@ int wifi_update_rtc(void)
 		Serial.println(ntp.formattedTime("%d. %B %Y")); /* dd. Mmm yyyy */
 		Serial.println(ntp.formattedTime("%A %T"));     /* Www hh:mm:ss */
 		deinit_ntp();
+		disconnect_wifi();
 		return 0;
-	} else {
-		Serial.println("Fail updating epoch");
 	}
-	disconnect_wifi();
+	Serial.println("Fail updating epoch");
 	return -1;
 }
