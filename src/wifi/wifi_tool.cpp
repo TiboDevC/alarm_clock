@@ -95,6 +95,8 @@ static int connect_to_wifi()
 	do {
 		Serial.print("Attempt: ");
 		Serial.println(num_try);
+		/* Reset Wi-Fi chip every try */
+		WiFi.end();
 		WiFi.begin(ssid, pass);
 		delay(10000);
 		status = WiFi.status();
