@@ -22,3 +22,6 @@
 [submodule "lib/FreeRTOS-Kernel"]
 	path = lib/FreeRTOS-Kernel
 	url = git@github.com:FreeRTOS/FreeRTOS-Kernel.git
+[submodule "lib/ArduinoModule-CMSIS-Atmel"]
+	path = lib/ArduinoModule-CMSIS-Atmel
+	url = https://github.com/arduino/ArduinoModule-CMSIS-Atmel.git

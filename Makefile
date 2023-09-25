@@ -66,7 +66,7 @@ TARGET_CXX_SRC += $(wildcard $(SKETCH)/button/*.cpp)
 VARIANT_DIR := lib/ArduinoCore-samd/variants/mkrwifi1010
 VARIANT_SRC := $(VARIANT_DIR)/variant.cpp
 CMSIS_DIR   := lib/CMSIS_5/CMSIS/Core
-SAM_DIR     := lib/CMSIS-Atmel/CMSIS/CMSIS/Device/ATMEL
+SAM_DIR     := lib/ArduinoModule-CMSIS-Atmel/CMSIS-Atmel/CMSIS/Device/ATMEL
 
 # List all .o files
 CORE_OBJS := $(patsubst %.c,$(OBJDIR)/%.o,$(CORE_CC_SRC)) \
