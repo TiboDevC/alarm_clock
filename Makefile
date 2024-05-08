@@ -216,11 +216,11 @@ hex: $(TARGET_HEX)
 # Create static libraries of Arduino source code and libraries
 $(OBJDIR)/arduino_core_lib.a: CXXFLAGS += $(CXXFLAGS_EXTRA_ARDUINO)
 $(OBJDIR)/arduino_core_lib.a: $(CORE_OBJS)
-	$(_V_AR_$(V))ar -r -o $@ $^
+	$(_V_AR_$(V))$(AR) -r -o $@ $^
 
 $(OBJDIR)/arduino_libraries_lib.a: CXXFLAGS += $(CXXFLAGS_EXTRA_ARDUINO)
 $(OBJDIR)/arduino_libraries_lib.a: $(LIBRARIES_OBJS)
-	$(_V_AR_$(V))ar -r -o $@ $^
+	$(_V_AR_$(V))$(AR) -r -o $@ $^
 
 # Generic targets
 $(SRCS): Makefile
