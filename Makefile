@@ -145,12 +145,12 @@ CCXXFLAGS  += -fno-exceptions -ffunction-sections -fdata-sections -Wno-expansion
 
 # Too many warning in Arduino source code, silent them
 CXXFLAGS_EXTRA_ARDUINO := -Wno-class-memaccess -Wno-address-of-packed-member -Wno-format-overflow -Wno-restrict -Wno-maybe-uninitialized 
-CXXFLAGS_EXTRA_ARDUINO += -Wno-sized-deallocation -Wno-unused-variable
+CXXFLAGS_EXTRA_ARDUINO += -Wno-sized-deallocation -Wno-unused-variable -Wno-volatile
 CFLAGS_EXTRA_ARDUINO += -Wno-enum-int-mismatch
 
-LCFLAGS    := $(CCXXFLAGS) -std=gnu11
+LCFLAGS    := $(CCXXFLAGS) -std=gnu18
 
-LCXXFLAGS  := $(CCXXFLAGS) -std=gnu++17 -fno-rtti -fno-threadsafe-statics
+LCXXFLAGS  := $(CCXXFLAGS) -std=gnu++20 -fno-rtti -fno-threadsafe-statics
 
 LASFLAGS   := $(CCXXFLAGS)
 
