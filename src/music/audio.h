@@ -18,10 +18,6 @@
 #include "Arduino.h"
 #include "api/Print.h"
 
-#include "SD.h"
-#include "SPI.h"
-
-
 class AudioZeroClass{
 public:
 

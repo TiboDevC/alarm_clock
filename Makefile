@@ -232,6 +232,10 @@ $(OBJDIR)/arduino_libraries_lib.a: CXXFLAGS += $(CXXFLAGS_EXTRA_ARDUINO)
 $(OBJDIR)/arduino_libraries_lib.a: $(LIBRARIES_OBJS)
 	$(_V_AR_$(V))$(AR) -r -o $@ $^
 
+# Exception for Arduino SD library as SD.h includes `Print.h` and not `api/Print.h`
+$(OBJDIR)/lib/SD/src/%.o: CPPFLAGS += -I$(CORE_API_DIR)api
+$(OBJDIR)/src/music/%.o: CPPFLAGS += -I$(CORE_API_DIR)api
+
 # Generic targets
 $(SRCS): Makefile
 
