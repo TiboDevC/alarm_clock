@@ -1,9 +1,6 @@
 [submodule "lib/FlashStorage_SAMD"]
 	path = lib/FlashStorage_SAMD
 	url = git@github.com:khoih-prog/FlashStorage_SAMD.git
-[submodule "lib/Arduino-FreeRTOS-SAMD21"]
-	path = lib/Arduino-FreeRTOS-SAMD21
-	url = git@github.com:BriscoeTech/Arduino-FreeRTOS-SAMD21.git
 [submodule "lib/SD"]
 	path = lib/SD
 	url = git@github.com:arduino-libraries/SD.git
