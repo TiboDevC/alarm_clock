@@ -22,3 +22,6 @@
 [submodule "lib/ArduinoModule-CMSIS-Atmel"]
 	path = lib/ArduinoModule-CMSIS-Atmel
 	url = https://github.com/arduino/ArduinoModule-CMSIS-Atmel.git
+[submodule "lib/ArduinoCore-API"]
+	path = lib/ArduinoCore-API
+	url = https://github.com/arduino/ArduinoCore-API.git
