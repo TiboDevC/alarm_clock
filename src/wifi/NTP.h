@@ -24,7 +24,7 @@
 #define NTP_H
 
 #include "Arduino.h"
-#include <Udp.h>
+#include <api/Udp.h>
 #include <time.h>
 
 #define SEVENTYYEARS     2208988800UL

@@ -2,7 +2,7 @@ TARGET     := mkrwifi1010
 SKETCH     := src
 
 # Board specific flags, TODO include it from bootloader definition
-BOARD_FLAGS := -DUSB_VID=0x2341 -DUSB_PID=0x8054 -DF_CPU=48000000 -DPinStatus=uint8_t
+BOARD_FLAGS := -DUSB_VID=0x2341 -DUSB_PID=0x8054 -DF_CPU=48000000
 
 # Directory Configuration
 OBJDIR      := obj
@@ -13,6 +13,12 @@ CORE_DIR     := $(addprefix lib/, $(CORE))
 CORE_INC     := $(addprefix -I,$(CORE_DIR))
 CORE_CC_SRC  := $(foreach dir,$(CORE_DIR), $(wildcard $(dir)*.c))
 CORE_CXX_SRC := $(foreach dir,$(CORE_DIR), $(wildcard $(dir)*.cpp))
+
+CORE_API         := ArduinoCore-API/
+CORE_API_DIR     := $(addprefix lib/, $(CORE_API))
+CORE_API_INC     := $(addprefix -I,$(CORE_API_DIR))
+CORE_API_CC_SRC  := $(wildcard $(CORE_API_DIR)api/*.c)
+CORE_API_CXX_SRC := $(wildcard $(CORE_API_DIR)api/*.cpp)
 
 CORE_LIBRAIRIES         := SPI
 CORE_LIBRAIRIES         += Wire
@@ -71,6 +77,8 @@ SAM_DIR     := lib/ArduinoModule-CMSIS-Atmel/CMSIS-Atmel/CMSIS/Device/ATMEL
 # List all .o files
 CORE_OBJS := $(patsubst %.c,$(OBJDIR)/%.o,$(CORE_CC_SRC)) \
              $(patsubst %.cpp,$(OBJDIR)/%.o,$(CORE_CXX_SRC)) \
+             $(patsubst %.cpp,$(OBJDIR)/%.o,$(CORE_API_CC_SRC)) \
+             $(patsubst %.cpp,$(OBJDIR)/%.o,$(CORE_API_CXX_SRC)) \
              $(patsubst %.c,$(OBJDIR)/%.o,$(CORE_LIBRAIRIES_CC_SRC)) \
              $(patsubst %.cpp,$(OBJDIR)/%.o,$(CORE_LIBRAIRIES_CXX_SRC))
 
@@ -125,7 +133,7 @@ export GDB     = $(TOOLCHAIN_BIN)arm-none-eabi-gdb
 PRINTF_FLOAT_FLAG = -Wl,--require-defined=_printf_float
 
 LCPPFLAGS  := -D__SAMD21G18A__ -DUSBCON $(SOURCE_VERSION_FLAG)
-LCPPFLAGS  += -I$(SKETCH) $(CORE_INC) $(CORE_LIBRAIRIES_INC) $(LIBRARIES_INC) -I$(CMSIS_DIR)/Include -I$(SAM_DIR) -I$(VARIANT_DIR)
+LCPPFLAGS  += -I$(SKETCH) $(CORE_INC) $(CORE_API_INC) $(CORE_LIBRAIRIES_INC) $(LIBRARIES_INC) -I$(CMSIS_DIR)/Include -I$(SAM_DIR) -I$(VARIANT_DIR)
 LCPPFLAGS  += -MMD -MP
 
 # common flags
@@ -138,6 +146,7 @@ CCXXFLAGS  += -fno-exceptions -ffunction-sections -fdata-sections -Wno-expansion
 # Too many warning in Arduino source code, silent them
 CXXFLAGS_EXTRA_ARDUINO := -Wno-class-memaccess -Wno-address-of-packed-member -Wno-format-overflow -Wno-restrict -Wno-maybe-uninitialized 
 CXXFLAGS_EXTRA_ARDUINO += -Wno-sized-deallocation -Wno-unused-variable
+CFLAGS_EXTRA_ARDUINO += -Wno-enum-int-mismatch
 
 LCFLAGS    := $(CCXXFLAGS) -std=gnu11
 
@@ -215,6 +224,7 @@ hex: $(TARGET_HEX)
 
 # Create static libraries of Arduino source code and libraries
 $(OBJDIR)/arduino_core_lib.a: CXXFLAGS += $(CXXFLAGS_EXTRA_ARDUINO)
+$(OBJDIR)/arduino_core_lib.a: CFLAGS += $(CFLAGS_EXTRA_ARDUINO)
 $(OBJDIR)/arduino_core_lib.a: $(CORE_OBJS)
 	$(_V_AR_$(V))$(AR) -r -o $@ $^
 
