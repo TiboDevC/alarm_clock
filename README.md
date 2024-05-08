@@ -74,3 +74,15 @@ Application is structured around a Finite State Machine (FSM). There are many wa
 this one: https://www.state-machine.com/doc/PSiCC2.pdf
 
 FreeRTOS is used as the scheduler.
+
+### Build project
+
+#### Dependencies
+
+flash programmer for Atmel SAM microcontrollers `sudo apt install bossa-cli`
+
+#### Build and flash
+```
+make
+make upload
+```
