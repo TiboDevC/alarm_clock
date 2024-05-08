@@ -200,7 +200,7 @@ size: $(TARGET_ELF) | $(TARGET_BIN)
 
 .PHONY: upload
 upload: $(TARGET_BIN) all
-	#$(_V_RESET_$(V))$(RESET_SCRIPT)
+	$(_V_RESET_$(V))$(RESET_SCRIPT)
 	$(_V_UPLOAD_$(V))$(BOSSAC) $(BOSSAC_FLAGS) $<
 
 .PHONY: clean
