@@ -33,22 +33,6 @@ static void _idle_task(void *pvParameters)
 	}
 }
 
-#define PRINT_UART_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
-
-static StaticTask_t _print_uart_task_buffer;
-static StackType_t  _print_uart_task_stack[PRINT_UART_TASK_STACK_SIZE];
-
-static void _print_uart_task(void *pvParameters)
-{
-	while (1) {
-		if (Serial.available()) {
-			while (Serial.available()) {
-				Serial.print(Serial.read());
-			}
-		}
-	}
-}
-
 void setup()
 {
 	/* Disable speaker first */
@@ -83,14 +67,6 @@ void setup()
 	                  tskIDLE_PRIORITY + 1,
 	                  _idle_task_stack,
 	                  &_idle_task_buffer);
-
-	xTaskCreateStatic(_print_uart_task,
-	                  "Print uart task",
-	                  IDLE_TASK_STACK_SIZE,
-	                  NULL,
-	                  tskIDLE_PRIORITY + 1,
-	                  _print_uart_task_stack,
-	                  &_print_uart_task_buffer);
 
 	Serial.println("end alarm_init, start scheduler");
 	vTaskStartScheduler();
