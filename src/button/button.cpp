@@ -1,5 +1,5 @@
 #include <array>
-#include <limits.h>
+#include <climits>
 
 #include "Arduino.h"
 
