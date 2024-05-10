@@ -7,6 +7,7 @@
 #include "flash_storage/alarm_flash_storage.h"
 #include "rtc/rtc_tool.h"
 #include "ui/screen.h"
+#include "watchdog/watchdog.h"
 
 enum fsm_handler_rc state_init(struct fsm *fsm, struct fsm_event const *event)
 {
@@ -28,6 +29,10 @@ enum fsm_handler_rc state_init(struct fsm *fsm, struct fsm_event const *event)
 		init_rtc();
 
 		rtc_start_interrupt();
+
+		/* Must be started after init_rtc() since this function init GCLK2 */
+		debug("Init WDT");
+		wdt_init();
 
 		debug("[state_init] event_init ends\n");
 

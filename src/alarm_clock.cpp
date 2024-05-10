@@ -1,5 +1,6 @@
 #include <Arduino.h>
 
+#include "watchdog/watchdog.h"
 #include <FreeRTOS.h>
 #include <task.h>
 
@@ -16,19 +17,14 @@ extern "C" {
 
 #define IDLE_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
 
-static StaticTask_t _idle_task_buffer;
-static StackType_t  _idle_task_stack[IDLE_TASK_STACK_SIZE];
+static StaticTask_t _wdt_task_buffer;
+static StackType_t  _wdt_task_stack[IDLE_TASK_STACK_SIZE];
 
-static void _idle_task(void *pvParameters)
+static void _wdt_task(void *pvParameters)
 {
-	constexpr int period_ms     = 1000 / portTICK_PERIOD_MS;
-	TickType_t    xLastWakeTime = xTaskGetTickCount();
-
 	while (1) {
-		xTaskDelayUntil(&xLastWakeTime, period_ms);
-		if (serialEventRun) {
-			serialEventRun();
-		}
+		vTaskDelay(pdMS_TO_TICKS(500));
+		wdt_refresh();
 		Serial.print(".");
 	}
 }
@@ -60,13 +56,13 @@ void setup()
 	alarm_clock_fsm();
 
 	/* Start IDLE task */
-	xTaskCreateStatic(_idle_task,
+	xTaskCreateStatic(_wdt_task,
 	                  "IDLE task",
 	                  IDLE_TASK_STACK_SIZE,
 	                  NULL,
-	                  tskIDLE_PRIORITY + 1,
-	                  _idle_task_stack,
-	                  &_idle_task_buffer);
+	                  tskIDLE_PRIORITY,
+	                  _wdt_task_stack,
+	                  &_wdt_task_buffer);
 
 	Serial.println("end alarm_init, start scheduler");
 	vTaskStartScheduler();

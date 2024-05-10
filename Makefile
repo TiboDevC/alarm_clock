@@ -68,6 +68,7 @@ TARGET_CXX_SRC += $(wildcard $(SKETCH)/flash_storage/*.cpp)
 TARGET_CXX_SRC += $(wildcard $(SKETCH)/wifi/*.cpp)
 TARGET_CXX_SRC += $(wildcard $(SKETCH)/rtc/*.cpp)
 TARGET_CXX_SRC += $(wildcard $(SKETCH)/button/*.cpp)
+TARGET_CC_SRC += $(wildcard $(SKETCH)/watchdog/*.c)
 
 VARIANT_DIR := lib/ArduinoCore-samd/variants/mkrwifi1010
 VARIANT_SRC := $(VARIANT_DIR)/variant.cpp
