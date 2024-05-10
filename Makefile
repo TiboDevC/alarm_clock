@@ -1,4 +1,4 @@
-TARGET     := mkrwifi1010
+TARGET     := alarm_clock_samd21
 SKETCH     := src
 
 # Board specific flags, TODO include it from bootloader definition
