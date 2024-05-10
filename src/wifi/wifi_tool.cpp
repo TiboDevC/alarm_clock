@@ -127,6 +127,7 @@ static void disconnect_wifi()
 
 static void init_ntp()
 {
+	Serial.println("Init NTP");
 	ntp.ruleDST("CEST",
 	            Last,
 	            Sun,
