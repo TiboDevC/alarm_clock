@@ -207,6 +207,8 @@ upload: $(TARGET_BIN) all
 clean:
 	$(_V_CLEAN_$(V))rm -rf $(OBJDIR) .size_done
 
+# https://docs.arduino.cc/tutorials/mkr-wifi-1010/atmel-ice/
+# https://docs.arduino.cc/tutorials/mkr-wifi-1010/mkr-jlink-setup/
 .PHONY: gdb
 gdb: $(TARGET_ELF)
 	$(GDB) -q $(TARGET_ELF) -ex "target extended-remote :2331" -ex "load" -ex "mon reset"
