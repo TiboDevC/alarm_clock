@@ -40,7 +40,7 @@ void setup()
 
 	SerialUSB.begin(115200);
 
-	delay(5000); // prevents usb driver crash on startup, do not omit this
+	delay(3000); // prevents usb driver crash on startup, do not omit this
 
 	if (!Serial.available()) {
 		/* Disable serial if not available */
